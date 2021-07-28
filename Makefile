@@ -15,7 +15,7 @@ notebook:
 	docker-compose run --service-ports model-notebook bash
 
 attach-console:
-	docker exec -it model-notebook bash
+	docker exec -it asqa_model-notebook_1 bash
 
 chmod:
 	chmod -R 777 .

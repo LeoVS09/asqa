@@ -14,8 +14,7 @@ checkout:
 
 # Will start notebook environment on http://0.0.0.0:8890
 notebook: 
-	jupyter notebook --ip=0.0.0.0 --allow-root --port=8890
-
+	jupyter notebook --ip=0.0.0.0 --NotebookApp.allow_origin='https://colab.research.google.com' --allow-root --port=8890 --NotebookApp.port_retries=0
 
 install:
 	pip install -r requirements.txt
