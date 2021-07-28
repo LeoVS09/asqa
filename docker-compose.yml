@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+
+   model-notebook:
+      build:
+         context: ./model
+      ports: 
+         - 8890:8890
+         - 6006:6006
+      runtime: nvidia
+      volumes:
+         - ./model:/work/.
+      
+
+
