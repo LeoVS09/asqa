@@ -11,6 +11,26 @@ services:
       runtime: nvidia
       volumes:
          - ./model:/work/.
-      
 
+      depends_on: 
+         - elasticsearch
+      links:
+         - elasticsearch
 
+   elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+      ports:
+         - 9200:9200
+         - 9300:9300
+      volumes:
+         - elasticsearch_data:/usr/share/elasticsearch/data
+      environment:
+         ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+         ELASTIC_PASSWORD: pass
+         # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+         # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+         discovery.type: single-node
+
+volumes:
+   elasticsearch_data:
+      driver: local
