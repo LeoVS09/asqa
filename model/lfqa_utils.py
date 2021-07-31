@@ -9,6 +9,7 @@ import torch
 import torch.utils.checkpoint as checkpoint
 from torch.utils.data import DataLoader, Dataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
+from tqdm.contrib import tzip
 
 import faiss  # noqa: F401
 import nlp  # noqa: F401
@@ -74,7 +75,7 @@ def query_es_index(question, es_client, index_name="english_wiki_kilt_snippets_1
     hits = response["hits"]["hits"]
     support_doc = "<P> " + " <P> ".join([hit["_source"]["passage_text"] for hit in hits])
     res_list = [dict([(k, hit["_source"][k]) for k in hit["_source"] if k != "passage_text"]) for hit in hits]
-    for r, hit in zip(res_list, hits):
+    for r, hit in tzip(res_list, hits):
         r["passage_id"] = hit["_id"]
         r["score"] = hit["_score"]
         r["passage_text"] = hit["_source"]["passage_text"]
@@ -601,7 +602,7 @@ def query_qa_dense_index(
     support_doc = "<P> " + " <P> ".join([p["passage_text"] for p in res_passages])
     res_list = [dict([(k, p[k]) for k in wiki_passages.column_names]) for p in res_passages]
     res_list = [res for res in res_list if len(res["passage_text"].split()) > min_length][:n_results]
-    for r, sc in zip(res_list, D[0]):
+    for r, sc in tzip(res_list, D[0]):
         r["score"] = float(sc)
     return support_doc, res_list
 

@@ -1,0 +1,5 @@
+outs:
+- md5: 0f642fd57087f75bf0af721d92b8dee3
+  size: 8987501056
+  path: wiki40b_passages_reps_32_l-8_h-768_b-512-512.dat
+  isexec: true
