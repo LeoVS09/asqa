@@ -26,6 +26,16 @@ save-dependencies:
 	pip freeze > requirements.txt
 	pip freeze | sed 's/==.*//g' > requirements-unfized.txt
 
+
+# docs folder required for github pages
+notebook-to-html:
+	jupyter nbconvert ./*.ipynb --to html --output-dir="./docs"
+
+notebook-to-python:
+	jupyter nbconvert ./*.ipynb --to python --output-dir="./results"
+
+notebook-artifacts: notebook-to-html notebook-to-python chmod
+
 # ---------------------------------------------------------------------------------------------------------------------
 # DOCKER
 # ---------------------------------------------------------------------------------------------------------------------
@@ -36,3 +46,10 @@ CURRENT_GID := $(shell id -g)
 
 chmod:
 	chmod -R 777 .
+
+# ---------------------------------------------------------------------------------------------------------------------
+# GPU
+# ---------------------------------------------------------------------------------------------------------------------
+
+gpu-monitor:
+	watch -n 0.5 nvidia-smi
