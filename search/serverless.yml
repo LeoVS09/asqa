@@ -1,0 +1,73 @@
+service: asqa-search
+# app and org for use with dashboard.serverless.com
+app: asqa
+org: asqa-team
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+useDotenv: true
+configValidationMode: error
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: eu-central-1
+  lambdaHashingVersion: 20201221
+  
+  stage: ${opt:stage, 'dev'}
+  
+  apiGateway:
+    minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
+  
+  timeout: 60
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+          Resource: arn:aws:s3:::asqa-search-models/*
+  
+  ecr:
+    images:
+      search: ./
+
+# you can add packaging information here
+package:
+  individually: false
+  patterns:
+    - 'handler.py'
+    - 'src/**'
+    - '!package.json'
+    - '!package-log.json'
+    - '!node_modules/**'
+    - '!cache/**'
+    - '!test/**'
+    - '!__pycache__/**'
+    - '!.pytest_cache/**'
+    - '!model/pytorch_model.bin'
+    - '!raw/**'
+    - '!.vscode/**'
+    - '!.ipynb_checkpoints/**'
+
+functions:
+  search:
+    image:
+      name: search
+    memorySize: 3008
+    timeout: 120
+    events:
+      - httpApi:
+          path: /search
+          method: post
+    
+    environment:
+      STAGE: ${self:provider.stage}
+
+resources:
+ Resources:
+   SearchModelsBucket:
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: asqa-search-models

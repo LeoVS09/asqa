@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
 
+   # Research of NNs for whole solution
    model-notebook:
       build:
          context: ./model
@@ -30,6 +31,20 @@ services:
          # Use single node discovery in order to disable production mode and avoid bootstrap checks.
          # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
          discovery.type: single-node
+
+   # Search engine lambda
+   search:
+      build:
+         context: ./search
+         dockerfile: ./search/dev.Dockerfile
+      ports:
+         - 8895:8895
+      runtime: nvidia
+      volumes:
+         - ./search/:/app/.
+      env_file:
+         ./search/.env.local
+
 
 volumes:
    elasticsearch_data:
