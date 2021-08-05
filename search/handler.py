@@ -4,35 +4,32 @@ except ImportError:
     pass
 
 import logging
-import json
-from src.predict_answer import predict_answer as predict_answer_fn
+import os
+from src.search_engine_from_s3 import load_and_init_engine
 
+SEARCH_DATA_BUCKET = os.environ.get('SEARCH_DATA_BUCKET')
+if not SEARCH_DATA_BUCKET:
+    raise ValueError('SEARCH_DATA_BUCKET enviroment variable must be specified')
 
-"""Example function which using model for predict answer"""
-def predict_answer(event, context):
+SEARCH_DATA_KEY = os.environ.get('SEARCH_DATA_KEY')
+if not SEARCH_DATA_KEY:
+    raise ValueError('SEARCH_DATA_KEY enviroment variable must be specified')
+
+engine = load_and_init_engine(SEARCH_DATA_BUCKET, SEARCH_DATA_KEY)
+
+"""Adapter of search context for lambda enviroment"""
+def search_passages(event, event_context):
     try:
+
+        results_count = event.get('results_count')
+        if not results_count:
+            results_count = 10
         
-        answer = predict_answer_fn(event['question'], event['context'])
+        contexts = engine.search_passages([event['question']], results_count = results_count)
 
-        return {
-            "statusCode": 200,
-            "headers": {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                "Access-Control-Allow-Credentials": True
-
-            },
-            "body": {'answer': answer}
-        }
+        return { 'context': contexts[0] }
     
     except Exception as e:
         logging.exception(e)
-        return {
-            "statusCode": 500,
-            "headers": {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                "Access-Control-Allow-Credentials": True
-            },
-            "body": {"error": repr(e)}
-        }
+        
+        return { "error": repr(e) }

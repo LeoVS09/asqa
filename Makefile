@@ -1,10 +1,8 @@
 #!/usr/bin/env make
 
-.PHONY: start default notebook attach-console chmod gpu-monitor
-
+.PHONY: start default notebook attach-console chmod gpu-monitor search-notebook
 
 default: start
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # DEVELOPMENT
@@ -12,7 +10,11 @@ default: start
 
 # Will start in docker develoment environment
 notebook:
-	docker-compose run --service-ports model-notebook bash
+	docker-compose run --service-ports model-notebook
+
+# Will start docker development environment for search lambda
+search-notebook:
+	docker-compose run --service-ports search bash
 
 attach-console:
 	docker exec -it asqa_model-notebook_1 bash

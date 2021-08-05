@@ -11,6 +11,8 @@ Babel
 backcall
 bleach
 blis
+boto3
+botocore
 cached-property
 cachetools
 catalogue
@@ -26,6 +28,7 @@ cryptography
 cufflinks
 cymem
 dataclasses
+datasets
 decorator
 defusedxml
 dill
@@ -36,6 +39,7 @@ faiss-gpu
 fastavro
 filelock
 flatbuffers
+fsspec
 future
 gast
 google-auth
@@ -55,6 +59,7 @@ ipython-genutils
 ipywidgets
 jedi
 Jinja2
+jmespath
 joblib
 json5
 jsonschema
@@ -79,6 +84,7 @@ lxml
 Markdown
 MarkupSafe
 mistune
+multiprocess
 murmurhash
 nbclassic
 nbclient
@@ -119,6 +125,7 @@ pyparsing
 pyrsistent
 python-apt
 python-dateutil
+python-dotenv
 pytz
 pyxdg
 PyYAML
@@ -130,6 +137,7 @@ requests-unixsocket
 retrying
 rouge
 rsa
+s3transfer
 sacremoses
 SecretStorage
 Send2Trash

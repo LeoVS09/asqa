@@ -6,10 +6,8 @@ RUN pip3 install -r requirements.txt
 
 FROM base
 
-COPY ./trained_model/*.json ./trained_model/*.txt ./trained_model/
-
 COPY handler.py ./
 
 COPY src ./src/
 
-CMD ["handler.predict_answer"]
+CMD ["handler.search_passages"]

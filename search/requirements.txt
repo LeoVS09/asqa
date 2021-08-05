@@ -2,5 +2,6 @@ https://download.pytorch.org/whl/cpu/torch-1.9.0%2Bcpu-cp38-cp38-linux_x86_64.wh
 #https://download.pytorch.org/whl/cpu/torch-1.9.0-cp38-none-macosx_10_9_x86_64.whl
 transformers==4.9.1
 boto3==1.18.11
-tokenizers==0.10.3
-simpletransformers
+faiss-cpu
+datasets
+numpy

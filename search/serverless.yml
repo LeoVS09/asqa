@@ -1,7 +1,7 @@
 service: asqa-search
 # app and org for use with dashboard.serverless.com
 app: asqa
-org: asqa-team
+org: asqateam
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -31,7 +31,7 @@ provider:
   
   ecr:
     images:
-      search: ./
+      search_passages: ./
 
 # you can add packaging information here
 package:
@@ -52,14 +52,14 @@ package:
     - '!.ipynb_checkpoints/**'
 
 functions:
-  search:
+  search_passages:
     image:
-      name: search
+      name: search_passages
     memorySize: 3008
     timeout: 120
     events:
       - httpApi:
-          path: /search
+          path: /search_passages
           method: post
     
     environment:
