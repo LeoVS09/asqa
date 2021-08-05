@@ -14,7 +14,7 @@ notebook:
 
 # Will start docker development environment for search lambda
 search-notebook:
-	docker-compose run --service-ports search bash
+	docker-compose run --service-ports search
 
 attach-console:
 	docker exec -it asqa_model-notebook_1 bash

@@ -2,8 +2,6 @@ import faiss
 from transformers import AutoModel, AutoTokenizer
 import numpy as np
 from datasets import Dataset
-from .SearchEngine import SearchEngine
-from .EmbedingModel import EmbedingModel
 
 def read_passages(filename):
     return Dataset.load_from_disk(filename)
@@ -49,12 +47,3 @@ def read_models():
 
     return passages, index, tokenizer, model
 
-def load_and_init_engine():
-
-    passages, index, tokenizer, model = read_models()
-
-    return SearchEngine(
-        model = EmbedingModel(model, tokenizer), 
-        passages = passages, 
-        index = index
-    )

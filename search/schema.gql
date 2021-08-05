@@ -1,0 +1,52 @@
+type Query {
+    status: Status!
+    search(input: SearchInput!): SearchResults!
+}
+
+type Status {
+    enabled: Boolean!
+}
+
+input SearchInput {
+    questions: [String!]!
+    """
+    Count of passages to return, per question
+    """
+    passages_count: Int = 10
+}
+
+type SearchResults {
+    nodes: [SearchResult!]!
+}
+
+type SearchResult {
+    question: String!
+
+    """
+    Passages of texts for question
+    """
+    passages: [Passage!]!
+}
+
+type Passage {
+    datasets_id: Int
+    
+    """
+    Id of entity in wikidata, can be linked to wikipedia page
+    """
+    wiki_id: String
+
+    """
+    Score of relativity passage to answer, bigger better
+    """
+    score: Float
+
+    start_paragraph: Int
+    end_paragraph: Int
+    start_character: Int
+    end_character: Int
+
+    article_title: String!
+    section_title: String!
+    passage_text: String!
+}

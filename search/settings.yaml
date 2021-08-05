@@ -1,0 +1,3 @@
+# Default configuration values, real values will be set from enviroment
+SERVER_PORT: 8894
+GRAPHQL_DEBUG: true
