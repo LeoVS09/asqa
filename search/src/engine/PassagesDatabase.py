@@ -1,3 +1,4 @@
+
 class PassagesInMemoryDatabase:
     """In memory implementation of text passages database"""
 

@@ -36,14 +36,15 @@ services:
    search:
       build:
          context: ./search
-         dockerfile: ./search/dev.Dockerfile
+         dockerfile: ./dev.Dockerfile
+      container_name: asqa_search_dev
       ports:
+         - 8894:8894
          - 8895:8895
-      runtime: nvidia
       volumes:
          - ./search/:/app/.
       env_file:
-         ./search/.env.local
+         ./search/.env
 
 
 volumes:

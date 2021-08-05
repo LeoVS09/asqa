@@ -142,3 +142,9 @@ models/
 trained_model/
 squad-distilbert.tar.gz
 
+
+# Ignore dynaconf secret files
+.secrets.*
+
+# Model data
+data/

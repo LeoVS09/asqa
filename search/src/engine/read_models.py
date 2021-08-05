@@ -1,19 +1,7 @@
 import faiss
 from transformers import AutoModel, AutoTokenizer
-import boto3
-import tarfile
-import io
 import numpy as np
 from datasets import Dataset
-
-s3 = boto3.client('s3')
-
-def load_files(s3_bucket, file_key, folder):
-    obj = s3.get_object(Bucket=s3_bucket, Key=file_key)
-    bytestream = io.BytesIO(obj['Body'].read())
-    tar = tarfile.open(fileobj=bytestream, mode="r:gz")
-
-    tar.extractall(path=folder)
 
 def read_passages(filename):
     return Dataset.load_from_disk(filename)
@@ -45,19 +33,17 @@ def read_model(filename):
     _ = model.eval()
     return model
 
-
 ARCHIVE_FOLDER = './data'
 PASSAGES_FILENAME = f'{ARCHIVE_FOLDER}/passages'
 INDEX_FILENAME = f'{ARCHIVE_FOLDER}/index'
 TOKENIZER_FILENAME = f'{ARCHIVE_FOLDER}/tokenizer'
 MODEL_FILENAME = f'{ARCHIVE_FOLDER}/model'
 
-def load_and_read_files(s3_bucket, file_key):
-    load_files(s3_bucket, file_key, ARCHIVE_FOLDER)
-
+def read_models():
     passages = read_passages(PASSAGES_FILENAME)
     index = read_index(INDEX_FILENAME, num_rows = passages.num_rows)
     tokenizer = read_tokenizer(TOKENIZER_FILENAME)
     model = read_model(MODEL_FILENAME)
 
     return passages, index, tokenizer, model
+

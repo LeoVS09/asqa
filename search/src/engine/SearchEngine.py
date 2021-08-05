@@ -11,16 +11,16 @@ class SearchEngine:
         self.passages = passages
         self.index = index
 
-    def search_passages(self, questions, results_count):
+    def search_passages(self, questions, passages_count):
         """
             Sarch multiple passages of texts for each question,
             @param questions - Questions to search
-            @param results_count - Number of passages to return per each question
+            @param passages_count - Number of passages to return per each question
         """
         # Embed questtion in representation which can be searched in index
         questions_embeding = self.model.embed_questions(questions)
         # Find batch passages of texts related to questions      
-        D, I = self.index.search(questions_embeding, results_count)
+        D, I = self.index.search(questions_embeding, passages_count)
         # Extract texts from passages database
         passages = self.passages.get_batch(I)
         # add seacr score to passage index
