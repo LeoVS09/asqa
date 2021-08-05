@@ -64,6 +64,8 @@ functions:
     
     environment:
       STAGE: ${self:provider.stage}
+      SEARCH_DATA_BUCKET: ${env:SEARCH_DATA_BUCKET}
+      SEARCH_DATA_KEY: ${env:SEARCH_DATA_KEY}
 
 resources:
  Resources:
