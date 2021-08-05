@@ -28,10 +28,9 @@ And now you can open GraphiQL enviroment
 
 Web API service provide graphql and rest endoints
 
-* http://localhost:8894/redoc - rest api docs
-* http://localhost:8894/docs - alternative rest api docs
-* http://localhost:8894/graphql - graphql playground
-
+* <http://localhost:8894/redoc> - rest api docs
+* <http://localhost:8894/docs> - alternative rest api docs
+* <http://localhost:8894/graphql> - graphql playground
 
 ### In docker isolated linux development
 
@@ -72,4 +71,25 @@ For run unit test powered by `pytest`, simply run
 
 ```bash
 make test
+```
+
+## Deploy image
+
+For start server in cloud need deploy image in AWS ECR
+
+```bash
+# Firstly get your AWS ACCOUNT ID 
+aws sts get-caller-identity
+
+# Login docker
+aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+
+# Build image locally
+docker build -t asqa-search:0.1.0 .
+
+# Tag image relative to your account
+docker tag asqa-search:0.1.0 <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>
+
+# Push image
+docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>
 ```

@@ -19,6 +19,9 @@ search-notebook:
 attach-console:
 	docker exec -it asqa_model-notebook_1 bash
 
+attach-search-console:
+	docker exec -it asqa_search_dev_1 bash
+
 chmod:
 	chmod -R 777 .
 
