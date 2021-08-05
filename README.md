@@ -8,14 +8,14 @@ Research trying to provide simple architecture, which will able to answer on que
 
 ## Roadmap
 
-- [*] QA model for [ELI5 dataset](https://facebookresearch.github.io/ELI5/explore.html)
-- [] Telegram bot integration
-- [] Use Bigger Wikipedia index, instead [Wiki40b](https://www.tensorflow.org/datasets/catalog/wiki40b) use [wikipedia_en_100_0](https://huggingface.co/datasets/wiki_snippets), which contain two times bigger dataset
-- [] QA model for [SQuAD dataset](https://rajpurkar.github.io/SQuAD-explorer/)
-- [] QA model for [CoQA dataset](https://stanfordnlp.github.io/coqa/)
-- [] QA model for [QReCC dataset](https://github.com/apple/ml-qrecc)
-- [] Site for direct bot conversation
-- [] Add urls to wikipedia pages in answers
+- [x] QA model for [ELI5 dataset](https://facebookresearch.github.io/ELI5/explore.html)
+- [ ] Telegram bot integration
+- [ ] Use Bigger Wikipedia index, instead [Wiki40b](https://www.tensorflow.org/datasets/catalog/wiki40b) use [wikipedia_en_100_0](https://huggingface.co/datasets/wiki_snippets), which contain two times bigger dataset
+- [ ] QA model for [SQuAD dataset](https://rajpurkar.github.io/SQuAD-explorer/)
+- [ ] QA model for [CoQA dataset](https://stanfordnlp.github.io/coqa/)
+- [ ] QA model for [QReCC dataset](https://github.com/apple/ml-qrecc)
+- [ ] Site for direct bot conversation
+- [ ] Add urls to wikipedia pages in answers
 
 ## Development
 
