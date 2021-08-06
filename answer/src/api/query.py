@@ -9,7 +9,7 @@ answerer = load_and_init_answerer()
 def resolve_status(_, info):
     return {'enabled': True}
 
-@query.field("answr")
+@query.field("answer")
 def resolve_search(_, info, input):
     question = input['question']
 
@@ -27,7 +27,7 @@ def resolve_search(_, info, input):
         top_k = input['top_k'],
         no_repeat_ngram_size = input['no_repeat_ngram_size'],
         length_penalty = input['length_penalty'],
-        max_time = input['max_time'],
+        max_time = input.get('max_time'),
     )
 
     nodes = []

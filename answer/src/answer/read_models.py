@@ -1,4 +1,5 @@
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+import logging
 
 def read_tokenizer(filename):
     return AutoTokenizer.from_pretrained(
@@ -20,8 +21,10 @@ TOKENIZER_FILENAME = f'{ARCHIVE_FOLDER}/tokenizer'
 MODEL_FILENAME = f'{ARCHIVE_FOLDER}/model'
 
 def read_models():
+    logging.info('Start reading models...')
     tokenizer = read_tokenizer(TOKENIZER_FILENAME)
     model = read_model(MODEL_FILENAME)
+    logging.info('Modeles was read')
 
     return tokenizer, model
 
