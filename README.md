@@ -27,6 +27,16 @@ For create development enviroment used docker. For start development containers 
 make start
 ```
 
+### NN platform
+
+For start NN platform gateway only just run
+
+```bash
+make platform-gateway
+```
+
+open <http://localhost:8910/graphql>
+
 ### Start specific containers
 
 For start research Jupiter notebook type

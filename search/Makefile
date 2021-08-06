@@ -17,18 +17,12 @@ start:
 dev:
 	uvicorn src.main:app --reload --host 0.0.0.0 --port ${SERVER_PORT}
 
-
-# Will start notebook environment on http://0.0.0.0:8895
-notebook: 
-	jupyter notebook --ip=0.0.0.0 --NotebookApp.allow_origin='https://colab.research.google.com' --allow-root --port=8895 --NotebookApp.port_retries=0
-
-
 install: 
-	pip install -r dev.requirements.txt
+	pip install -r requirements.txt
 
 save-dependencies:
-	pip freeze > dev.requirements.txt
-	pip freeze | sed 's/==.*//g' > dev.requirements-unfized.txt
+	pip freeze > requirements.txt
+	pip freeze | sed 's/==.*//g' > requirements-unfized.txt
 
 # ---------------------------------------------------------------------------------------------------------------------
 # DOCKER

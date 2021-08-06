@@ -32,11 +32,32 @@ services:
          # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
          discovery.type: single-node
 
+   # GraphQl gateway service for search and answers
+   platform-gateway:
+      image: graphql/gateway
+      links:
+         - search
+         - answer
+      depends_on:
+         - search
+         - answer
+      ports:
+         - 8910:80
+      environment: # TODO: use graphql manager service in production https://github.com/graphql-services/graphql-gateway
+         - GRAPHQL_URL_0=http://search:8894/graphql
+         - GRAPHQL_URL_1=http://answer:8904/graphql
+         - GRAPHQL_UPDATE_GATEWAY=true
+         - GRAPHQL_UPDATE_GATEWAY_INTERVAL_MS=60000
+      deploy: 
+         restart_policy:
+            condition: any
+            delay: 5s
+   
    # Search engine service
    search:
       build:
          context: ./search
-         dockerfile: ./dev.Dockerfile
+         dockerfile: ./Dockerfile
       container_name: asqa_search_dev
       ports:
          - 8894:8894
@@ -50,7 +71,7 @@ services:
    answer:
       build:
          context: ./answer
-         dockerfile: ./dev.Dockerfile
+         dockerfile: ./Dockerfile
       container_name: asqa_answer_dev
       ports:
          - 8904:8904

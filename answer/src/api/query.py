@@ -5,10 +5,6 @@ query = ObjectType("Query")
 
 answerer = load_and_init_answerer()
 
-@query.field("status")
-def resolve_status(_, info):
-    return {'enabled': True}
-
 @query.field("answer")
 def resolve_search(_, info, input):
     question = input['question']

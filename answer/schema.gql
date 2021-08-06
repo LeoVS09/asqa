@@ -1,10 +1,5 @@
 type Query {
-    status: Status!
     answer(input: QuestionInput!): Answers!
-}
-
-type Status {
-    enabled: Boolean!
 }
 
 input QuestionInput {

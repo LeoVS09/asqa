@@ -13,13 +13,13 @@ notebook:
 	docker-compose run --service-ports model-notebook
 
 # Will start docker development environment for search lambda
-search-notebook:
+search:
 	docker-compose run --service-ports search
 
 search-console:
 	docker-compose run --service-ports search bash
 
-answer-notebook:
+answer:
 	docker-compose run --service-ports answer
 
 answer-console:
@@ -29,11 +29,13 @@ attach-console:
 	docker exec -it asqa_model-notebook_1 bash
 
 attach-search-console:
-	docker exec -it asqa_search_dev_1 bash
+	docker exec -it asqa_search_dev bash
 
 attach-answer-console:
-	docker exec -it asqa_answer_dev_1 bash
+	docker exec -it asqa_answer_dev bash
 
+platform-gateway:
+	docker-compose up platform-gateway
 
 chmod:
 	chmod -R 777 .

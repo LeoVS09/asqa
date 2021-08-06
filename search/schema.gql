@@ -1,10 +1,5 @@
 type Query {
-    status: Status!
     search(input: SearchInput!): SearchResults!
-}
-
-type Status {
-    enabled: Boolean!
 }
 
 input SearchInput {
