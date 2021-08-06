@@ -1,6 +1,6 @@
-# Asqa / Search
+# Asqa / Answer
 
-Search engine based on NN for Asqa solution.
+Service which can answer on questions by given context, based on DNN.
 
 ## Technology References
 
@@ -13,7 +13,7 @@ Create enviroment and start server
 
 ```bash
 # In upper folder start console 
-make search-console
+make answer-console
 
 # Start development server
 make dev
@@ -82,10 +82,10 @@ aws sts get-caller-identity
 aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
 
 # Build image locally
-docker build -t asqa-search:0.1.0 .
+docker build -t asqa-answer:0.1.0 .
 
 # Tag image relative to your account
-docker tag asqa-search:0.1.0 <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>
+docker tag asqa-answer:0.1.0 <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>
 
 # Push image
 docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>

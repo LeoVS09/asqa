@@ -1,0 +1,82 @@
+type Query {
+    status: Status!
+    answer(input: QuestionInput!): Answers!
+}
+
+type Status {
+    enabled: Boolean!
+}
+
+input QuestionInput {
+    """
+    Question on which need to answer
+    """
+    question: String!
+
+    """
+    Context for given question
+    """
+    context: String!
+
+    """
+    Summary maximum length of question and context document
+    """
+    max_input_length: Int = 1024
+    """
+    count of answers to generate per question
+    """
+    num_answers: Int = 10
+    """
+    Number of beams for beam search. 1 means no beam search
+    """
+    num_beams: Int = 8
+    """
+    minimum length of answer
+    """
+    min_answer_length: Int = 64
+    """
+    maximum length of answer
+    """
+    max_answer_length: Int = 256
+    """
+    Whether or not to use sampling ; use greedy decoding otherwise
+    """
+    do_sample: Boolean = false
+    """
+    The value used to module the next token probabilities
+    """
+    temperature: Float = 1.0
+    """
+    if set to float < 1, only the most probable tokens with probabilities that add up to top_p or higher are kept for generation.
+    """
+    top_p: Float = 1.0
+    """
+    The number of highest probability vocabulary tokens to keep for top-k-filtering
+    """
+    top_k: Int = 50
+    """
+    if set to int > 0, all ngrams of that size can only occur once.
+    """
+    no_repeat_ngram_size: Int = 3
+    """
+    Exponential penalty to the length. 1.0 means no penalty. Set to values < 1.0 in order to encourage the model to generate shorter sequences, to a value > 1.0 in order to encourage the model to produce longer sequences.
+    """
+    length_penalty: Float = 1.0
+    """
+    The maximum amount of time you allow the computation to run for in seconds. generation will still finish the current pass after allocated time has been passed.
+    """
+    max_time: Float
+}
+
+
+type Answers {
+    """
+    List of answers on questions
+    """
+    nodes: [Answer!]!
+}
+
+type Answer {
+    question: String!
+    text: String!
+}
