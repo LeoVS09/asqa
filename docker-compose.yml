@@ -32,7 +32,7 @@ services:
          # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
          discovery.type: single-node
 
-   # Search engine lambda
+   # Search engine service
    search:
       build:
          context: ./search
@@ -45,6 +45,20 @@ services:
          - ./search/:/app/.
       env_file:
          ./search/.env
+
+   # Answering NN service
+   answer:
+      build:
+         context: ./answer
+         dockerfile: ./dev.Dockerfile
+      container_name: asqa_answer_dev
+      ports:
+         - 8904:8904
+         - 8905:8905
+      volumes:
+         - ./answer/:/app/.
+      env_file:
+         ./answer/.env
 
 
 volumes:
