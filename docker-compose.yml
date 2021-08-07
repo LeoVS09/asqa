@@ -78,16 +78,16 @@ services:
       env_file:
          ./answer/.env
 
-   bot:
+   core:
       build:
-         context: ./bot
-      container_name: asqa_bot_dev
+         context: ./core
+      container_name: asqa_core_dev
       ports:
          - 8915:8915
       volumes:
-         - ./bot/:/app/.
+         - ./core/:/app/.
       env_file:
-         ./bot/.env
+         ./core/.env
 
 volumes:
    elasticsearch_data:

@@ -37,11 +37,11 @@ attach-answer-console:
 platform-gateway:
 	docker-compose up platform-gateway
 
-bot:
-	docker-compose up bot
+core:
+	docker-compose up core
 
-bot-console:
-	docker-compose run --service-ports bot bash
+core-console:
+	docker-compose run --service-ports core bash
 
 chmod:
 	chmod -R 777 .
