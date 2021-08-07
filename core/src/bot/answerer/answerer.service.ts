@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PlatformApiService } from '../interfaces';
+import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
 
 @Injectable()
 export class AnswererService {
     constructor(
-        private readonly platformService: PlatformApiService
+        private readonly platformService: PlatformApiAdapterService
     ){}
 
     async answer(question: string): Promise<string> {

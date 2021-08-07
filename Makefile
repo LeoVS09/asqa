@@ -43,6 +43,10 @@ core:
 core-console:
 	docker-compose run --service-ports core bash
 
+attach-core-console:
+	docker exec -it asqa_core_run_a94722544b08 bash
+
+
 chmod:
 	chmod -R 777 .
 

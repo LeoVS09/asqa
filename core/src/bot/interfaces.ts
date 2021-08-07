@@ -4,7 +4,7 @@ export interface Passages {
 }
 
 export interface Answer {
-    scrore: string;
+    score: number;
     text: string;
 }
 
