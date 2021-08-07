@@ -3,8 +3,6 @@ import { Answer, Passages, PlatformApiService, TextTypes } from '../interfaces';
 import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
 import { AnswererService } from './answerer.service';
 
-
-
 describe('AnswererService', () => {
   let service: AnswererService;
   let mockPlatformApi: PlatformApiService 
