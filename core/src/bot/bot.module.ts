@@ -4,8 +4,37 @@ import { SlowAnswerService } from './slow-answer/slow-answer.service';
 import { BotService } from './bot/bot.service';
 import { PlatformApiAdapterService } from './platform-api-adapter/platform-api-adapter.service';
 import { MessagesEventAdapterService } from './messages-event-adapter/messages-event-adapter.service';
+import { BotController } from './controller/bot.controller';
+import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
-  providers: [AnswererService, SlowAnswerService, BotService, PlatformApiAdapterService, MessagesEventAdapterService]
+  providers: [
+    { 
+      provide: 'KAFKA_CLIENT', 
+      useFactory: (configService: ConfigService) => {
+        return ClientProxyFactory.create({
+          transport: Transport.KAFKA,
+          options: {
+            client: {
+              clientId: configService.get('KAFKA_CLIENT_ID'),
+              brokers: [configService.get('KAFKA_BROKER_URL')],
+            },
+            consumer: {
+              groupId: configService.get('KAFKA_CONSUMER_GROUP_ID'),
+              allowAutoTopicCreation: true
+            }
+          }
+        });
+      },
+      inject: [ConfigService],
+    },
+    AnswererService,
+    SlowAnswerService, 
+    BotService, 
+    PlatformApiAdapterService, 
+    MessagesEventAdapterService
+  ],
+  controllers: [BotController]
 })
 export class BotModule {}

@@ -17,7 +17,7 @@ async function bootstrap() {
         brokers: [configService.get('KAFKA_BROKER_URL')],
       },
       consumer: {
-        groupId: configService.get('KONSUMER_GROUP_ID'),
+        groupId: configService.get('KAFKA_CONSUMER_GROUP_ID'),
         allowAutoTopicCreation: true
       }
     }
