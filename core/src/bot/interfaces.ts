@@ -10,7 +10,8 @@ export interface Answer {
 
 export enum TextTypes {
     EXCUSE_SLOW_ANSWER = 'EXCUSE_SLOW_ANSWER',
-    EXCUSE_VERY_SLOW_ANSWER = 'EXCUSE_VERY_SLOW_ANSWER'
+    EXCUSE_VERY_SLOW_ANSWER = 'EXCUSE_VERY_SLOW_ANSWER',
+    EXCUSE_ERROR = 'EXCUSE_ERROR',
 }
 
 export interface PlatformApiService {

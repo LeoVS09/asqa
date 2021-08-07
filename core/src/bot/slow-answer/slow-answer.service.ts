@@ -16,6 +16,7 @@ export class SlowAnswerService {
         private readonly platformService: PlatformApiAdapterService
     ) {}
 
+    // TODO: create decorator, instead of explisit method usage
     async wrapSlowAnswerExcuse<R>(meta: EventMeta, callback: () => Promise<R>): Promise<R> {
         let answered = false
         
