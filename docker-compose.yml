@@ -56,7 +56,6 @@ services:
    search:
       build:
          context: ./search
-         dockerfile: ./Dockerfile
       container_name: asqa_search_dev
       ports:
          - 8894:8894
@@ -70,7 +69,6 @@ services:
    answer:
       build:
          context: ./answer
-         dockerfile: ./Dockerfile
       container_name: asqa_answer_dev
       ports:
          - 8904:8904
@@ -80,6 +78,16 @@ services:
       env_file:
          ./answer/.env
 
+   bot:
+      build:
+         context: ./bot
+      container_name: asqa_bot_dev
+      ports:
+         - 8915:8915
+      volumes:
+         - ./bot/:/app/.
+      env_file:
+         ./bot/.env
 
 volumes:
    elasticsearch_data:
