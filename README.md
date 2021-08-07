@@ -15,6 +15,7 @@ Research trying to provide simple architecture, which will able to answer on que
 - [ ] QA model for [CoQA dataset](https://stanfordnlp.github.io/coqa/)
 - [ ] QA model for [QReCC dataset](https://github.com/apple/ml-qrecc)
 - [ ] Site for direct bot conversation
+- [ ] Add twitter integration
 - [ ] Add urls to wikipedia pages in answers
 - [ ] Setup CI/CD for service deployment
 - [ ] Setup CI/CD for models deployment
