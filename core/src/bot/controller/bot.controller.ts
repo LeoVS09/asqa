@@ -1,24 +1,19 @@
-import { Controller, Inject } from '@nestjs/common';
-import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller, ValidationPipe } from '@nestjs/common';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import { BotService } from '../bot/bot.service';
+import { MessageFromUserEventDto } from '../events';
+import { MESSAGE_FROM_USER_TOPIC } from '../topics';
 
 @Controller('bot')
 export class BotController {
 
     constructor(
-        @Inject('KAFKA_CLIENT') private readonly client: ClientKafka
-    ) {}
+        private readonly bot: BotService
+    ){}
 
-    async onModuleInit() {
-        this.client.subscribeToResponseOf('hero.kill.dragon');
-        await this.client.connect();
-    }
-      
-
-    @MessagePattern('my-first-topic') // Our topic name
-    getHello(@Payload() message) {
-      console.log(message.value);
-      this.client.emit('hero.kill.dragon', 'Hello Kafka');
-      console.log('Message emited');
-      return 'Hello World';
+    @EventPattern(MESSAGE_FROM_USER_TOPIC)
+    getHello(@Payload('value', new ValidationPipe()) value: MessageFromUserEventDto) {
+      debugger;
+      return this.bot.onMessage(value.text, value.meta);
     }
 }

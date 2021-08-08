@@ -20,16 +20,23 @@ export interface PlatformApiService {
     generateText(type: TextTypes): Promise<string>
 }
 
-export interface EventMeta {
+export interface IEventMeta {
     /** Data for identify user */
     identity: any
 }
 
-export interface MessageToUserEvent {
+export interface IEventWithIdentity {
+    meta: IEventMeta;
+}
+
+export interface IMessageToUserEvent extends IEventWithIdentity {
     text: string;
-    meta: EventMeta;
+}
+
+export interface IMessageFromUserEvent extends IEventWithIdentity {
+    text: string;
 }
 
 export interface MessagesEventBroker {
-    sendToUser(event: MessageToUserEvent)
+    sendToUser(event: IMessageToUserEvent)
 }

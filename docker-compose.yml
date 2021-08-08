@@ -84,14 +84,17 @@ services:
       container_name: asqa_core_dev
       ports:
          - 8915:8915
+         - 9229:9229
       volumes:
          - ./core/:/app/.
       env_file:
          ./core/.env
       depends_on: 
          - kafka
+         - platform-gateway
       links:
          - kafka
+         - platform-gateway
    
    kafka:
       image: docker.io/bitnami/kafka:2

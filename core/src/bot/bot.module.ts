@@ -7,6 +7,8 @@ import { MessagesEventAdapterService } from './messages-event-adapter/messages-e
 import { BotController } from './controller/bot.controller';
 import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { TextGenerationPlacholderService } from './platform-api-adapter/text-generation-placholder.service';
+import { PlatformGraphqlClientService } from './platform-api-adapter/platform-graphql-client.service';
 
 @Module({
   providers: [
@@ -33,7 +35,9 @@ import { ConfigService } from '@nestjs/config';
     SlowAnswerService, 
     BotService, 
     PlatformApiAdapterService, 
-    MessagesEventAdapterService
+    MessagesEventAdapterService,
+    TextGenerationPlacholderService,
+    PlatformGraphqlClientService,
   ],
   controllers: [BotController]
 })

@@ -31,7 +31,11 @@ save-dependencies:
 chmod:
 	chmod -R 777 .
 
+read-dotenv:
+	set -o allexport; source .env; set +o allexport
+
 # --------------------------------------------------- TESTS --------------------------------------------------------------- 
 
 test: 
 	pytest
+

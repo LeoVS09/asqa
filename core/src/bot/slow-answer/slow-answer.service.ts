@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { EventMeta, TextTypes } from '../interfaces';
+import { IEventMeta, TextTypes } from '../interfaces';
 import { MessagesEventAdapterService } from '../messages-event-adapter/messages-event-adapter.service';
 import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
 
 // Time when answer generation took too long, and need do something for let user know we working
 const SLOW_ANSWER_CASES = [
-    {type: TextTypes.EXCUSE_SLOW_ANSWER, time: 3000},
-    {type: TextTypes.EXCUSE_VERY_SLOW_ANSWER, time: 15000}
+    {type: TextTypes.EXCUSE_SLOW_ANSWER, time: 5000},
+    {type: TextTypes.EXCUSE_VERY_SLOW_ANSWER, time: 20000}
 ]
 
 @Injectable()
@@ -17,7 +17,7 @@ export class SlowAnswerService {
     ) {}
 
     // TODO: create decorator, instead of explisit method usage
-    async wrapSlowAnswerExcuse<R>(meta: EventMeta, callback: () => Promise<R>): Promise<R> {
+    async wrapSlowAnswerExcuse<R>(meta: IEventMeta, callback: () => Promise<R>): Promise<R> {
         let answered = false
         
         SLOW_ANSWER_CASES.map(({time, type}) => setTimeout(async () => {
@@ -31,9 +31,16 @@ export class SlowAnswerService {
             this.broker.sendToUser({text: excuse, meta})
         }, time))
 
-        const answer = await callback()
-        answered = true
+        try {
+            const answer = await callback()
+            answered = true
 
-        return answer
+            return answer
+        
+        } catch (err) {
+            answered = true
+
+            throw err
+        }
     }
 }
