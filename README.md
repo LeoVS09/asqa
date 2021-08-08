@@ -54,3 +54,24 @@ For notebook in search labmda enviroment type
 ```bash
 make search-notebook
 ```
+
+### Deploy image
+
+For deploy image in aws registry need
+
+```bash
+# Firstly get your AWS ACCOUNT ID 
+aws sts get-caller-identity
+
+# Login docker
+aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+
+# Build image locally
+docker build -t asqa-search:0.1.0 .
+
+# Tag image relative to your account
+docker tag asqa-search:0.1.0 <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>
+
+# Push image
+docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<my-repository>:<tag>
+```

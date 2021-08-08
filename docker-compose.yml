@@ -62,8 +62,8 @@ services:
          - 8895:8895
       volumes:
          - ./search/:/app/.
-      env_file:
-         ./search/.env
+      environment:
+         - SERVER_PORT=8894
 
    # Answering NN service
    answer:
@@ -75,8 +75,8 @@ services:
          - 8905:8905
       volumes:
          - ./answer/:/app/.
-      env_file:
-         ./answer/.env
+      environment:
+         - SERVER_PORT=8904
 
    core:
       build:
@@ -87,8 +87,12 @@ services:
          - 9229:9229
       volumes:
          - ./core/:/app/.
-      env_file:
-         ./core/.env
+      environment:
+         - SERVER_PORT=8915
+         - KAFKA_BROKER_URL='kafka:9092'
+         - KAFKA_CLIENT_ID='asqa-core'
+         - KAFKA_CONSUMER_GROUP_ID='asqa-consumer'
+         - PLATFORM_GQL_URL='http://platform-gateway/graphql'
       depends_on: 
          - kafka
          - platform-gateway

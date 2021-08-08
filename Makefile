@@ -57,6 +57,35 @@ chmod:
 start:
 	docker-compose up --build
 
+
+# ---------------------------------------------------------------------------------------------------------------------
+# BUILD
+# ---------------------------------------------------------------------------------------------------------------------
+
+# read .env $ set -o allexport; source .env; set +o allexport
+
+export AWS_REGION = 'eu-central-1'
+export AWS_ACCOUNT_ID = '449682673987'
+
+export SEARCH_VERSION = '0.1.1'
+
+login-aws:
+	aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+# after login run cat ~/.docker/config.json to see credentials
+
+add-aws-ecr-to-k8s:
+	kubectl create secret generic regcred \
+		--from-file=.dockerconfigjson=/home/leovs09/.docker/config.json \
+		--type=kubernetes.io/dockerconfigjson
+
+build-search:
+	docker build -t asqa-search:${SEARCH_VERSION} ./search
+
+deploy-search:
+	docker tag asqa-search:${SEARCH_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_VERSION}
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_VERSION}
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # GPU
 # ---------------------------------------------------------------------------------------------------------------------
