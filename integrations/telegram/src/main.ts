@@ -1,5 +1,5 @@
 import { Telegraf, Context } from 'telegraf';
-import { createKafkaConsumer, sendMessageToKafka } from './kafka';
+import { stopKafka, createKafkaConsumer, sendMessageToKafka } from './kafka';
 
 const contextCache: { [key: string]: Context } = {};
 
@@ -31,14 +31,16 @@ bootstrap();
 
 function handleExitEvents(bot: Telegraf) {
   ['unhandledRejection', 'uncaughtException'].map((type) => {
-    process.on(type, (e) => {
+    process.on(type, async (e) => {
       bot.stop(`[${type}]: ${e}`);
+      await stopKafka();
     });
   });
 
   ['SIGTERM', 'SIGINT', 'SIGUSR2'].map((type) => {
     process.once(type, async () => {
       bot.stop(type);
+      await stopKafka();
     });
   });
 }

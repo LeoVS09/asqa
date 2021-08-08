@@ -30,14 +30,13 @@ const options: KafkaConfig = {
   sasl,
 };
 const kafka = new Kafka(options);
+const consumer = kafka.consumer({ groupId: 'asqa-group' });
 const producer = kafka.producer();
 
 type ConsumerCallback = (data: Payload) => Promise<void>;
 
 export const createKafkaConsumer = async (callback: ConsumerCallback) => {
   const { SEND_TO_USER_TOPIC: topic } = process.env;
-
-  const consumer = kafka.consumer({ groupId: 'asqa-group' });
 
   await consumer.connect();
   await consumer.subscribe({ topic, fromBeginning: false });
@@ -81,4 +80,9 @@ export const sendMessageToKafka = async (payload: Payload) => {
         .logger()
         .error(`[${options.clientId}] ${e.message}`, { stack: e.stack }),
     );
+};
+
+export const stopKafka = async () => {
+  await consumer.disconnect();
+  await producer.disconnect();
 };
