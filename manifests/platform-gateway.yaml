@@ -6,7 +6,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: platform-gateway
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/version: "latest"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -25,7 +25,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: graphql/gateway
+      - image: graphql/gateway:latest
         name: asqa-platform-gateway
         
         resources:
@@ -75,7 +75,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: platform-gateway
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/version: "latest"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
@@ -97,7 +97,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: platform-gateway
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/version: "latest"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
   annotations:
