@@ -28,7 +28,7 @@ spec:
       - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-core:0.1.0
         name: asqa-core
         imagePullPolicy: IfNotPresent
-        
+
         resources:
           requests:
             cpu: 1
@@ -85,7 +85,6 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
-  type: LoadBalancer
   ports:
   - port: 80
     targetPort: 80

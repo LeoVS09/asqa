@@ -79,7 +79,6 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
-  type: LoadBalancer
   ports:
   - port: 80
     targetPort: 80
