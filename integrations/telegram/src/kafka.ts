@@ -35,7 +35,7 @@ const producer = kafka.producer();
 
 type ConsumerCallback = (data: Payload) => Promise<void>;
 
-export const createKafkaConsumer = async (callback: ConsumerCallback) => {
+export const consumeKafkaMessages = async (callback: ConsumerCallback) => {
   const { SEND_TO_USER_TOPIC: topic } = process.env;
 
   await consumer.connect();

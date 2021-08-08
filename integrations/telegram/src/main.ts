@@ -1,5 +1,5 @@
 import { Telegraf, Context } from 'telegraf';
-import { stopKafka, createKafkaConsumer, sendMessageToKafka } from './kafka';
+import { stopKafka, consumeKafkaMessages, sendMessageToKafka } from './kafka';
 
 const contextCache: { [key: string]: Context } = {};
 
@@ -23,7 +23,7 @@ async function bootstrap() {
 
   await bot.launch();
 
-  await createKafkaConsumer(async ({ identity, text }) => {
+  await consumeKafkaMessages(async ({ identity, text }) => {
     contextCache[identity]?.reply(text);
   });
 }
