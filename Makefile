@@ -37,6 +37,16 @@ attach-answer-console:
 platform-gateway:
 	docker-compose up platform-gateway
 
+core:
+	docker-compose up core
+
+core-console:
+	docker-compose run --service-ports core bash
+
+attach-core-console:
+	docker exec -it asqa_core_run_9655390d68b8 bash
+
+
 chmod:
 	chmod -R 777 .
 
