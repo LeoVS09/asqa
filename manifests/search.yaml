@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: answer
+  name: search
   labels:
     tier: backend
     solution: asqa
-    app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/name: search
+    app.kubernetes.io/version: "0.1.1"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -14,28 +14,28 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: answer
+      app: search
       tier: backend
       solution: asqa
   template:
     metadata:
       labels:
-        app: answer
+        app: search
         tier: backend
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.1.0
-        name: asqa-answer
+      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.1.1
+        name: asqa-search
         imagePullPolicy: IfNotPresent
 
         resources:
           requests:
             cpu: 2
-            memory: 2G
+            memory: 12G
           limits:
-            cpu: 4
-            memory: 4G
+            cpu: 6
+            memory: 16G
           
         ports:
         - name: main-port
@@ -69,13 +69,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: answer
+  name: search
   labels:
-    app: answer
+    app: search
     tier: backend
     solution: asqa
-    app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/name: search
+    app.kubernetes.io/version: "0.1.1"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
@@ -83,6 +83,6 @@ spec:
   - port: 80
     targetPort: 80
   selector:
-    app: answer
+    app: search
     tier: backend
     solution: asqa
