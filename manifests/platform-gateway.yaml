@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: answer
+  name: platform-gateway
   labels:
     tier: backend
     solution: asqa
-    app.kubernetes.io/name: answer
+    app.kubernetes.io/name: platform-gateway
     app.kubernetes.io/version: "0.1.0"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
@@ -14,37 +14,40 @@ spec:
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: answer
+      app: platform-gateway
       tier: backend
       solution: asqa
   template:
     metadata:
       labels:
-        app: answer
+        app: platform-gateway
         tier: backend
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.1.0
-        name: asqa-answer
+      - image: graphql/gateway
+        name: asqa-platform-gateway
         
         resources:
           requests:
-            cpu: 2
-            memory: 2G
+            cpu: 1
+            memory: 256M
           limits:
-            cpu: 4
-            memory: 4G
+            cpu: 1
+            memory: 1G
           
         ports:
         - name: main-port
           containerPort: 80
         
         env:
-        - name: SERVER_PORT
-          value: '80'
-        - name: GRAPHQL_DEBUG
+        - name: GRAPHQL_URL_0
+          value: 'http://search/graphql'
+        - name: GRAPHQL_URL_1
+          value: 'http://answer/graphql'
+        - name: GRAPHQL_UPDATE_GATEWAY
           value: 'false'
+        
         
         livenessProbe:
           httpGet:
@@ -60,20 +63,18 @@ spec:
           httpGet:
             path: /graphql
             port: main-port
-          failureThreshold: 30
-          periodSeconds: 10 # 30 * 10 = 300s = 5m for start
-      imagePullSecrets:
-      - name: regcred # aws
+          failureThreshold: 10
+          periodSeconds: 3 # 10 * 3 = 30s for start
 ---      
 apiVersion: v1
 kind: Service
 metadata:
-  name: answer
+  name: platform-gateway
   labels:
-    app: answer
+    app: platform-gateway
     tier: backend
     solution: asqa
-    app.kubernetes.io/name: answer
+    app.kubernetes.io/name: platform-gateway
     app.kubernetes.io/version: "0.1.0"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
@@ -83,19 +84,19 @@ spec:
   - port: 80
     targetPort: 80
   selector:
-    app: answer
+    app: platform-gateway
     tier: backend
     solution: asqa
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: answer
+  name: platform-gateway
   labels:
-    app: answer
+    app: platform-gateway
     tier: backend
     solution: asqa
-    app.kubernetes.io/name: answer
+    app.kubernetes.io/name: platform-gateway
     app.kubernetes.io/version: "0.1.0"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
@@ -104,13 +105,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: answer.k8s.local
+  - host: platform-gateway.k8s.local
     http:
       paths:
       - path: /graphql
         pathType: Prefix
         backend:
           service:
-            name: answer
+            name: platform-gateway
             port:
               number: 80
