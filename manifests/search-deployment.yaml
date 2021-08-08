@@ -43,22 +43,23 @@ spec:
         env:
         - name: SERVER_PORT
           value: '80'
+        
+        livenessProbe:
+          httpGet:
+            path: /graphql
+            port: main-port
+      
+        readinessProbe:
+          httpGet:
+            path: /graphql
+            port: main-port
+
+        startupProbe:
+          httpGet:
+            path: /graphql
+            port: main-port
+          failureThreshold: 30
+          periodSeconds: 10 # 30 * 10 = 300s = 5m for start
       imagePullSecrets:
       - name: regcred # aws
       
-      livenessProbe:
-        httpGet:
-          path: /graphql
-          port: main-port
-      
-      readinessProbe:
-        httpGet:
-          path: /graphql
-          port: main-port
-
-      startupProbe:
-        httpGet:
-          path: /graphql
-          port: main-port
-      failureThreshold: 30
-      periodSeconds: 10 # 30 * 10 = 300s = 5m for start
