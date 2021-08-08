@@ -1,7 +1,10 @@
-# TODO
+# Asqa Telegram Integration (Bot)
 
+## TODO
+- [X] Bot registered: http://t.me/AsqaBot
+- [X] Telegraf + Kafka implemented
+- [ ] Dockerfile
 ## Required variables
-
 ```
 TELEGRAM_BOT_API_KEY=<>
 KAFKA_BOOTSTRAP_SERVER=127.0.0.1:9092
