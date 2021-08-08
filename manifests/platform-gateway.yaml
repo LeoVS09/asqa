@@ -49,22 +49,22 @@ spec:
           value: 'false'
         
         
-        livenessProbe:
-          httpGet:
-            path: /graphql
-            port: main-port
+        # livenessProbe:
+        #   httpGet:
+        #     path: /graphql
+        #     port: main-port
       
-        readinessProbe:
-          httpGet:
-            path: /graphql
-            port: main-port
+        # readinessProbe:
+        #   httpGet:
+        #     path: /graphql
+        #     port: main-port
 
-        startupProbe:
-          httpGet:
-            path: /graphql
-            port: main-port
-          failureThreshold: 10
-          periodSeconds: 3 # 10 * 3 = 30s for start
+        # startupProbe:
+        #   httpGet:
+        #     path: /graphql
+        #     port: main-port
+        #   failureThreshold: 10
+        #   periodSeconds: 3 # 10 * 3 = 30s for start
 ---      
 apiVersion: v1
 kind: Service
