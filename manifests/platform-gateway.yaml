@@ -42,9 +42,9 @@ spec:
         
         env:
         - name: GRAPHQL_URL_0
-          value: 'http://search/graphql'
-        - name: GRAPHQL_URL_1
           value: 'http://answer/graphql'
+        # - name: GRAPHQL_URL_1
+        #   value: 'http://search/graphql'
         - name: GRAPHQL_UPDATE_GATEWAY
           value: 'false'
         
