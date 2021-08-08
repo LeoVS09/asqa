@@ -101,7 +101,7 @@ metadata:
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /graphql
 spec:
   ingressClassName: nginx
   rules:
