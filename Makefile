@@ -67,7 +67,9 @@ start:
 export AWS_REGION = 'eu-central-1'
 export AWS_ACCOUNT_ID = '449682673987'
 
-export SEARCH_VERSION = '0.1.1'
+export SEARCH_VERSION = 0.1.1
+export ANSWER_VERSION = 0.1.0
+export CORE_VERSION = 0.1.0
 
 login-aws:
 	aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
@@ -85,6 +87,19 @@ deploy-search:
 	docker tag asqa-search:${SEARCH_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_VERSION}
 	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_VERSION}
 
+build-answer:
+	docker build -t asqa-answer:${ANSWER_VERSION} ./answer
+
+deploy-answer:
+	docker tag asqa-answer:${ANSWER_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-answer:${ANSWER_VERSION}
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-answer:${ANSWER_VERSION}
+
+build-core:
+	docker build -t asqa-core:${CORE_VERSION} ./answer
+
+deploy-core:
+	docker tag asqa-answer:${CORE_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # GPU
