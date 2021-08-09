@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/part-of: asqa
 spec:
   kafka:
-    replicas: 2
+    replicas: 3
     listeners:
       - name: plain
         port: 9092
@@ -56,7 +56,7 @@ metadata:
     strimzi.io/cluster: "kafka"
     solution: asqa
 spec:
-  partitions: 2
+  partitions: 3
   replicas: 1
 ---
 apiVersion: kafka.strimzi.io/v1beta2
