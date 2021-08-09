@@ -101,6 +101,10 @@ deploy-core:
 	docker tag asqa-core:${CORE_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
 	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
 
+# TODO: use argo-cd for automatically setup kafka
+setup-kafka-for-k8s:
+	kubectl apply -f ./manifests/kafka.yaml
+
 # ---------------------------------------------------------------------------------------------------------------------
 # GPU
 # ---------------------------------------------------------------------------------------------------------------------
