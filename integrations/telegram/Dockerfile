@@ -9,13 +9,13 @@ WORKDIR /app
 
 FROM base as second
 
-COPY package.json yarn.lock /app/
+COPY package.json package-lock.json /app/
 
-RUN yarn
+RUN npm i
 
 FROM second
 
 COPY . /app
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]
 

@@ -46,6 +46,11 @@ core-console:
 attach-core-console:
 	docker exec -it asqa_core_run_9655390d68b8 bash
 
+telegram:
+	docker-compose up telegram_integration
+
+telegram-console:
+	docker-compose run --service-ports telegram_integration bash
 
 chmod:
 	chmod -R 777 .
