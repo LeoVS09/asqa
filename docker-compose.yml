@@ -99,6 +99,19 @@ services:
       links:
          - kafka
          - platform-gateway
+
+   telegram_integration:
+      build:
+         context: ./integrations/telegram
+      container_name: asqa_telegram_integration_dev
+      volumes:
+         - ./integrations/telegram/:/app/.
+      env_file:
+         ./integrations/telegram/.env
+      depends_on: 
+         - kafka
+      links:
+         - kafka
    
    kafka:
       image: docker.io/bitnami/kafka:2
