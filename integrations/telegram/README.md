@@ -3,7 +3,7 @@
 ## TODO
 - [X] Bot registered: http://t.me/AsqaBot
 - [X] Telegraf + Kafka implemented
-- [ ] Dockerfile
+- [X] Dockerfile
 ## Required variables
 ```
 TELEGRAM_BOT_API_KEY=<>
