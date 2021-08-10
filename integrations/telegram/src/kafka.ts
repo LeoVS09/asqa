@@ -8,7 +8,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 interface Payload {
-  identity: string;
+  meta: { identity: string };
   text: string;
 }
 

@@ -16,15 +16,15 @@ async function bootstrap() {
     contextCache[identity] = ctx;
 
     sendMessageToKafka({
-      identity,
+      meta: { identity },
       text: ctx.message.text,
     });
   });
 
   await bot.launch();
 
-  await consumeKafkaMessages(async ({ identity, text }) => {
-    contextCache[identity]?.reply(text);
+  await consumeKafkaMessages(async ({ meta, text }) => {
+    contextCache[meta.identity]?.reply(text);
   });
 }
 bootstrap();
