@@ -75,6 +75,7 @@ export AWS_ACCOUNT_ID = '449682673987'
 export SEARCH_VERSION = 0.1.1
 export ANSWER_VERSION = 0.1.0
 export CORE_VERSION = 0.1.1
+export TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
 login-aws:
 	aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
@@ -105,6 +106,13 @@ build-core:
 deploy-core:
 	docker tag asqa-core:${CORE_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
 	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
+
+build-telegram:
+	docker build -t asqa-telegram:${TELEGRAM_INTEGRATION_VERSION} ./integrations/telegram
+
+deploy-telegram:
+	docker tag asqa-telegram:${TELEGRAM_INTEGRATION_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram:${TELEGRAM_INTEGRATION_VERSION}
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram:${TELEGRAM_INTEGRATION_VERSION}
 
 # TODO: use argo-cd for automatically setup kafka
 setup-kafka-for-k8s:
