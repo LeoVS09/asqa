@@ -8,18 +8,19 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({
-    transform: true
+      transform: true,
   }));
 
   const configService = app.get(ConfigService);
-  
+
+  const brokers = [configService.get('KAFKA_BROKER_URL')]
 
   app.connectMicroservice<KafkaOptions>({
     transport: Transport.KAFKA,
     options: {
       client: {
         clientId: configService.get('KAFKA_CLIENT_ID'),
-        brokers: [configService.get('KAFKA_BROKER_URL')],
+        brokers,
       },
       consumer: {
         groupId: configService.get('KAFKA_CONSUMER_GROUP_ID'),

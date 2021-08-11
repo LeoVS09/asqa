@@ -31,14 +31,20 @@ const options: KafkaConfig = {
 };
 const kafka = new Kafka(options);
 const consumer = kafka.consumer({ groupId: 'asqa-group' });
-const producer = kafka.producer();
+const producer = kafka.producer({ allowAutoTopicCreation: true });
 
 type ConsumerCallback = (data: Payload) => Promise<void>;
+
+export const connectKafka = async () => {
+  await consumer.connect();
+  await producer.connect();
+
+  return {consumer, producer}
+};
 
 export const consumeKafkaMessages = async (callback: ConsumerCallback) => {
   const { SEND_TO_USER_TOPIC: topic } = process.env;
 
-  await consumer.connect();
   await consumer.subscribe({ topic, fromBeginning: false });
 
   return consumer

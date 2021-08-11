@@ -89,10 +89,10 @@ services:
          - ./core/:/app/.
       environment:
          - SERVER_PORT=8915
-         - KAFKA_BROKER_URL='kafka:9092'
-         - KAFKA_CLIENT_ID='asqa-core'
-         - KAFKA_CONSUMER_GROUP_ID='asqa-consumer'
-         - PLATFORM_GQL_URL='http://platform-gateway/graphql'
+         - KAFKA_BROKER_URL=kafka:9092
+         - KAFKA_CLIENT_ID=asqa-core
+         - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
+         - PLATFORM_GQL_URL=http://platform-gateway/graphql
       depends_on: 
          - kafka
          - platform-gateway
@@ -104,6 +104,8 @@ services:
       build:
          context: ./integrations/telegram
       container_name: asqa_telegram_integration_dev
+      ports:
+         - 8916:8916
       volumes:
          - ./integrations/telegram/:/app/.
       env_file:
