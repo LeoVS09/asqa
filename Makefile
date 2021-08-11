@@ -66,6 +66,7 @@ start:
 # ---------------------------------------------------------------------------------------------------------------------
 # BUILD
 # ---------------------------------------------------------------------------------------------------------------------
+# TODO: move to some CI/CD automation
 
 # read .env $ set -o allexport; source .env; set +o allexport
 
@@ -108,11 +109,11 @@ deploy-core:
 	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-core:${CORE_VERSION}
 
 build-telegram:
-	docker build -t asqa-telegram:${TELEGRAM_INTEGRATION_VERSION} ./integrations/telegram
+	docker build -t asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION} ./integrations/telegram
 
 deploy-telegram:
-	docker tag asqa-telegram:${TELEGRAM_INTEGRATION_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram:${TELEGRAM_INTEGRATION_VERSION}
-	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram:${TELEGRAM_INTEGRATION_VERSION}
+	docker tag asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION}
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION}
 
 # TODO: use argo-cd for automatically setup kafka
 setup-kafka-for-k8s:
