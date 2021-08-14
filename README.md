@@ -12,7 +12,7 @@ Research trying to provide simple architecture, which will able to answer on que
 - [ ] Telegram bot integration
 - [ ] Cache answers and search
 - [ ] Add rating for answers
-- [ ] Use Bigger Wikipedia index, instead [Wiki40b](https://www.tensorflow.org/datasets/catalog/wiki40b) use [wikipedia_en_100_0](https://huggingface.co/datasets/wiki_snippets), which contain two times bigger dataset
+- [ ] Use Bigger Wikipedia index, instead [Wiki40b](https://www.tensorflow.org/datasets/catalog/wiki40b) use [wikipedia_en_100_0](https://huggingface.co/datasets/wiki_snippets), which contain two times bigger dataset. Use[index guide](https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index) for make search possible
 - [ ] QA model for [SQuAD dataset](https://rajpurkar.github.io/SQuAD-explorer/)
 - [ ] QA model for [CoQA dataset](https://stanfordnlp.github.io/coqa/)
 - [ ] QA model for [QReCC dataset](https://github.com/apple/ml-qrecc)
@@ -22,6 +22,7 @@ Research trying to provide simple architecture, which will able to answer on que
 - [ ] Setup CI/CD for service deployment
 - [ ] Setup CI/CD for models deployment
 - [ ] Split search index and dataset, and increase search service count for paralel computation
+- [ ] Make hyperparametor tuning for Faiss search library
 
 ## Development
 

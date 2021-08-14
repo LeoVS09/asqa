@@ -24,6 +24,10 @@ save-dependencies:
 	pip freeze > requirements.txt
 	pip freeze | sed 's/==.*//g' > requirements-unfized.txt
 
+notebook: 
+	jupyter notebook --ip=0.0.0.0 --allow-root --port=8895 --NotebookApp.port_retries=0
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # DOCKER
 # ---------------------------------------------------------------------------------------------------------------------

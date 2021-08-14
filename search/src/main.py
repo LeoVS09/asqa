@@ -1,7 +1,10 @@
 from fastapi import FastAPI
-from .api import router, graphql_router
 from config import settings
 import logging
+
+logging.basicConfig(level=logging.INFO)
+
+from .api import router, graphql_router
 
 logging.info(f'App version: {settings["APP_VERSION"]}')
 
