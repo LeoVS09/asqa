@@ -30,22 +30,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    
-    - name: Resolve bump label
-      id: bump
-      uses: zwaldowski/match-label-action@v1
-      with:
-        allowed: major,minor,patch
-    - name: Bump version
-      uses: zwaldowski/semver-release-action@v1
-      with:
-        bump: ${{ steps.bump.outputs.match }}
-        profix: search_v
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Save new version
-      run: |-
-        cd search
-        sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
         
     - name: Setup DVC
       uses: iterative/setup-dvc@v1
