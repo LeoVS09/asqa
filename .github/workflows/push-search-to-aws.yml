@@ -1,0 +1,83 @@
+# This workflow will build and push a new container image to Amazon ECR
+#
+# To use this workflow, you will need to complete the following set-up steps:
+#
+# 1. Create an ECR repository to store your images.
+#    For example: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-2`.
+#    Replace the value of `ECR_REPOSITORY` in the workflow below with your repository's name.
+#    Replace the value of `aws-region` in the workflow below with your repository's region.
+#
+# 2. Store an IAM user access key in GitHub Actions secrets named `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+#    See the documentation for each action used below for the recommended IAM policies for this IAM user,
+#    and best practices on handling the access key credentials.
+
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "search/**"
+
+name: Push Search to Amazon ECR
+
+jobs:
+  push:
+    name: Push image
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Resolve bump label
+      id: bump
+      uses: zwaldowski/match-label-action@v1
+      with:
+        allowed: major,minor,patch
+    - name: Bump version
+      uses: zwaldowski/semver-release-action@v1
+      with:
+        bump: ${{ steps.bump.outputs.match }}
+        profix: search_v
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Save new version
+      run: |-
+        cd search
+        sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
+        
+    - name: Setup DVC
+      uses: iterative/setup-dvc@v1
+      
+    - name: Save GDrive credentials
+      run: echo "${{ secrets.GDRIVE_USER_CREDENTIALS }}" > ./.dvc/tmp/gdrive-user-credentials.json
+      
+    - name: Pull search data
+      run: |-
+        dvc pull ./search/data
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-central-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: asqa-search
+        IMAGE_TAG: ${{ steps.next_version.outputs.version }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./search
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
