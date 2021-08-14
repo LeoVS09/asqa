@@ -9,7 +9,6 @@ from .api import router, graphql_router
 logging.info(f'App version: {settings["APP_VERSION"]}')
 
 app = FastAPI(port=settings['SERVER_PORT'])
-
 logging.info(f'Run server at port {settings["SERVER_PORT"]}')
 
 app.include_router(router)
