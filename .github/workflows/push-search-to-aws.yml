@@ -23,7 +23,7 @@ name: Push Search to Amazon ECR
 
 jobs:
   push:
-    name: Push image
+    name: Push Search image
     runs-on: ubuntu-latest
     environment: production
 
