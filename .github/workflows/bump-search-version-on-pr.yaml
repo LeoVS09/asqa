@@ -21,7 +21,7 @@ jobs:
       with:
         allowed: major,minor,patch
     - name: Bump version
-      uses: zwaldowski/semver-release-action@v1
+      uses: zwaldowski/semver-release-action@v2
       with:
         bump: ${{ steps.bump.outputs.match }}
         prefix: search_v
