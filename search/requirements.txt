@@ -8,3 +8,4 @@ uvicorn==0.14.0
 uvicorn[standard]
 ariadne==0.13.0
 dynaconf==3.1.4
+pymongo==3.12.0

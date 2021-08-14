@@ -52,6 +52,9 @@ telegram:
 telegram-console:
 	docker-compose run --service-ports telegram_integration bash
 
+dump-mongo:
+	docker exec asqa_mongo_1 sh -c 'exec mongodump -d search-passages -u root -p example --authenticationDatabase admin --gzip --archive > /archive/search-passages.archive.gzip'
+
 chmod:
 	chmod -R 777 .
 
@@ -70,10 +73,10 @@ start:
 
 # read .env $ set -o allexport; source .env; set +o allexport
 
-export AWS_REGION = 'eu-central-1'
-export AWS_ACCOUNT_ID = '449682673987'
+export AWS_REGION = eu-central-1
+export AWS_ACCOUNT_ID = 449682673987
 
-export SEARCH_VERSION = 0.1.1
+export SEARCH_VERSION = 0.2.0
 export ANSWER_VERSION = 0.1.0
 export CORE_VERSION = 0.1.1
 export TELEGRAM_INTEGRATION_VERSION = 0.1.0
