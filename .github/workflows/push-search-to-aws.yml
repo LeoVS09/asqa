@@ -35,7 +35,10 @@ jobs:
       uses: iterative/setup-dvc@v1
       
     - name: Save GDrive credentials
-      run: echo "${{ secrets.GDRIVE_USER_CREDENTIALS }}" > ./.dvc/tmp/gdrive-user-credentials.json
+      run: |-
+        cd .dvc
+        mkdir -p tmp
+        echo "${{ secrets.GDRIVE_USER_CREDENTIALS }}" > ./tmp/gdrive-user-credentials.json
       
     - name: Pull search data
       run: |-
