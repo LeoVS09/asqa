@@ -22,11 +22,11 @@ jobs:
       uses: zwaldowski/match-label-action@v1
       with:
         allowed: major,minor,patch
-    - name: Set version variables
+    - name: Read version from settings.yaml and set version variables
       run: |
         VER=$(grep VERSION search/settings.yaml | cut -d '"' -f 2)
         echo "VERSION=$VER" >> $GITHUB_ENV
-    - name: Bump version
+    - name: Generate new version
       id: next_version
       uses: zwaldowski/semver-release-action@v2
       with:
@@ -36,11 +36,17 @@ jobs:
         dry_run: true
       env:
         VERSION: ${{ env.VERSION }}
-    - name: Save new version
+    
+    - name: Save new version in image settings.yaml
       run: |-
         cd search
         sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
-    - name: Push changes
+    - name: Generate production yaml with new version from template
+      run: |-
+        cd manifests
+        sed -i -E 's/%VERSION%/${{ steps.next_version.outputs.version }}/g' templates/search.yaml > production/search.yaml
+    
+    - name: Commit and push changes
       uses: EndBug/add-and-commit@v7
       with: 
         default_author: github_actions
