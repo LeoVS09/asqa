@@ -76,7 +76,7 @@ start:
 export AWS_REGION = eu-central-1
 export AWS_ACCOUNT_ID = 449682673987
 
-export SEARCH_VERSION = 0.2.0
+export SEARCH_DATA_VERSION = 0.3.0-data
 export ANSWER_VERSION = 0.1.0
 export CORE_VERSION = 0.1.1
 export TELEGRAM_INTEGRATION_VERSION = 0.1.0
@@ -90,12 +90,12 @@ add-aws-ecr-to-k8s:
 		--from-file=.dockerconfigjson=/home/leovs09/.docker/config.json \
 		--type=kubernetes.io/dockerconfigjson
 
-build-search:
-	docker build -t asqa-search:${SEARCH_VERSION} ./search
+build-search-data:
+	docker build -t asqa-search:${SEARCH_DATA_VERSION} -f ./search/Dockerfile.data ./search
 
-deploy-search:
-	docker tag asqa-search:${SEARCH_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_VERSION}
-	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_VERSION}
+deploy-search-data:
+	docker tag asqa-search:${SEARCH_DATA_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_DATA_VERSION}
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_DATA_VERSION}
 
 build-answer:
 	docker build -t asqa-answer:${ANSWER_VERSION} ./answer

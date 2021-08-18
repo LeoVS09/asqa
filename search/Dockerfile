@@ -5,15 +5,21 @@ RUN apt update && apt upgrade -y && \
 
 WORKDIR /app 
 
-FROM base as second
+FROM base as data
+
+COPY --from=449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.3.0-data /app/data /app/data
+
+FROM data as dependencies
 
 COPY requirements.txt /app/
 
 RUN pip3 install -r requirements.txt
 
-FROM second
+FROM dependencies
 
-COPY . /app
+COPY config.* schema.* settings.* Makefile /app/
+
+COPY ./src /app/src
 
 CMD [ "make", "start" ]
 
