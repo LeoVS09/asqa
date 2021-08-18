@@ -1,4 +1,6 @@
 [core]
-    remote = gdrive
+    remote = aws
 ['remote "gdrive"']
     url = gdrive://1k6FtxqSe_5_rOfY_VbyIcmkekSe0Pxvn/asqa
+['remote "aws"']
+    url = s3://asqa-dvc-store/base/
