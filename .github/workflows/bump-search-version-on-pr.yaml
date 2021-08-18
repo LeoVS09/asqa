@@ -44,7 +44,7 @@ jobs:
     - name: Generate production yaml with new version from template
       run: |-
         cd manifests
-        sed -i -E 's/%VERSION%/${{ steps.next_version.outputs.version }}/g' templates/search.yaml > production/search.yaml
+        sed -E 's/%VERSION%/${{ steps.next_version.outputs.version }}/g' templates/search.yaml > production/search.yaml
     
     - name: Commit and push changes
       uses: EndBug/add-and-commit@v7
