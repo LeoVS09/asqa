@@ -1,4 +1,4 @@
-name: Bump search version
+name: Bump search service version
 on:
   pull_request:
     branches:
@@ -28,14 +28,11 @@ jobs:
         echo "VERSION=$VER" >> $GITHUB_ENV
     - name: Generate new version
       id: next_version
-      uses: zwaldowski/semver-release-action@v2
+      uses: leovs09/semver-release-action@v1
       with:
+        version: ${{ env.VERSION }}
         bump: ${{ steps.bump.outputs.match }}
-        prefix: search_v
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        dry_run: true
-      env:
-        VERSION: ${{ env.VERSION }}
     
     - name: Save new version in image settings.yaml
       run: |-
