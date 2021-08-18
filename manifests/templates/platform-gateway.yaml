@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-gateway
+  labels:
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: platform-gateway
+    app.kubernetes.io/version: "latest"
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: asqa
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: platform-gateway
+      tier: backend
+      solution: asqa
+  template:
+    metadata:
+      labels:
+        app: platform-gateway
+        tier: backend
+        solution: asqa
+    spec:
+      containers:
+      - image: graphql/gateway:latest
+        name: asqa-platform-gateway
+        
+        resources:
+          requests:
+            cpu: 1
+            memory: 256M
+          limits:
+            cpu: 1
+            memory: 1G
+          
+        ports:
+        - name: main-port
+          containerPort: 80
+        
+        env:
+        - name: GRAPHQL_URL_0
+          value: 'http://answer/graphql'
+        - name: GRAPHQL_URL_1
+          value: 'http://search/graphql'
+        - name: GRAPHQL_UPDATE_GATEWAY
+          value: 'false'
+        
+        
+        livenessProbe:
+          httpGet:
+            path: /.well-known/apollo/server-health
+            port: main-port
+      
+        readinessProbe:
+          httpGet:
+            path: /.well-known/apollo/server-health
+            port: main-port
+
+        startupProbe:
+          httpGet:
+            path: /.well-known/apollo/server-health
+            port: main-port
+          failureThreshold: 10
+          periodSeconds: 3 # 10 * 3 = 30s for start
+---      
+apiVersion: v1
+kind: Service
+metadata:
+  name: platform-gateway
+  labels:
+    app: platform-gateway
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: platform-gateway
+    app.kubernetes.io/version: "latest"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: asqa
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: platform-gateway
+    tier: backend
+    solution: asqa
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: platform-gateway
+  labels:
+    app: platform-gateway
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: platform-gateway
+    app.kubernetes.io/version: "latest"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: asqa
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /graphql
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: platform-gateway.k8s.local
+    http:
+      paths:
+      - path: /graphql
+        pathType: Prefix
+        backend:
+          service:
+            name: platform-gateway
+            port:
+              number: 80
