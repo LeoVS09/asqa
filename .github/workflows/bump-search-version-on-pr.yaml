@@ -28,7 +28,7 @@ jobs:
         echo "VERSION=$VER" >> $GITHUB_ENV
     - name: Generate new version
       id: next_version
-      uses: leovs09/semver-release-action@v2
+      uses: leovs09/semver-release-action@v3
       with:
         version: ${{ env.VERSION }}
         bump: ${{ steps.bump.outputs.match }}
