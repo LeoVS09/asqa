@@ -25,12 +25,12 @@ jobs:
     - name: Read version from settings.yaml and set version variables
       run: |
         VER=$(grep VERSION search/settings.yaml | cut -d '"' -f 2)
-        echo "VERSION=$VER" >> $GITHUB_ENV
+        echo "CURRENT_VERSION=$VER" >> $GITHUB_ENV
     - name: Generate new version
       id: next_version
       uses: leovs09/semver-release-action@v1
       with:
-        version: ${{ env.VERSION }}
+        version: ${{ env.CURRENT_VERSION }}
         bump: ${{ steps.bump.outputs.match }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
     
