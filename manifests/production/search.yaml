@@ -6,7 +6,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: search
-    app.kubernetes.io/version: "0.3.0"
+    app.kubernetes.io/version: "0.3.1"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -25,7 +25,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.3.0
+      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.3.1
         name: asqa-search
         imagePullPolicy: IfNotPresent
 
@@ -46,6 +46,8 @@ spec:
           value: '80'
         - name: GRAPHQL_DEBUG
           value: 'false'
+        - name: MONGODB_URL
+          value: mongodb://root:mongodb-asqa-password@mongodb:27017/
         
         livenessProbe:
           httpGet:
@@ -75,7 +77,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: search
-    app.kubernetes.io/version: "0.3.0"
+    app.kubernetes.io/version: "0.3.1"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
