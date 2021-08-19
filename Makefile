@@ -52,9 +52,6 @@ telegram:
 telegram-console:
 	docker-compose run --service-ports telegram_integration bash
 
-dump-mongo:
-	docker exec asqa_mongo_1 sh -c 'exec mongodump -d search-passages -u root -p example --authenticationDatabase admin --gzip --archive > /archive/search-passages.archive.gzip'
-
 chmod:
 	chmod -R 777 .
 
