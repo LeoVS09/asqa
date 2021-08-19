@@ -64,7 +64,7 @@ spec:
             path: /graphql
             port: main-port
           failureThreshold: 30
-          periodSeconds: 10 # 30 * 10 = 300s = 5m for start
+          periodSeconds: 20 # 30 * 20 = 600s = 10m for start
       imagePullSecrets:
       - name: regcred # aws
 ---      
