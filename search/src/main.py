@@ -2,7 +2,11 @@ from fastapi import FastAPI
 from config import settings
 import logging
 
-logging.basicConfig(level=logging.INFO)
+
+if settings['DEBUG_LOG']:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 from .api import router, graphql_router
 

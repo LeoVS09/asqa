@@ -5,6 +5,25 @@ DATABASE_NAME = 'search-passages'
 COLLECTION_NAME = 'passages'
 INDEX_KEY = 'wiki_snippets-wiki_40b_en_100-train-full'
 
+def map_items(items, I):
+    items_map = {}
+
+    for item in items:
+        items_map[item['index_id']] = item
+
+    results_map = []
+    for ids in I:
+        results_list = []
+        for index_id in ids:
+            
+            item = items_map.get(index_id)
+            if item is not None:
+                results_list.append(item)
+        
+        results_map.append(results_list)
+
+    return results_map
+
 class PassagesDatabaseMongoAdapter:
 
     def __init__(self, mongodb_url):
@@ -14,13 +33,20 @@ class PassagesDatabaseMongoAdapter:
         self.db = self.client[DATABASE_NAME]
         self.collection = self.db[COLLECTION_NAME]
 
-        logging.info('Creating index for topic...')
-        index = self.collection.create_index('index_key')
-        logging.info(f'Created index for topic {INDEX_KEY}: {index}')
+        self.create_index('index_key')
+        self.create_index([
+            ("index_key", pymongo.ASCENDING),
+            ("index_id", pymongo.ASCENDING)
+        ])
         
         logging.info('Start initial topic count computation...')
         self.num_rows = self._get_num_rows()
         logging.info(f'Count of rows in index: {self.num_rows}')
+
+    def create_index(self, index):
+        logging.info('Creating index for topic...')
+        result = self.collection.create_index(index, background=True)
+        logging.info(f'Created index {result}')
 
     def _get_num_rows(self):
         result = self.collection.aggregate( [
@@ -32,21 +58,14 @@ class PassagesDatabaseMongoAdapter:
         return result[0]['count']
 
     def get_batch(self, I):
-        self.collection.find_one({"index_key": INDEX_KEY})
         index_list = [[int(i) for i in i_lst] for i_lst in I]
-        index_list = flatten(t)
+        index_list = flatten(index_list)
 
-        items = self.collection.find_one({"index_key": INDEX_KEY, 'index_id': { '$in': index_list}})
+        logging.debug('Execute find query to mongo...')
+        items = list(self.collection.find({"index_key": INDEX_KEY, 'index_id': { '$in': index_list}}))
 
-        results_map = []
-        item_i = 0
-        for list in I:
-            results_list = []
-            for i in range(len(list)):
-                results_list.append(list[item_i])
-                item_i += 1
-            
-            results_map.append(results_list)
+        logging.debug('Calculate results passsage map...')
+        results_map = map_items(items, I)
 
         return results_map
 
