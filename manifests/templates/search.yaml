@@ -46,6 +46,8 @@ spec:
           value: '80'
         - name: GRAPHQL_DEBUG
           value: 'false'
+        - name: MONGODB_URL
+          value: mongodb://root:mongodb-asqa-password@mongodb:27017/
         
         livenessProbe:
           httpGet:

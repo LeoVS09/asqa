@@ -86,3 +86,25 @@ kubectl run kafka-producer-2 -ti --image=quay.io/strimzi/kafka:0.24.0-kafka-2.8.
 # use this command for receive topics
 kubectl run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.24.0-kafka-2.8.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server kafka-kafka-bootstrap:9092 --topic message.to.user.v1 --from-beginning
 ```
+
+### Backup and restore mongodb
+
+For backup local mongodb and restore in cloud kubernetes 
+need archive local mongo from docker-compose
+
+```bash
+docker exec asqa_mongo_1 sh -c 'exec mongodump -d search-passages -u root -p example --authenticationDatabase admin --gzip --archive > /archive/search-passages.archive.gzip'
+```
+
+then need [install mongorestore](https://docs.mongodb.com/database-tools/installation/installation/) 
+and port-forward to mongodb container
+
+```bash
+kubectl port-forward mongodb-<pod-id> 27017:27017
+```
+
+Restore database from local files
+
+```bash
+mongorestore --uri="mongodb://root:mongodb-asqa-password@localhost:27017/?authSource=admin" --db=search-passages --gzip --archive="./mongo-data/archive/search-passages.archive.gzip"
+```

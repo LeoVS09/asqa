@@ -21,17 +21,17 @@ class IndexSearch:
         self.index = None
 
         if compress:
-            raise Error('Not implemented')
+            raise Exception('Not implemented')
         else:
             self.index = faiss.IndexFlatIP(batch_size)
 
         if not self.index.is_trained:
             logging.info('Perform training on index...')
-            raise Error('Index require training')
+            raise Exception('Index require training')
 
         self.index.add(passages_reps)
    
-        logging.info(f'N total of index is {index.ntota}')
+        logging.info(f'N total of index is {self.index.ntota}')
 
     def search(self, *args, **kwargs):
         return self.index.search(*args, **kwargs)
