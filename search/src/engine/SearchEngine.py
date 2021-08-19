@@ -1,3 +1,4 @@
+import logging
 
 class SearchEngine:
     def __init__(self, model, passages, index):
@@ -18,12 +19,16 @@ class SearchEngine:
             @param passages_count - Number of passages to return per each question
         """
         # Embed questtion in representation which can be searched in index
+        logging.debug('Embed questions...')
         questions_embeding = self.model.embed_questions(questions)
         # Find batch passages of texts related to questions      
+        logging.debug('Search in index...')
         D, I = self.index.search(questions_embeding, passages_count)
         # Extract texts from passages database
+        logging.debug('Retrive passages...')
         passages = self.passages.get_batch(I)
         # add seacr score to passage index
+        logging.debug('Add score to passages...')
         results = self.add_scores_to_passages(passages, D)
 
         return results

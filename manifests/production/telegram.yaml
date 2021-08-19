@@ -74,7 +74,7 @@ spec:
           failureThreshold: 30
           periodSeconds: 10 # 30 * 10 = 300s = 5m for start
       imagePullSecrets:
-      - name: regcred # aws
+      - name: eu-central-1-ecr-registry # aws
 ---      
 apiVersion: v1
 kind: Service
