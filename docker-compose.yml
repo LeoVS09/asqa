@@ -65,7 +65,6 @@ services:
       environment:
          - SERVER_PORT=8894
          - MONGODB_URL=mongodb://root:example@mongo:27017/
-         - COMPRESS_INDEX=true
       depends_on: 
          - mongo
       links:

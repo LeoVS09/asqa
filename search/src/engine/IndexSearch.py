@@ -31,7 +31,7 @@ class IndexSearch:
 
         self.index.add(passages_reps)
    
-        logging.info(f'N total of index is {self.index.ntota}')
+        logging.info(f'N total of index is {self.index.ntotal}')
 
     def search(self, *args, **kwargs):
         return self.index.search(*args, **kwargs)
