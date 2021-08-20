@@ -53,23 +53,23 @@ spec:
         - name: TELEGRAM_BOT_API_KEY
           valueFrom:
             secretKeyRef:
-              name: telgram-bot-api-key
+              name: telegram-bot-api-key
               key: token
-          # Create using kubectl create secret generic telgram-bot-api-key --from-file=token=./telegram-token.txt
+          # Create using kubectl create secret generic telegram-bot-api-key --from-file=token=./telegram-token.txt
         
         livenessProbe:
           httpGet:
-            path: /
+            path: /is-ready
             port: main-port
       
         readinessProbe:
           httpGet:
-            path: /
+            path: /is-ready
             port: main-port
 
         startupProbe:
           httpGet:
-            path: /
+            path: /is-ready
             port: main-port
           failureThreshold: 30
           periodSeconds: 10 # 30 * 10 = 300s = 5m for start

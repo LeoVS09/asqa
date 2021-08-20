@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Answer, Passages, PlatformApiService, TextTypes } from '../interfaces';
-import { PlatformGraphqlClientService } from './platform-graphql-client.service';
-import { TextGenerationPlacholderService } from './text-generation-placholder.service';
+import { Answer, Passages, PlatformApiService, TextTypes } from '../../bot/interfaces';
+import { PlatformGraphqlClientService } from '../clients';
+import { TextGenerationPlaceholderService } from '../text-generation-placeholder';
 import { answerGql, searchPassagesGql } from './queries';
 import { SearchPassages, SearchPassagesVariables } from './__generated__/SearchPassages';
 import { Answer as AnswerGql, AnswerVariables } from './__generated__/Answer';
@@ -10,7 +10,7 @@ import { Answer as AnswerGql, AnswerVariables } from './__generated__/Answer';
 export class PlatformApiAdapterService implements PlatformApiService {
 
     constructor(
-        private readonly textGenerationService: TextGenerationPlacholderService,
+        private readonly textGenerationService: TextGenerationPlaceholderService,
         private readonly client: PlatformGraphqlClientService
     ) {}
 

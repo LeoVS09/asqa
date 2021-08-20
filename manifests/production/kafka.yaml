@@ -51,7 +51,7 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: messge.from.user.v1
+  name: message.from.user.v1
   labels:
     strimzi.io/cluster: "kafka"
     solution: asqa
@@ -69,3 +69,72 @@ metadata:
 spec:
   partitions: 1 # telegram integration not support scaling
   replicas: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui
+  labels:
+    tier: frontend
+    solution: infrustructure
+    app.kubernetes.io/name: kafka-ui
+    app.kubernetes.io/version: latest
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: asqinfrustructurea
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: kafka-ui
+      tier: frontend
+      solution: infrustructure
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+        tier: frontend
+        solution: infrustructure
+    spec:
+      containers:
+      - image: obsidiandynamics/kafdrop:latest
+        name: kafdrop
+        imagePullPolicy: IfNotPresent
+
+        resources:
+          requests:
+            cpu: 1
+            memory: 512M
+          limits:
+            cpu: 1
+            memory: 1G
+          
+        ports:
+        - name: main-port
+          containerPort: 9000
+        
+        env:
+        - name: KAFKA_BROKERCONNECT
+          value: 'kafka-kafka-bootstrap:9092'
+        
+---      
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+    tier: frontend
+    solution: infrustructure
+    app.kubernetes.io/name: kafka-ui
+    app.kubernetes.io/version: latest
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: infrustructure
+spec:
+  ports:
+  - port: 9000
+    targetPort: 9000
+  selector:
+    app: kafka-ui
+    tier: frontend
+    solution: infrustructure

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TextGenerationPlacholderService } from './text-generation-placholder.service';
+import { TextGenerationPlaceholderService } from './text-generation-placeholder.service';
 
 describe('TextGenerationPlacholderService', () => {
-  let service: TextGenerationPlacholderService;
+  let service: TextGenerationPlaceholderService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TextGenerationPlacholderService],
+      providers: [TextGenerationPlaceholderService],
     }).compile();
 
-    service = module.get<TextGenerationPlacholderService>(TextGenerationPlacholderService);
+    service = module.get<TextGenerationPlaceholderService>(TextGenerationPlaceholderService);
   });
 
   it('should be defined', () => {
