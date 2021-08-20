@@ -20,7 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "gql:download-schema": "apollo client:download-schema --endpoint='http://platform-gateway/graphql' platform.graphql",
-    "gql:gen-types": "apollo client:codegen --localSchemaFile=platform.graphql --globalTypesFile=./src/bot/platform-api-adapter/api.global.ts --target=typescript"
+    "gql:gen-types": "apollo client:codegen --localSchemaFile=platform.graphql --globalTypesFile=./src/platform-api-adapter/api.global.ts --target=typescript"
   },
   "dependencies": {
     "@apollo/client": "^3.4.5",

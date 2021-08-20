@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
+import { PlatformApiAdapterService } from '../../platform-api-adapter';
 
 @Injectable()
 export class AnswererService {

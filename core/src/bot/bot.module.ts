@@ -2,15 +2,16 @@ import { Module } from '@nestjs/common';
 import { AnswererService } from './answerer/answerer.service';
 import { SlowAnswerService } from './slow-answer/slow-answer.service';
 import { BotService } from './bot/bot.service';
-import { PlatformApiAdapterService } from './platform-api-adapter/platform-api-adapter.service';
 import { MessagesEventAdapterService } from './messages-event-adapter/messages-event-adapter.service';
 import { BotController } from './controller/bot.controller';
-import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { TextGenerationPlacholderService } from './platform-api-adapter/text-generation-placholder.service';
-import { PlatformGraphqlClientService } from './platform-api-adapter/platform-graphql-client.service';
+import { PlatformApiAdapterModule } from 'src/platform-api-adapter/platform-api-adapter.module';
 
 @Module({
+  imports: [
+    PlatformApiAdapterModule
+  ],
   providers: [
     { 
       provide: 'KAFKA_CLIENT', 
@@ -34,10 +35,7 @@ import { PlatformGraphqlClientService } from './platform-api-adapter/platform-gr
     AnswererService,
     SlowAnswerService, 
     BotService, 
-    PlatformApiAdapterService, 
     MessagesEventAdapterService,
-    TextGenerationPlacholderService,
-    PlatformGraphqlClientService,
   ],
   controllers: [BotController]
 })

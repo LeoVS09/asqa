@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IEventMeta, TextTypes } from '../interfaces';
 import { MessagesEventAdapterService } from '../messages-event-adapter/messages-event-adapter.service';
-import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
+import { PlatformApiAdapterService } from '../../platform-api-adapter';
 
 // Time when answer generation took too long, and need do something for let user know we working
 const SLOW_ANSWER_CASES = [

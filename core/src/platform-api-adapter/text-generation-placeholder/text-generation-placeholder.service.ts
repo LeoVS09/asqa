@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TextTypes } from '../interfaces';
+import { TextTypes } from '../../bot/interfaces';
 
 const textGenerationMap: {[type: string]: Array<string>} = {
     [TextTypes.EXCUSE_ERROR]: ['Sorry, something went wrong :(', 'Eh, I\'m feels bad :(', 'Oh, something broken in me :('],
@@ -12,7 +12,7 @@ const textGenerationMap: {[type: string]: Array<string>} = {
  * until we not add real DNN service for it
  */
 @Injectable()
-export class TextGenerationPlacholderService {
+export class TextGenerationPlaceholderService {
 
     async generateText(type: TextTypes): Promise<string> {
 

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AnswererService } from '../answerer/answerer.service';
 import { IEventMeta, TextTypes } from '../interfaces';
 import { MessagesEventAdapterService } from '../messages-event-adapter/messages-event-adapter.service';
-import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
+import { PlatformApiAdapterService } from '../../platform-api-adapter';
 import { SlowAnswerService } from '../slow-answer/slow-answer.service';
 
 @Injectable()
