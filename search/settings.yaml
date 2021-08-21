@@ -3,5 +3,4 @@ SERVER_PORT: 8894
 GRAPHQL_DEBUG: true
 APP_VERSION: "0.3.3"
 MONGODB_URL: "mongodb://root:example@mongo:27017/"
-COMPRESS_INDEX: false
 DEBUG_LOG: false

@@ -16,7 +16,7 @@ def read_model(filename):
 
 ARCHIVE_FOLDER = './data'
 PASSAGES_FILENAME = f'{ARCHIVE_FOLDER}/passages'
-INDEX_FILENAME = f'{ARCHIVE_FOLDER}/index'
+INDEX_FILENAME = f'{ARCHIVE_FOLDER}/ivf_wiki40b_num_17553713_vector_128_high_compress.index'
 TOKENIZER_FILENAME = f'{ARCHIVE_FOLDER}/tokenizer'
 MODEL_FILENAME = f'{ARCHIVE_FOLDER}/model'
 
