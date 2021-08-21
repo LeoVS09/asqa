@@ -6,10 +6,6 @@ import logging
 class IndexSearch:
 
     def __init__(self, filename = INDEX_FILENAME):
-        """
-        @param compress - Use compression to decrease size of used RAM, can decrease search results
-        
-        """
         logging.info(f'Reading index from {filename}')
         self.index = faiss.read_index(filename)
 
