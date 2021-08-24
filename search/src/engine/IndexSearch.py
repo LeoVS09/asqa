@@ -1,37 +1,16 @@
-import faiss
-import numpy as np
-from .read_models import INDEX_FILENAME
+import scann
 import logging
+from config import settings
+
+filename = settings['INDEX_FILENAME']
+nprobe = settings['INDEX_NPROBE']
 
 class IndexSearch:
 
-    # wiki40b_passages_reps_32_l-8_h-768_b-512-512.dat
-    def __init__(self, num_rows, filename = INDEX_FILENAME, batch_size = 128, compress = False):
-        """
-        @param compress - Use compression to decrease size of used RAM, can decrease search results
-        
-        """
+    def __init__(self):
         logging.info(f'Reading index from {filename}')
-        passages_reps = np.memmap(
-            filename,
-            dtype='float32', mode='r',
-            shape=(num_rows, batch_size)
-        )
+        self.index = scann.scann_ops_pybind.load_searcher(filename)
 
-        self.index = None
-
-        if compress:
-            raise Exception('Not implemented')
-        else:
-            self.index = faiss.IndexFlatIP(batch_size)
-
-        if not self.index.is_trained:
-            logging.info('Perform training on index...')
-            raise Exception('Index require training')
-
-        self.index.add(passages_reps)
-   
-        logging.info(f'N total of index is {self.index.ntotal}')
-
-    def search(self, *args, **kwargs):
-        return self.index.search(*args, **kwargs)
+    def search(self, questions_embeding, passages_count_to_search):
+        neighbors, distances = self.index.search_batched(questions_embeding, final_num_neighbors = passages_count_to_search)
+        return distances, neighbors

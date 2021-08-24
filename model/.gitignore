@@ -5,3 +5,4 @@ models/
 tokenaizers/
 search_data
 *.tar.gz
+indexes/

@@ -38,17 +38,13 @@ class PassagesDatabaseMongoAdapter:
             ("index_key", pymongo.ASCENDING),
             ("index_id", pymongo.ASCENDING)
         ])
-        
-        logging.info('Start initial topic count computation...')
-        self.num_rows = self._get_num_rows()
-        logging.info(f'Count of rows in index: {self.num_rows}')
 
     def create_index(self, index):
         logging.info('Creating index for topic...')
         result = self.collection.create_index(index, background=True)
         logging.info(f'Created index {result}')
 
-    def _get_num_rows(self):
+    def get_num_rows(self):
         result = self.collection.aggregate( [
             { "$match": {"index_key": INDEX_KEY} },
             { "$group": { "_id": None, "count": { "$sum": 1 } } }
