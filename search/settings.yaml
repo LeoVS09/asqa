@@ -10,5 +10,3 @@ TOKENIZER_FILENAME: './data/tokenizer'
 MODEL_FILENAME: './data/model'
 # Hyperparams
 INDEX_NPROBE: 0 # 262144 # if zero not will be used
-REINDEX_SIZE: 0 # if 0 then not will use reindex
-MEANINGULL_SIZE: 100
