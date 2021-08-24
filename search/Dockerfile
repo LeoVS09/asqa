@@ -1,4 +1,4 @@
-FROM 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.4.0-data as base
+FROM 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.5.0-data as base
 
 RUN apt update && apt upgrade -y && \
    apt install -y bash bash-completion make curl wget git

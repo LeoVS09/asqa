@@ -1,19 +1,16 @@
-import faiss
-import numpy as np
-from .read_models import INDEX_FILENAME
+import scann
 import logging
+from config import settings
+
+filename = settings['INDEX_FILENAME']
+nprobe = settings['INDEX_NPROBE']
 
 class IndexSearch:
 
-    def __init__(self, filename = INDEX_FILENAME):
+    def __init__(self):
         logging.info(f'Reading index from {filename}')
-        self.index = faiss.read_index(filename)
+        self.index = scann.scann_ops_pybind.load_searcher(filename)
 
-        if not self.index.is_trained:
-            logging.info('Perform training on index...')
-            raise Exception('Index require training')
-   
-        logging.info(f'N total of index is {self.index.ntotal}')
-
-    def search(self, *args, **kwargs):
-        return self.index.search(*args, **kwargs)
+    def search(self, questions_embeding, passages_count_to_search):
+        neighbors, distances = self.index.search_batched(questions_embeding, final_num_neighbors = passages_count_to_search)
+        return distances, neighbors

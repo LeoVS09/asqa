@@ -73,7 +73,7 @@ start:
 export AWS_REGION = eu-central-1
 export AWS_ACCOUNT_ID = 449682673987
 
-export SEARCH_DATA_VERSION = 0.4.0-data
+export SEARCH_DATA_VERSION = 0.5.0-data
 export ANSWER_VERSION = 0.1.0
 export CORE_VERSION = 0.1.2
 export TELEGRAM_INTEGRATION_VERSION = 0.1.0

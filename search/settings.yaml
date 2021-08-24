@@ -3,4 +3,12 @@ SERVER_PORT: 8894
 GRAPHQL_DEBUG: true
 APP_VERSION: "0.3.3"
 MONGODB_URL: "mongodb://root:example@mongo:27017/"
-DEBUG_LOG: false
+DEBUG_LOG: true
+PASSAGES_FILENAME: './data/passages'
+INDEX_FILENAME: './data/scann262144x1_wiki40b_num_17553713_brute_force.index'
+TOKENIZER_FILENAME: './data/tokenizer'
+MODEL_FILENAME: './data/model'
+# Hyperparams
+INDEX_NPROBE: 0 # 262144 # if zero not will be used
+REINDEX_SIZE: 0 # if 0 then not will use reindex
+MEANINGULL_SIZE: 100

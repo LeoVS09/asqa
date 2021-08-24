@@ -1,5 +1,6 @@
 from transformers import AutoModel, AutoTokenizer
 import logging
+from config import settings
 
 def read_tokenizer(filename):
     return AutoTokenizer.from_pretrained(
@@ -14,17 +15,11 @@ def read_model(filename):
     _ = model.eval()
     return model
 
-ARCHIVE_FOLDER = './data'
-PASSAGES_FILENAME = f'{ARCHIVE_FOLDER}/passages'
-INDEX_FILENAME = f'{ARCHIVE_FOLDER}/ivf_wiki40b_num_17553713_vector_128_high_compress.index'
-TOKENIZER_FILENAME = f'{ARCHIVE_FOLDER}/tokenizer'
-MODEL_FILENAME = f'{ARCHIVE_FOLDER}/model'
-
 def read_models():
     logging.info('Reading tokenizer...')
-    tokenizer = read_tokenizer(TOKENIZER_FILENAME)
+    tokenizer = read_tokenizer(settings['TOKENIZER_FILENAME'])
     logging.info('Reading model...')
-    model = read_model(MODEL_FILENAME)
+    model = read_model(settings['MODEL_FILENAME'])
 
     return tokenizer, model
 
