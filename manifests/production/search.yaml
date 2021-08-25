@@ -35,7 +35,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: search
-    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/version: "0.5.0"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -58,7 +58,7 @@ spec:
         persistentVolumeClaim:
           claimName: search-models-cache-claim
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.4.0
+      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:0.5.0
         name: asqa-search
         imagePullPolicy: IfNotPresent
 
@@ -138,7 +138,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: search
-    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/version: "0.5.0"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
