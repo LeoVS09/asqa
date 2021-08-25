@@ -32,10 +32,10 @@ spec:
         resources:
           requests:
             cpu: 2
-            memory: 12G
+            memory: 6G
           limits:
             cpu: 6
-            memory: 16G
+            memory: 10G
           
         ports:
         - name: main-port
@@ -48,6 +48,8 @@ spec:
           value: 'false'
         - name: MONGODB_URL
           value: mongodb://root:mongodb-asqa-password@mongodb:27017/
+        - name: DEBUG_LOG
+          value: 'false'
         
         livenessProbe:
           httpGet:
