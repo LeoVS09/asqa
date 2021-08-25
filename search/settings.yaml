@@ -4,9 +4,7 @@ GRAPHQL_DEBUG: true
 APP_VERSION: "0.4.0"
 MONGODB_URL: "mongodb://root:example@mongo:27017/"
 DEBUG_LOG: true
-PASSAGES_FILENAME: './data/passages'
-INDEX_FILENAME: './data/scann262144x1_wiki40b_num_17553713_brute_force.index'
-TOKENIZER_FILENAME: './data/tokenizer'
-MODEL_FILENAME: './data/model'
-# Hyperparams
-INDEX_NPROBE: 0 # 262144 # if zero not will be used
+CACHE_FOLDER: '/cache'
+INDEX_FILENAME: 'scann262144x1_wiki40b_num_17553713_brute_force.index'
+TOKENIZER_FILENAME: 'tokenizer'
+EMBEDER_FILENAME: 'embeder'

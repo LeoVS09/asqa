@@ -1,11 +1,25 @@
 import torch
+from transformers import AutoModel, AutoTokenizer
+
+def read_tokenizer(filename):
+    return AutoTokenizer.from_pretrained(
+        filename,
+        # solve Exception: No such file or directory (os error 2), 
+        # simular to https://github.com/VinAIResearch/PhoBERT/issues/26 
+        use_fast=False
+    )
+
+def read_embeder(filename):
+    model = AutoModel.from_pretrained(filename)
+    _ = model.eval()
+    return model
 
 class EmbedingModel:
 
-    def __init__(self, embeder, tokenizer):
+    def __init__(self, embeder_filename, tokenizer_filename):
 
-        self.embeder = embeder
-        self.tokenizer = tokenizer
+        self.embeder = read_embeder(embeder_filename)
+        self.tokenizer = read_tokenizer(tokenizer_filename)
 
     def embed_questions(self, questions, max_length = 128):
 
