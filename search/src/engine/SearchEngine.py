@@ -12,6 +12,9 @@ class SearchEngine:
         self.passages = passages
         self.index = index
 
+    def is_ready(self):
+        return True # add proper health check
+
     def search_passages(self, questions, passages_count):
         """
             Sarch multiple passages of texts for each question,

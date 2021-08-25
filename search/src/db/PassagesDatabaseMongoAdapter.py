@@ -39,6 +39,9 @@ class PassagesDatabaseMongoAdapter:
             ("index_id", pymongo.ASCENDING)
         ])
 
+    def is_ready(self):
+        return True # TODO: add proper check
+
     def create_index(self, index):
         logging.info('Creating index for topic...')
         result = self.collection.create_index(index, background=True)

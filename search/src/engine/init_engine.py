@@ -6,16 +6,13 @@ from .SearchEngine import SearchEngine
 from .EmbedingModel import EmbedingModel
 
 from .IndexSearch import IndexSearch
-from src.db.PassagesDatabaseMongoAdapter import PassagesDatabaseMongoAdapter
 
 cache_folder = settings['CACHE_FOLDER']
 index_filename = os.path.join(cache_folder, settings['INDEX_FILENAME']) 
 tokenizer_filename = os.path.join(cache_folder, settings['TOKENIZER_FILENAME'])
 embeder_filename = os.path.join(cache_folder, settings['EMBEDER_FILENAME'])
 
-def load_and_init_engine():
-
-    passages = PassagesDatabaseMongoAdapter(mongodb_url = settings['MONGODB_URL'])
+def load_and_init_engine(passages):
 
     logging.info(f'Reading index from {index_filename}')
     index = IndexSearch(index_filename)

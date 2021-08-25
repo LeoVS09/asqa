@@ -1,2 +1,2 @@
-from .rest import router
-from .graphql import graphql_router
+from .graphql import setup_graphql_router
+from .AppContext import AppContext
