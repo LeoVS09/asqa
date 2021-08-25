@@ -1,3 +1,32 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: search-models-cache-volume
+  labels:
+    type: cache
+    solution: asqa
+    app.kubernetes.io/name: search
+    app.kubernetes.io/component: data
+    app.kubernetes.io/part-of: asqa
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: search-models-cache-claim
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,6 +53,10 @@ spec:
         tier: backend
         solution: asqa
     spec:
+      volumes:
+      - name: search-models-cache-storage
+        persistentVolumeClaim:
+          claimName: search-models-cache-claim
       containers:
       - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:%VERSION%
         name: asqa-search
@@ -41,6 +74,10 @@ spec:
         - name: main-port
           containerPort: 80
         
+        volumeMounts:
+        - mountPath: "/cache"
+          name: search-models-cache-storage
+        
         env:
         - name: SERVER_PORT
           value: '80'
@@ -50,6 +87,14 @@ spec:
           value: mongodb://root:mongodb-asqa-password@mongodb:27017/
         - name: DEBUG_LOG
           value: 'false'
+        - name: CACHE_FOLDER
+          value: '/cache'
+        - name: INDEX_FILENAME
+          value: 'scann262144x1_wiki40b_num_17553713_brute_force.index'
+        - name: TOKENIZER_FILENAME
+          value: 'tokenizer'
+        - name: EMBEDER_FILENAME
+          value: 'embeder'
         
         livenessProbe:
           httpGet:
