@@ -1,9 +1,0 @@
-FROM tensorflow/tensorflow:2.5.0 as base
-
-# Build image with data for search service
-
-WORKDIR /app 
-
-COPY ./data /app/data
-
-COPY ./data.dvc /app/data.dvc

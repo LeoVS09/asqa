@@ -1,12 +1,11 @@
 # Default configuration values, real values will be set from enviroment
 SERVER_PORT: 8894
 GRAPHQL_DEBUG: true
-APP_VERSION: "0.4.0"
+IS_DEVELOPMENT: false
+APP_VERSION: "0.5.0"
 MONGODB_URL: "mongodb://root:example@mongo:27017/"
-DEBUG_LOG: true
-PASSAGES_FILENAME: './data/passages'
-INDEX_FILENAME: './data/scann262144x1_wiki40b_num_17553713_brute_force.index'
-TOKENIZER_FILENAME: './data/tokenizer'
-MODEL_FILENAME: './data/model'
-# Hyperparams
-INDEX_NPROBE: 0 # 262144 # if zero not will be used
+DEBUG_LOG: false
+CACHE_FOLDER: '/cache'
+INDEX_URL: 's3://asqa-search-models/index/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz'
+TOKENIZER_URL: 's3://asqa-search-models/tokenizer/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz'
+EMBEDER_URL: 's3://asqa-search-models/embeder/transformers-bert-embeder-auto-model-1.0.1.tar.gz'

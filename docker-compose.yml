@@ -62,9 +62,13 @@ services:
          - 8895:8895
       volumes:
          - ./search/:/app/.
+         - ./search-data/:/cache/.
       environment:
          - SERVER_PORT=8894
          - MONGODB_URL=mongodb://root:example@mongo:27017/
+         - CACHE_FOLDER=/cache
+      env_file: 
+         - ./search/.env
       depends_on: 
          - mongo
       links:

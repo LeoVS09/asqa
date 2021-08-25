@@ -73,12 +73,14 @@ start:
 export AWS_REGION = eu-central-1
 export AWS_ACCOUNT_ID = 449682673987
 
-export SEARCH_DATA_VERSION = 0.5.0-data
 export ANSWER_VERSION = 0.1.0
 export CORE_VERSION = 0.1.2
 export TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
 login-aws:
+	aws configure
+
+login-docker-to-aws:
 	aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 # after login run cat ~/.docker/config.json to see credentials
 
@@ -86,13 +88,6 @@ add-aws-ecr-to-k8s:
 	kubectl create secret generic regcred \
 		--from-file=.dockerconfigjson=/home/leovs09/.docker/config.json \
 		--type=kubernetes.io/dockerconfigjson
-
-build-search-data:
-	docker build -t asqa-search:${SEARCH_DATA_VERSION} -f ./search/Dockerfile.data ./search
-
-deploy-search-data:
-	docker tag asqa-search:${SEARCH_DATA_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_DATA_VERSION}
-	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-search:${SEARCH_DATA_VERSION}
 
 build-answer:
 	docker build -t asqa-answer:${ANSWER_VERSION} ./answer
@@ -125,3 +120,17 @@ setup-kafka-for-k8s:
 
 gpu-monitor:
 	watch -n 0.5 nvidia-smi
+
+# ---------------------------------------------------------------------------------------------------------------------
+# MODELS DATA
+# ---------------------------------------------------------------------------------------------------------------------
+
+archive-search-models:
+	tar -czvf ./search-data/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz -C ./search-data/transfromers-bert-auto-tokenaizer-1.0.1 .
+	tar -czvf ./search-data/transformers-bert-embeder-auto-model-1.0.1.tar.gz -C ./search-data/transformers-bert-embeder-auto-model-1.0.1 .
+	tar -czvf ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz -C ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1 .
+
+push-search-models:
+	aws s3 cp ./search-data/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz s3://asqa-search-models/tokenizer/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz
+	aws s3 cp ./search-data/transformers-bert-embeder-auto-model-1.0.1.tar.gz s3://asqa-search-models/embeder/transformers-bert-embeder-auto-model-1.0.1.tar.gz
+	aws s3 cp ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz s3://asqa-search-models/index/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz
