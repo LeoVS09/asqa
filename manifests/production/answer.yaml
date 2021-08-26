@@ -7,7 +7,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/version: "0.2.0"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
@@ -27,7 +27,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/version: "0.2.0"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -55,7 +55,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.1.0
+      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.2.0
         name: asqa-answer
         imagePullPolicy: IfNotPresent
 

@@ -1,7 +1,7 @@
 # Default configuration values, real values will be set from enviroment
 SERVER_PORT: 8904
 GRAPHQL_DEBUG: true
-APP_VERSION: "0.1.0"
+APP_VERSION: "0.2.0"
 IS_DEVELOPMENT: false
 DEBUG_LOG: false
 CACHE_FOLDER: '/cache'
