@@ -30,3 +30,6 @@ class SelfSetupAnswerer(Answerer):
             model = model, 
             tokenizer = TokenaizerWrapper(tokenizer)
         )
+
+    def is_ready(self):
+        return True # make real health check

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: answer-models-cache-volume
+  labels:
+    type: cache
+    solution: asqa
+    app.kubernetes.io/name: answer
+    app.kubernetes.io/component: data
+    app.kubernetes.io/part-of: asqa
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/volume/asqa/answer"
