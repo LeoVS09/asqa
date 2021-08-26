@@ -134,3 +134,11 @@ push-search-models:
 	aws s3 cp ./search-data/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz s3://asqa-search-models/tokenizer/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz
 	aws s3 cp ./search-data/transformers-bert-embeder-auto-model-1.0.1.tar.gz s3://asqa-search-models/embeder/transformers-bert-embeder-auto-model-1.0.1.tar.gz
 	aws s3 cp ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz s3://asqa-search-models/index/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz
+
+archive-answer-models:
+	tar -czvf ./answer-data/transformers-bert-auto-tokenizer-1.0.0.tar.gz -C ./answer-data/transformers-bert-auto-tokenizer-1.0.0 .
+	tar -czvf ./answer-data/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz -C ./answer-data/transformers-bert-auto-model-for-seq2seq-lm-1.0.0 .
+
+push-answer-models:
+	aws s3 cp ./answer-data/transformers-bert-auto-tokenizer-1.0.0.tar.gz s3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz
+	aws s3 cp ./answer-data/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz s3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz

@@ -1,15 +1,12 @@
 from ariadne import ObjectType
-from src.answer import load_and_init_answerer
 
 query = ObjectType("Query")
-
-answerer = load_and_init_answerer()
 
 @query.field("answer")
 def resolve_search(_, info, input):
     question = input['question']
 
-    answers = answerer.answer(
+    answers = info.context.answerer.answer(
         question = question,
         context = input['context'],
         max_input_length = input['max_input_length'],
