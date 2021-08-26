@@ -106,8 +106,12 @@ services:
          - 8905:8905
       volumes:
          - ./answer/:/app/.
+         - ./answer-data/:/cache/.
       environment:
          - SERVER_PORT=8904
+         - CACHE_FOLDER=/cache
+      env_file: 
+         - ./search/.env
 
    core:
       build:

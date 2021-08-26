@@ -131,3 +131,4 @@ dmypy.json
 telegram-token.txt
 mongo-data/
 search-data/
+answer-data/

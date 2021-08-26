@@ -1,22 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: answer
+  labels:
+    app: answer
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: answer
+    app.kubernetes.io/version: "0.2.0"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: asqa
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: answer
+    tier: backend
+    solution: asqa
+---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: answer
   labels:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/version: "0.2.0"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
   replicas: 1
   revisionHistoryLimit: 3
+  serviceName: answer
   selector:
     matchLabels:
       app: answer
       tier: backend
       solution: asqa
+  volumeClaimTemplates:
+  - metadata:
+      name: answer-models-cache-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
   template:
     metadata:
       labels:
@@ -25,7 +55,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.1.0
+      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.2.0
         name: asqa-answer
         imagePullPolicy: IfNotPresent
 
@@ -38,53 +68,58 @@ spec:
             cpu: 4
             memory: 4G
             ephemeral-storage: "6Gi"
-        
+          
         ports:
         - name: main-port
           containerPort: 80
+
+        volumeMounts:
+        - mountPath: "/cache"
+          name: answer-models-cache-storage
         
         env:
         - name: SERVER_PORT
           value: '80'
         - name: GRAPHQL_DEBUG
           value: 'false'
-        
+        - name: DEBUG_LOG
+          value: 'false'
+        # Model data
+        - name: CACHE_FOLDER
+          value: '/cache'
+        - name: TOKENIZER_URL
+          value: 's3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz'
+        - name: MODEL_URL
+          value: 's3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz'
+        # AWS creds
+        - name: AWS_DEFAULT_REGION       
+          value: eu-central-1
+        - name: AWS_SECRET_ACCESS_KEY     
+          valueFrom: 
+            secretKeyRef:
+              name: aws-creds
+              key: AWS_SECRET_ACCESS_KEY
+        - name: AWS_ACCESS_KEY_ID           
+          valueFrom: 
+            secretKeyRef:
+              name: aws-creds
+              key: AWS_ACCESS_KEY_ID
+      
         livenessProbe:
           httpGet:
-            path: /graphql
+            path: /is-live
             port: main-port
       
         readinessProbe:
           httpGet:
-            path: /graphql
+            path: /is-ready
             port: main-port
 
         startupProbe:
           httpGet:
-            path: /graphql
+            path: /is-ready
             port: main-port
           failureThreshold: 30
-          periodSeconds: 10 # 30 * 10 = 300s = 5m for start
+          periodSeconds: 40 # 30 * 40 = 1200s = 20m for start
       imagePullSecrets:
       - name: eu-central-1-ecr-registry # aws
----      
-apiVersion: v1
-kind: Service
-metadata:
-  name: answer
-  labels:
-    app: answer
-    tier: backend
-    solution: asqa
-    app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.1.0"
-    app.kubernetes.io/component: backend
-    app.kubernetes.io/part-of: asqa
-spec:
-  ports:
-  - port: 80
-    targetPort: 80
-  selector:
-    app: answer
-    tier: backend
-    solution: asqa
