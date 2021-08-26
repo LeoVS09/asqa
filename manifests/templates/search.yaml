@@ -64,9 +64,11 @@ spec:
           requests:
             cpu: 2
             memory: 10G
+            ephemeral-storage: "3Gi"
           limits:
             cpu: 6
             memory: 14G
+            ephemeral-storage: "5Gi"
           
         ports:
         - name: main-port
