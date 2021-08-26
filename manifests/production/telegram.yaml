@@ -28,6 +28,7 @@ spec:
       - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-telegram-integration:0.1.0
         name: asqa-telegram-integration
         imagePullPolicy: IfNotPresent
+        command: ['nest', 'start']
 
         resources:
           requests:

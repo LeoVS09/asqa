@@ -28,7 +28,8 @@ spec:
       - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-telegram-integration:%VERSION%
         name: asqa-telegram-integration
         imagePullPolicy: IfNotPresent
-
+        command: ['nest', 'start']
+        
         resources:
           requests:
             cpu: 1
@@ -53,7 +54,7 @@ spec:
         - name: TELEGRAM_BOT_API_KEY
           valueFrom:
             secretKeyRef:
-              name: telgram-bot-api-key
+              name: telegram-bot-api-key
               key: token
           # Create using kubectl create secret generic telgram-bot-api-key --from-file=token=./telegram-token.txt
         
