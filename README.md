@@ -108,3 +108,28 @@ Restore database from local files
 ```bash
 mongorestore --uri="mongodb://root:mongodb-asqa-password@localhost:27017/?authSource=admin" --db=search-passages --gzip --archive="./mongo-data/archive/search-passages.archive.gzip"
 ```
+
+## Known Issues
+
+### Expect container which in crash loop
+
+Add coommand to pod container, for make container stuck
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: persistent-volume
+spec:
+  containers:
+    - name: busybox
+      # Add this command
+      command: ['tail', '-f', '/dev/null']
+```
+
+then exec bash in running container
+
+```bash
+kubectl exec -it mongo-pod -- bash 
+```
+
