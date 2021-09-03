@@ -134,3 +134,5 @@ search-data/
 answer-data/
 registry-bentoml/
 postgres-data/
+minio/
+answer-bentoml/

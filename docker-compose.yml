@@ -112,30 +112,33 @@ services:
          - SERVER_PORT=8904
          - CACHE_FOLDER=/cache
          - BENTOML_HOME=/bentoml
-         - YATAI_URL=model-registry-manger:50051
+         - YATAI_URL=model-registry-manager:50051
       env_file: 
          - ./search/.env
       depends_on: 
-         - model-registry-manger
+         - model-registry-manager
       links:
-         - model-registry-manger
+         - model-registry-manager
 
-   model-registry-manger:
+   model-registry-manager:
       image: bentoml/yatai-service:0.13.1
       ports:
          - 50051:50051 # GRPC port
          - 3000:3000 # UI port
       environment:
          - BENTOML_HOME=/bentoml
+         - AWS_ACCESS_KEY_ID=minio
+         - AWS_SECRET_ACCESS_KEY=minio123
+         - AWS_DEFAULT_REGION=eu-central-1
       volumes:
          - ./registry-bentoml/:/bentoml/.
-      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --repo-base-url=s3://asqa-models/
-      env_file: 
-         - ./.env # AWS Access credentials
+      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=http://minio:9000 --repo-base-url=s3://asqa-models/
       depends_on: 
          - postgresdb
+         - minio
       links:
          - postgresdb
+         - minio
 
    postgresdb:
       image: postgres:13.4
@@ -149,6 +152,23 @@ services:
          - POSTGRES_DB=bentomldb
       volumes:
          - ./postgres-data:/var/lib/postgresql/data
+
+   minio:
+      image: quay.io/minio/minio
+      command: server /data --console-address ":9001"
+      expose:
+         - "9000"
+         - "9001"
+      environment:
+         MINIO_ROOT_USER: minio
+         MINIO_ROOT_PASSWORD: minio123
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+         interval: 30s
+         timeout: 20s
+         retries: 3
+      volumes:
+         - ./minio/data:/data
 
    postgres-ui:
       image: adminer

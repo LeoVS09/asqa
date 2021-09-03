@@ -1,7 +1,7 @@
 import torch
 
 class TokenaizerWrapper:
-    """Add basic functtionality around base tokenaise"""
+    """Add basic functtionality around base tokenizer"""
 
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
