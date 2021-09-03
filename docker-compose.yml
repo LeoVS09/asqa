@@ -107,11 +107,58 @@ services:
       volumes:
          - ./answer/:/app/.
          - ./answer-data/:/cache/.
+         - ./answer-bentoml/:/bentoml/.
       environment:
          - SERVER_PORT=8904
          - CACHE_FOLDER=/cache
+         - BENTOML_HOME=/bentoml
+         - YATAI_URL=model-registry-manger:50051
       env_file: 
          - ./search/.env
+      depends_on: 
+         - model-registry-manger
+      links:
+         - model-registry-manger
+
+   model-registry-manger:
+      image: bentoml/yatai-service:0.13.1
+      ports:
+         - 50051:50051 # GRPC port
+         - 3000:3000 # UI port
+      environment:
+         - BENTOML_HOME=/bentoml
+      volumes:
+         - ./registry-bentoml/:/bentoml/.
+      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --repo-base-url=s3://asqa-models/
+      env_file: 
+         - ./.env # AWS Access credentials
+      depends_on: 
+         - postgresdb
+      links:
+         - postgresdb
+
+   postgresdb:
+      image: postgres:13.4
+      restart: always
+      ports:
+         - 5432:5432
+      environment:
+         - POSTGRES_PASSWORD=examplepass
+         - POSTGRES_USER=postgres
+         - PGDATA=/var/lib/postgresql/data
+         - POSTGRES_DB=bentomldb
+      volumes:
+         - ./postgres-data:/var/lib/postgresql/data
+
+   postgres-ui:
+      image: adminer
+      restart: always
+      ports:
+         - 8082:8080
+      depends_on: 
+         - postgresdb
+      links:
+         - postgresdb
 
    core:
       build:
