@@ -2,6 +2,11 @@ from config import settings
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import logging
 
+if settings['DEBUG_LOG']:
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
+
 from .AnswerService import AnswerService, MODELS_ARTIFACT_NAME, MODEL_KEY, TOKENIZER_KEY
 
 TOKENIZER_FILE = settings['TOKENIZER_FILE']

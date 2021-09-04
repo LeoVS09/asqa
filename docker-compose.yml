@@ -107,9 +107,10 @@ services:
       volumes:
          - ./answer/:/app/.
          - ./answer-data/:/cache/.
-         - ./answer-bentoml/:/bentoml/.
+         - ./data/answer/bentoml/:/bentoml/.
       environment:
-         - SERVER_PORT=8904
+         - BENTOML_PORT=8904
+         - BENTOML_GUNICORN_WORKERS=1
          - CACHE_FOLDER=/cache
          - BENTOML_HOME=/bentoml
          - YATAI_URL=model-registry-manager:50051
@@ -130,8 +131,9 @@ services:
          - AWS_ACCESS_KEY_ID=minio
          - AWS_SECRET_ACCESS_KEY=minio123
          - AWS_DEFAULT_REGION=eu-central-1
+         - MODEL_NAME=AnswerService:latest
       volumes:
-         - ./registry-bentoml/:/bentoml/.
+         - ./data/registry/bentoml/:/bentoml/.
       command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=http://minio:9000 --repo-base-url=s3://asqa-models/
       depends_on: 
          - postgresdb
@@ -151,11 +153,12 @@ services:
          - PGDATA=/var/lib/postgresql/data
          - POSTGRES_DB=bentomldb
       volumes:
-         - ./postgres-data:/var/lib/postgresql/data
+         - ./data/postgres/data:/var/lib/postgresql/data
 
    minio:
       image: quay.io/minio/minio
-      command: server /data --console-address ":9001"
+      entrypoint: sh
+      command: -c 'mkdir -p /data/asqa-models && /usr/bin/minio server /data --console-address ":9001"'
       expose:
          - "9000"
          - "9001"
@@ -168,7 +171,7 @@ services:
          timeout: 20s
          retries: 3
       volumes:
-         - ./minio/data:/data
+         - ./data/minio/data:/data
 
    postgres-ui:
       image: adminer

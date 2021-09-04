@@ -13,3 +13,4 @@ boto3==1.18.29
 bentoml==0.13.1
 pytest==6.2.5
 pytest-snapshot==0.6.1
+click_completion==0.5.2

@@ -144,7 +144,7 @@ squad-distilbert.tar.gz
 
 
 # Ignore dynaconf secret files
-.secrets.*
+*.secrets.*
 
 # Model data
 data/

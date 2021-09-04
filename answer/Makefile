@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 start:
-	bentoml serve-gunicorn ${MODEL_NAME} --workers=${WORKERS_COUNT} --port=${SERVER_PORT}
+	bentoml serve-gunicorn ${MODEL_NAME} --yatai-url=${YATAI_URL}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ pack-and-push:
 	USE_YATAI=True python -m src.pack
 
 dev: pack
-	bentoml serve AnswerService:latest --port=${SERVER_PORT}
+	bentoml serve AnswerService:latest
 
 pull-latest:
 	bentoml retrieve AnswerService:latest --target_dir="/bentoml/service/latest" --yatai-url=${YATAI_URL}
@@ -39,6 +39,10 @@ save-dependencies:
 
 list-models:
 	bentoml list --yatai-url=${YATAI_URL}
+
+# Install not working in dockerfile :(
+bentoml-completion:
+	bentoml install-completion
 
 # ---------------------------------------------------------------------------------------------------------------------
 # DOCKER

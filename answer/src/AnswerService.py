@@ -1,16 +1,9 @@
-import logging
-import os
 from bentoml import env, artifacts, api, BentoService
 from bentoml.adapters import JsonInput
 from bentoml.frameworks.transformers import TransformersModelArtifact
 from bentoml.types import JsonSerializable
 
 from src.answer import Answerer
-
-if os.environ.get('DEBUG_LOG'):
-    logging.basicConfig(level=logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
 
 MODELS_ARTIFACT_NAME = 'transformersModel'
 MODEL_KEY = 'model'
