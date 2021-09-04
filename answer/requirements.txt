@@ -11,3 +11,5 @@ dynaconf==3.1.4
 fastapi-health==0.4.0
 boto3==1.18.29
 bentoml==0.13.1
+pytest==6.2.5
+pytest-snapshot==0.6.1

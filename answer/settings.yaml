@@ -1,9 +1,8 @@
 # Default configuration values, real values will be set from enviroment
-SERVER_PORT: 8904
-GRAPHQL_DEBUG: true
 APP_VERSION: "0.2.1"
 IS_DEVELOPMENT: false
 DEBUG_LOG: false
 TOKENIZER_FILE: '/cache/tokenizer/transformers-bert-auto-tokenizer-1.0.0'
 MODEL_FILE: '/cache/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0'
+USE_YATAI: false
 YATAI_URL: '127.0.0.1:50051'

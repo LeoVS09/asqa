@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 start:
-	python -m src.main
+	bentoml serve-gunicorn ${MODEL_NAME} --workers=${WORKERS_COUNT} --port=${SERVER_PORT}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -18,14 +18,17 @@ start:
 pack:
 	python -m src.pack
 
-dev:
-	bentoml serve AnswerService:latest --port=${SERVER_PORT} --yatai-url=${YATAI_URL}
+pack-and-push:
+	USE_YATAI=True python -m src.pack
+
+dev: pack
+	bentoml serve AnswerService:latest --port=${SERVER_PORT}
 
 pull-latest:
 	bentoml retrieve AnswerService:latest --target_dir="/bentoml/service/latest" --yatai-url=${YATAI_URL}
 
 get-latest:
-	bentoml get AnswerService:latest --yatai-url=${YATAI_URL} --print-location
+	bentoml get AnswerService:latest --print-location
 
 install: 
 	pip install -r requirements.txt
@@ -46,5 +49,10 @@ chmod:
 
 # --------------------------------------------------- TESTS --------------------------------------------------------------- 
 
-test: 
-	pytest
+unit-test: 
+	pytest --snapshot-update
+
+integration-test: pack
+	bentoml run AnswerService:latest predict --input-file './input.json'
+
+test: unit-test integration-test

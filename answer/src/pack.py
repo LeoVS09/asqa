@@ -6,6 +6,9 @@ from .AnswerService import AnswerService, MODELS_ARTIFACT_NAME, MODEL_KEY, TOKEN
 
 TOKENIZER_FILE = settings['TOKENIZER_FILE']
 MODEL_FILE = settings['MODEL_FILE']
+# While BentoML config not working, need allow pack locally. 
+# TODO: fix when https://github.com/bentoml/BentoML/issues/1799 will be resolved
+USE_YATAI = settings['USE_YATAI'] 
 YATAI_URL = settings['YATAI_URL']
 APP_VERSION = settings['APP_VERSION']
 
@@ -35,7 +38,13 @@ if __name__ == '__main__':
     artifact = {MODEL_KEY: model, TOKENIZER_KEY: tokenizer}
     service.pack(MODELS_ARTIFACT_NAME, artifact)
 
-    logging.info(f'Save the prediction service to Yatai registry {YATAI_URL} for model serving...')
-    saved_path = service.save(yatai_url=YATAI_URL,labels={"framework": "transformers", "version": APP_VERSION})
-
+    labels={"framework": "transformers", "version": APP_VERSION}
+    
+    if USE_YATAI:
+        logging.info(f'Save the prediction service to Yatai registry {YATAI_URL} for model serving...')
+        saved_path = service.save(yatai_url=YATAI_URL, labels=labels)
+    else:
+        logging.info(f'Save the prediction service for model serving...')
+        saved_path = service.save(labels=labels)
+    
     logging.info(f'Saved to {saved_path}')
