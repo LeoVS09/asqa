@@ -114,6 +114,7 @@ services:
          - CACHE_FOLDER=/cache
          - BENTOML_HOME=/bentoml
          - YATAI_URL=model-registry-manager:50051
+         - MODEL_NAME=AnswerService:latest
       env_file: 
          - ./search/.env
       depends_on: 
@@ -131,7 +132,6 @@ services:
          - AWS_ACCESS_KEY_ID=minio
          - AWS_SECRET_ACCESS_KEY=minio123
          - AWS_DEFAULT_REGION=eu-central-1
-         - MODEL_NAME=AnswerService:latest
       volumes:
          - ./data/registry/bentoml/:/bentoml/.
       command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=http://minio:9000 --repo-base-url=s3://asqa-models/

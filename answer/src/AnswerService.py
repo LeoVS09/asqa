@@ -16,7 +16,7 @@ http_input_example = """
 }
 """
 
-@env(pip_packages=['transformers==4.9.1', 'torch==1.9.0'])
+@env(requirements_txt_file="./production/requirements.txt")
 @artifacts([TransformersModelArtifact(MODELS_ARTIFACT_NAME)])
 class AnswerService(BentoService):
     """

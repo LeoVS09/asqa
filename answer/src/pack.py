@@ -9,6 +9,7 @@ else:
 
 from .AnswerService import AnswerService, MODELS_ARTIFACT_NAME, MODEL_KEY, TOKENIZER_KEY
 
+# TODO: use mlflow for load and save models
 TOKENIZER_FILE = settings['TOKENIZER_FILE']
 MODEL_FILE = settings['MODEL_FILE']
 # While BentoML config not working, need allow pack locally. 

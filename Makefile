@@ -73,7 +73,7 @@ start:
 export AWS_REGION = eu-central-1
 export AWS_ACCOUNT_ID = 449682673987
 
-export ANSWER_VERSION = 0.1.0
+export ANSWER_VERSION = 0.2.1
 export CORE_VERSION = 0.1.2
 export TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
@@ -88,13 +88,6 @@ add-aws-ecr-to-k8s:
 	kubectl create secret generic regcred \
 		--from-file=.dockerconfigjson=/home/leovs09/.docker/config.json \
 		--type=kubernetes.io/dockerconfigjson
-
-build-answer:
-	docker build -t asqa-answer:${ANSWER_VERSION} ./answer
-
-deploy-answer:
-	docker tag asqa-answer:${ANSWER_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-answer:${ANSWER_VERSION}
-	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-answer:${ANSWER_VERSION}
 
 build-core:
 	docker build -t asqa-core:${CORE_VERSION} ./core
@@ -142,3 +135,19 @@ archive-answer-models:
 push-answer-models:
 	aws s3 cp ./answer-data/transformers-bert-auto-tokenizer-1.0.0.tar.gz s3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz
 	aws s3 cp ./answer-data/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz s3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz
+
+# ---------------------------------------------------------------------------------------------------------------------
+# PRODUCTION MODEL SERVICE
+# ---------------------------------------------------------------------------------------------------------------------
+
+build-production-answer:
+	docker build -t answer-production:${ANSWER_VERSION} ./answer/production
+
+run-production-answer:
+	docker run -it \
+		-v ${PWD}/data/answer/production/bentoml:/home/bentoml \
+		-p 5000:5000 \
+		--network="asqa_default" \
+		-e MODEL_NAME=AnswerService:latest \
+		-e YATAI_URL=model-registry-manager:50051 \
+		answer-production:${ANSWER_VERSION}
