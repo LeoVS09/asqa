@@ -129,18 +129,18 @@ services:
          - 3000:3000 # UI port
       environment:
          - BENTOML_HOME=/bentoml
-         - AWS_ACCESS_KEY_ID=minio
-         - AWS_SECRET_ACCESS_KEY=minio123
-         - AWS_DEFAULT_REGION=eu-central-1
       volumes:
          - ./data/registry/bentoml/:/bentoml/.
-      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=http://minio:9000 --repo-base-url=s3://asqa-models/
+      # --s3-endpoint-url=http://minio:9000
+      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=https://s3.eu-central-1.wasabisys.com --repo-base-url=s3://asqa-bentoml-services/
+      env_file: 
+         ./.env
       depends_on: 
          - postgresdb
-         - minio
+         # - minio
       links:
          - postgresdb
-         - minio
+         # - minio
 
    postgresdb:
       image: postgres:13.4
