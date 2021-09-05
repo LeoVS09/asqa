@@ -70,12 +70,12 @@ start:
 
 # read .env $ set -o allexport; source .env; set +o allexport
 
-export AWS_REGION = eu-central-1
-export AWS_ACCOUNT_ID = 449682673987
+AWS_REGION = eu-central-1
+AWS_ACCOUNT_ID = 449682673987
 
-export ANSWER_VERSION = 0.2.1
-export CORE_VERSION = 0.1.2
-export TELEGRAM_INTEGRATION_VERSION = 0.1.0
+ANSWER_VERSION = 0.2.1
+CORE_VERSION = 0.1.2
+TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
 login-aws:
 	aws configure
@@ -141,7 +141,7 @@ push-answer-models:
 # ---------------------------------------------------------------------------------------------------------------------
 
 build-production-answer:
-	docker build -t answer-production:${ANSWER_VERSION} ./answer/production
+	docker build -t leovs09/asqa-answer:${ANSWER_VERSION} ./answer/production
 
 run-production-answer:
 	docker run -it \
@@ -150,4 +150,7 @@ run-production-answer:
 		--network="asqa_default" \
 		-e MODEL_NAME=AnswerService:latest \
 		-e YATAI_URL=model-registry-manager:50051 \
-		answer-production:${ANSWER_VERSION}
+		leovs09/asqa-answer:${ANSWER_VERSION}
+
+push-production-answer:
+	docker push leovs09/asqa-answer:${ANSWER_VERSION}
