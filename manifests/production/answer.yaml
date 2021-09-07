@@ -7,7 +7,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.2.1"
+    app.kubernetes.io/version: "0.2.2"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
@@ -27,7 +27,7 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "0.2.1"
+    app.kubernetes.io/version: "0.2.2"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -55,7 +55,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:0.2.1
+      - image: leovs09/asqa-answer:0.2.2
         name: asqa-answer
         imagePullPolicy: IfNotPresent
 
@@ -78,48 +78,36 @@ spec:
           name: answer-models-cache-storage
         
         env:
-        - name: SERVER_PORT
+        - name: BENTOML_PORT
           value: '80'
-        - name: GRAPHQL_DEBUG
-          value: 'false'
-        - name: DEBUG_LOG
-          value: 'false'
-        # Model data
-        - name: CACHE_FOLDER
-          value: '/cache'
-        - name: TOKENIZER_URL
-          value: 's3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz'
-        - name: MODEL_URL
-          value: 's3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz'
-        # AWS creds
-        - name: AWS_DEFAULT_REGION       
-          value: eu-central-1
-        - name: AWS_SECRET_ACCESS_KEY     
-          valueFrom: 
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_SECRET_ACCESS_KEY
-        - name: AWS_ACCESS_KEY_ID           
-          valueFrom: 
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_ACCESS_KEY_ID
+        - name: BENTOML_GUNICORN_WORKERS
+          value: '1'
+        - name: BENTOML_HOME
+          value: '/bentoml'
+        - name: MODEL_NAME
+          value: AnswerService:latest # TODO: use exact version of model
+        - name: YATAI_URL       
+          value: yatai-service:50051
       
         livenessProbe:
           httpGet:
-            path: /is-live
-            port: main-port
-      
+            path: /healthz
+            port: web
+          initialDelaySeconds: 3
+          periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: /is-ready
-            port: main-port
+            path: /healthz
+            port: web
+          initialDelaySeconds: 3
+          periodSeconds: 5
 
         startupProbe:
           httpGet:
-            path: /is-ready
-            port: main-port
+            path: /healthz
+            port: web
           failureThreshold: 30
           periodSeconds: 40 # 30 * 40 = 1200s = 20m for start
+      
       imagePullSecrets:
-      - name: eu-central-1-ecr-registry # aws
+      - name: docker-hub-creds
