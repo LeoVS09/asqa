@@ -39,7 +39,7 @@ async function main() {
   });
 
   console.log("Starting server on port:", PORT);
-  server.listen({ port: PORT }).then(({ url }) => {
+  server.listen({ port: PORT, host: '0.0.0.0' }).then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
   });
     

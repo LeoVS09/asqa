@@ -17,5 +17,8 @@ FROM second
 
 COPY . /app
 
-CMD [ "yarn", "start" ]
+RUN yarn prebuild && \
+   yarn build
+
+CMD [ "yarn", "start:prod" ]
 
