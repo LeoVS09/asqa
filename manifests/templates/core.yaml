@@ -52,6 +52,8 @@ spec:
           value: 'asqa-consumer'
         - name: PLATFORM_GQL_URL
           value: 'http://platform-gateway/graphql'
+        - name: NODE_ENV
+          value: 'production'
         
         livenessProbe:
           httpGet:

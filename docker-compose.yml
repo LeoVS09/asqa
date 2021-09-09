@@ -15,8 +15,6 @@ services:
 
       # depends_on: 
       #    - elasticsearch
-      # links:
-      #    - elasticsearch
 
    elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
@@ -35,12 +33,6 @@ services:
    # GraphQl gateway service for search and answers
    platform-gateway:
       image: graphql/gateway
-      links:
-         - search
-         - answer
-      depends_on:
-         - search
-         - answer
       ports:
          - 8910:80
       environment: # TODO: use graphql manager service in production https://github.com/graphql-services/graphql-gateway
@@ -51,6 +43,9 @@ services:
          restart_policy:
             condition: any
             delay: 5s
+      depends_on:
+         - search
+         - answer
    
    # Search engine service
    search:
@@ -70,8 +65,6 @@ services:
       env_file: 
          - ./search/.env
       depends_on: 
-         - mongo
-      links:
          - mongo
 
    mongo:
@@ -96,6 +89,20 @@ services:
          ME_CONFIG_MONGODB_ADMINPASSWORD: example
          ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
+   answer2gql:
+      build:
+         context: ./answer2gql
+      container_name: asqa_core_dev
+      ports:
+         - 8914:8914
+      volumes:
+         - ./answer2gql/:/app/.
+      environment:
+         - PORT=8914
+         - ANSWER_URL=http://answer:8904
+      depends_on: 
+         - answer
+
    # Answering NN service
    answer:
       build:
@@ -119,8 +126,6 @@ services:
          - ./search/.env
       depends_on: 
          - model-registry-manager
-      links:
-         - model-registry-manager
 
    model-registry-manager:
       image: bentoml/yatai-service:0.13.1
@@ -131,16 +136,13 @@ services:
          - BENTOML_HOME=/bentoml
       volumes:
          - ./data/registry/bentoml/:/bentoml/.
-      # --s3-endpoint-url=http://minio:9000
-      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=https://s3.eu-central-1.wasabisys.com --repo-base-url=s3://asqa-bentoml-services/
+      # production: --s3-endpoint-url=https://s3.eu-central-1.wasabisys.com --repo-base-url=s3://asqa-bentoml-services/
+      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=http://minio:9000 --repo-base-url=s3://asqa-models/
       env_file: 
          ./.env
       depends_on: 
          - postgresdb
-         # - minio
-      links:
-         - postgresdb
-         # - minio
+         - minio
 
    postgresdb:
       image: postgres:13.4
@@ -180,8 +182,6 @@ services:
          - 8082:8080
       depends_on: 
          - postgresdb
-      links:
-         - postgresdb
 
    core:
       build:
@@ -189,7 +189,6 @@ services:
       container_name: asqa_core_dev
       ports:
          - 8915:8915
-         - 9229:9229
       volumes:
          - ./core/:/app/.
       environment:
@@ -199,9 +198,6 @@ services:
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
          - PLATFORM_GQL_URL=http://platform-gateway/graphql
       depends_on: 
-         - kafka
-         - platform-gateway
-      links:
          - kafka
          - platform-gateway
 
@@ -216,8 +212,6 @@ services:
       env_file:
          ./integrations/telegram/.env
       depends_on: 
-         - kafka
-      links:
          - kafka
    
    kafka:

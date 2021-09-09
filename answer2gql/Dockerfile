@@ -1,19 +1,21 @@
-FROM tensorflow/tensorflow:2.5.0 as base
+FROM node:16 as base
 
 RUN apt update && apt upgrade -y && \
    apt install -y bash bash-completion make curl wget git
+
+RUN npm install -g @nestjs/cli
 
 WORKDIR /app 
 
 FROM base as second
 
-COPY requirements.txt /app/
+COPY package.json yarn.lock /app/
 
-RUN pip3 install -r requirements.txt
+RUN yarn
 
 FROM second
 
 COPY . /app
 
-CMD [ "make", "dev" ]
+CMD [ "yarn", "start" ]
 

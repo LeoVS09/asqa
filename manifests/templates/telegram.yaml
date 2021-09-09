@@ -45,6 +45,8 @@ spec:
         env:
         - name: SERVER_PORT
           value: '80'
+        - name: NODE_ENV
+          value: 'production'
         - name: KAFKA_BOOTSTRAP_SERVER
           value: 'kafka-kafka-bootstrap:9092'
         - name: SEND_TO_USER_TOPIC

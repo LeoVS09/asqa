@@ -1,10 +1,6 @@
-# Asqa / Core
+# Asqa / Answer2Graphql
 
-Core bot logic service, abstracted from specific messangers or platforms.
-
-## Description
-
-Sevice in general contain all bot use cases abstracted from platform services, search engine, and answer model.
+Transform Answer Swagger API to Graphql.
 
 ## Quick Start
 
@@ -12,15 +8,15 @@ You can start service in docker, which is prefered, for have connection to other
 
 ```bash
 # In upper folder run for start console inside container
-$ make bot-console
+$ make a2g-console
 
 # Docker will map your local folder to this container
 
 # Install dependencies
-$ yarn install
+$ yarn
 
 # Then just start service in dev mode
-$ yarn run start:dev
+$ yarn start:dev
 ```
 
 Or you can start service on your machine

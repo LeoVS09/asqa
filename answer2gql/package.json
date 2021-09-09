@@ -1,7 +1,7 @@
 {
-  "name": "@asqa/core",
-  "version": "0.2.0",
-  "description": "",
+  "name": "@asqa/answer2gql",
+  "version": "0.1.0",
+  "description": "Transform Answer Swagger API to Graphql",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -23,23 +23,11 @@
     "gql:gen-types": "apollo client:codegen --localSchemaFile=platform.graphql --globalTypesFile=./src/platform-api-adapter/api.global.ts --target=typescript"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.5",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.0",
-    "@nestjs/graphql": "^8.0.2",
-    "@nestjs/microservices": "^8.0.6",
-    "@nestjs/platform-express": "^8.0.0",
-    "apollo-server-express": "2.x.x",
-    "class-transformer": "^0.4.0",
-    "class-validator": "^0.13.1",
-    "cross-fetch": "^3.1.4",
     "graphql": "^15.5.1",
-    "kafkajs": "^1.15.0",
-    "react": "^17.0.2",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "apollo-server": "^3.3.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
