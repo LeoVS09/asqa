@@ -1,60 +1,48 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
 import {
   ApolloServerPluginLandingPageGraphQLPlayground
 } from "apollo-server-core";
+import * as fs from 'fs'
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+import {resolvers} from './resolvers'
+import {AnswerService} from './services'
+import { AnswererContext } from './types';
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
-
-const books = [
-    {
-      title: 'The Awakening',
-      author: 'Kate Chopin',
-    },
-    {
-      title: 'City of Glass',
-      author: 'Paul Auster',
-    },
-  ];
-
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
-const resolvers = {
-    Query: {
-      books: () => books,
-    },
-  };
-
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ 
-  typeDefs, 
-  resolvers,
-  plugins: [
-    ApolloServerPluginLandingPageGraphQLPlayground(),
-  ],
-});
-
+const SCHEMA_FILENAME = './schema.gql'
 const PORT = process.env.PORT || 4000;
+const ANSWER_URL = process.env.ANSWER_URL
 
-// The `listen` method launches a web server.
-server.listen({ port: PORT }).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+
+
+async function main() {
+
+  console.log('Reading file schema from:', SCHEMA_FILENAME)
+  const typeDefs = fs.readFileSync(SCHEMA_FILENAME).toString('utf-8')
+  
+  console.log('Connection to answer service by url:', ANSWER_URL)
+  const answerer = new AnswerService(ANSWER_URL);
+  if (!await answerer.isReady()) {
+    throw new Error('Cannot connect to answer service by url: ' + ANSWER_URL)
+  }
+
+  const server = new ApolloServer({ 
+    typeDefs, 
+    resolvers,
+    plugins: [
+      // Current version by default displays landing page instead playground
+      // This plugin fix it
+      ApolloServerPluginLandingPageGraphQLPlayground(),
+    ],
+    context: (): AnswererContext => ({
+      answerer
+    })
+  });
+
+  console.log("Starting server on port:", PORT);
+  server.listen({ port: PORT }).then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });
+    
+}
+
+main()

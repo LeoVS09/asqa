@@ -1,0 +1,24 @@
+type Query {
+    answer(input: QuestionInput!): Answers!
+}
+
+input QuestionInput {
+    """
+    Question on which need to answer
+    """
+    question: String!
+
+    """
+    Context for given question
+    """
+    context: String!
+}
+type Answers {
+    """
+    List of answers on questions
+    """
+    nodes: [Answer!]!
+}
+type Answer {
+    text: String!
+}
