@@ -71,15 +71,15 @@ spec:
           
         ports:
         - name: main-port
-          containerPort: 80
+          containerPort: 8080
 
         volumeMounts:
-        - mountPath: "/cache"
+        - mountPath: "/bentoml"
           name: answer-models-cache-storage
         
         env:
         - name: BENTOML_PORT
-          value: '80'
+          value: '8080'
         - name: BENTOML_GUNICORN_WORKERS
           value: '1'
         - name: BENTOML_HOME

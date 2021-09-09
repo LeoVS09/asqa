@@ -55,7 +55,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-answer:%VERSION%
+      - image: leovs09/asqa-answer:%VERSION%
         name: asqa-answer
         imagePullPolicy: IfNotPresent
 
@@ -71,55 +71,81 @@ spec:
           
         ports:
         - name: main-port
-          containerPort: 80
+          containerPort: 8080
 
         volumeMounts:
-        - mountPath: "/cache"
+        - mountPath: "/bentoml"
           name: answer-models-cache-storage
         
         env:
-        - name: SERVER_PORT
-          value: '80'
-        - name: GRAPHQL_DEBUG
-          value: 'false'
-        - name: DEBUG_LOG
-          value: 'false'
-        # Model data
-        - name: CACHE_FOLDER
-          value: '/cache'
-        - name: TOKENIZER_URL
-          value: 's3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz'
-        - name: MODEL_URL
-          value: 's3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz'
-        # AWS creds
-        - name: AWS_DEFAULT_REGION       
-          value: eu-central-1
-        - name: AWS_SECRET_ACCESS_KEY     
-          valueFrom: 
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_SECRET_ACCESS_KEY
-        - name: AWS_ACCESS_KEY_ID           
-          valueFrom: 
-            secretKeyRef:
-              name: aws-creds
-              key: AWS_ACCESS_KEY_ID
+        - name: BENTOML_PORT
+          value: '8080'
+        - name: BENTOML_GUNICORN_WORKERS
+          value: '1'
+        - name: BENTOML_HOME
+          value: '/bentoml'
+        - name: MODEL_NAME
+          value: AnswerService:latest # TODO: use exact version of model
+        - name: YATAI_URL       
+          value: yatai-service:50051
       
         livenessProbe:
           httpGet:
-            path: /is-live
+            path: /healthz
+            port: web
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: web
+          initialDelaySeconds: 3
+          periodSeconds: 5
+
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: web
+          failureThreshold: 30
+          periodSeconds: 40 # 30 * 40 = 1200s = 20m for start
+      
+      - image: leovs09/asqa-answer2gql:%ANSWER2GQL_VERSION
+        name: asqa-answer2gql
+        
+        resources:
+          requests:
+            cpu: 1
+            memory: 128M
+          limits:
+            cpu: 1
+            memory: 256G
+          
+        ports:
+        - name: main-port
+          containerPort: 80
+        
+        env:
+        - name: PORT
+          value: '80'
+        - name: ANSWER_URL
+          value: 'http://127.0.0.1:8080'
+        
+        livenessProbe:
+          httpGet:
+            path: /.well-known/apollo/server-health
             port: main-port
       
         readinessProbe:
           httpGet:
-            path: /is-ready
+            path: /.well-known/apollo/server-health
             port: main-port
 
         startupProbe:
           httpGet:
-            path: /is-ready
+            path: /.well-known/apollo/server-health
             port: main-port
-          failureThreshold: 30
-          periodSeconds: 40 # 30 * 40 = 1200s = 20m for start
+          failureThreshold: 10
+          periodSeconds: 3 # 10 * 3 = 30s for start
+      
       imagePullSecrets:
-      - name: eu-central-1-ecr-registry # aws
+      - name: docker-hub-creds

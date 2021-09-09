@@ -78,6 +78,7 @@ AWS_REGION = eu-central-1
 AWS_ACCOUNT_ID = 449682673987
 
 ANSWER_VERSION = 0.2.2
+ANSWER2GQL_VERSION = 0.1.0
 CORE_VERSION = 0.1.2
 TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
@@ -106,6 +107,13 @@ build-telegram:
 deploy-telegram:
 	docker tag asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION}
 	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION}
+
+build-a2g:
+	docker build -t leovs09/asqa-answer2gql:${ANSWER2GQL_VERSION} ./answer2gql
+
+push-a2g:
+	docker push leovs09/asqa-answer2gql:${ANSWER2GQL_VERSION}
+
 
 # TODO: use argo-cd for automatically setup kafka
 setup-kafka-for-k8s:
