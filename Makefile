@@ -77,7 +77,7 @@ start:
 AWS_REGION = eu-central-1
 AWS_ACCOUNT_ID = 449682673987
 
-ANSWER_VERSION = 0.2.2
+ANSWER_VERSION = 0.2.3
 ANSWER2GQL_VERSION = 0.1.0
 CORE_VERSION = 0.1.2
 TELEGRAM_INTEGRATION_VERSION = 0.1.0
@@ -120,11 +120,40 @@ setup-kafka-for-k8s:
 	kubectl apply -f ./manifests/kafka.yaml
 
 # ---------------------------------------------------------------------------------------------------------------------
+# PRODUCTION MODEL SERVICE
+# ---------------------------------------------------------------------------------------------------------------------
+
+build-production-answer:
+	docker build -t leovs09/asqa-answer:${ANSWER_VERSION} ./answer/production
+
+run-production-answer:
+	docker run -it \
+		-v ${PWD}/data/answer/production/bentoml:/home/bentoml \
+		-p 5000:5000 \
+		--network="asqa_default" \
+		-e MODEL_NAME=AnswerService:latest \
+		-e YATAI_URL=model-registry-manager:50051 \
+		leovs09/asqa-answer:${ANSWER_VERSION}
+
+push-production-answer:
+	docker push leovs09/asqa-answer:${ANSWER_VERSION}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # GPU
 # ---------------------------------------------------------------------------------------------------------------------
 
 gpu-monitor:
 	watch -n 0.5 nvidia-smi
+
+# ---------------------------------------------------------------------------------------------------------------------
+# KUSTOMIZE
+# ---------------------------------------------------------------------------------------------------------------------
+
+k-prod:
+	kustomize build ./manifests/overlays/production > ./manifests/overlays/production/tml_prod.yaml
+
+k-answer-version:
+	cd ./manifests/overlays/production && kustomize edit set image leovs09/asqa-answer:${ANSWER_VERSION} 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # MODELS DATA
@@ -148,21 +177,4 @@ push-answer-models:
 	aws s3 cp ./answer-data/transformers-bert-auto-tokenizer-1.0.0.tar.gz s3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz
 	aws s3 cp ./answer-data/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz s3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz
 
-# ---------------------------------------------------------------------------------------------------------------------
-# PRODUCTION MODEL SERVICE
-# ---------------------------------------------------------------------------------------------------------------------
 
-build-production-answer:
-	docker build -t leovs09/asqa-answer:${ANSWER_VERSION} ./answer/production
-
-run-production-answer:
-	docker run -it \
-		-v ${PWD}/data/answer/production/bentoml:/home/bentoml \
-		-p 5000:5000 \
-		--network="asqa_default" \
-		-e MODEL_NAME=AnswerService:latest \
-		-e YATAI_URL=model-registry-manager:50051 \
-		leovs09/asqa-answer:${ANSWER_VERSION}
-
-push-production-answer:
-	docker push leovs09/asqa-answer:${ANSWER_VERSION}

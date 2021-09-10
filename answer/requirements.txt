@@ -3,7 +3,7 @@ transformers==4.9.1
 datasets==1.11.0
 numpy==1.19.5
 dynaconf==3.1.4
-bentoml==0.13.1
+git+https://github.com/withsmilo/BentoML.git@seperate_predict_with_healthz
 pytest==6.2.5
 pytest-snapshot==0.6.1
 click_completion==0.5.2

@@ -7,7 +7,6 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "%VERSION%"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
@@ -27,7 +26,6 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: answer
-    app.kubernetes.io/version: "%VERSION%"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -55,23 +53,26 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: leovs09/asqa-answer:%VERSION%
+      - image: leovs09/asqa-answer:latest # will be set for specific environment
         name: asqa-answer
         imagePullPolicy: IfNotPresent
+        command: ["bentoml", "serve-gunicorn", "AnswerService:20210907021904_F7A394", "--debug"]
 
         resources:
           requests:
-            cpu: 2
-            memory: 2G
+            cpu: 4
+            memory: 6G
             ephemeral-storage: "4Gi"
           limits:
-            cpu: 4
-            memory: 4G
+            cpu: 6
+            memory: 8G
             ephemeral-storage: "6Gi"
           
         ports:
         - name: main-port
           containerPort: 8080
+        - name: health-port
+          containerPort: 5001
 
         volumeMounts:
         - mountPath: "/bentoml"
@@ -85,31 +86,31 @@ spec:
         - name: BENTOML_HOME
           value: '/bentoml'
         - name: MODEL_NAME
-          value: AnswerService:latest # TODO: use exact version of model
+          value: AnswerService:20210907021904_F7A394
         - name: YATAI_URL       
           value: yatai-service:50051
       
         livenessProbe:
           httpGet:
-            path: /healthz
-            port: web
+            path: /livez
+            port: health-port
           initialDelaySeconds: 3
           periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: /healthz
-            port: web
+            path: /livez
+            port: health-port
           initialDelaySeconds: 3
           periodSeconds: 5
 
         startupProbe:
           httpGet:
-            path: /healthz
-            port: web
+            path: /livez
+            port: health-port
           failureThreshold: 30
           periodSeconds: 40 # 30 * 40 = 1200s = 20m for start
       
-      - image: leovs09/asqa-answer2gql:%ANSWER2GQL_VERSION
+      - image: leovs09/asqa-answer2gql:latest # will be set for specific environment
         name: asqa-answer2gql
         
         resources:
