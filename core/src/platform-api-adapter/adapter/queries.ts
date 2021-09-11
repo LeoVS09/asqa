@@ -6,14 +6,14 @@ export const searchPassagesGql = gql`
             questions: $questions,
         }){
             nodes {
-            question
-            passages {
-                wiki_id
-                score
-                article_title
-                section_title
-                passage_text
-            }
+                question
+                passages {
+                    wiki_id
+                    score
+                    article_title
+                    section_title
+                    passage_text
+                }
             }
         }
     }
@@ -26,8 +26,7 @@ export const answerGql = gql`
             context: $context
         }){
             nodes {
-            question
-            text
+                text
             }
         }
     }

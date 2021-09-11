@@ -37,7 +37,7 @@ services:
          - 8910:80
       environment: # TODO: use graphql manager service in production https://github.com/graphql-services/graphql-gateway
          - GRAPHQL_URL_0=http://search:8894/graphql
-         - GRAPHQL_URL_1=http://answer:8904/graphql
+         - GRAPHQL_URL_1=http://answer2gql:8914/graphql
          - GRAPHQL_UPDATE_GATEWAY=false # Not working actually
       deploy: 
          restart_policy:
@@ -45,7 +45,7 @@ services:
             delay: 5s
       depends_on:
          - search
-         - answer
+         - answer2gql
    
    # Search engine service
    search:
@@ -198,7 +198,7 @@ services:
          - KAFKA_BROKER_URL=kafka:9092
          - KAFKA_CLIENT_ID=asqa-core
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
-         - PLATFORM_GQL_URL=http://platform-gateway/graphql
+         - PLATFORM_GQL_URL=http://platform-gateway:8910/graphql
       depends_on: 
          - kafka
          - platform-gateway

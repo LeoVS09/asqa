@@ -23,11 +23,12 @@
     "gql:gen-types": "apollo client:codegen --localSchemaFile=platform.graphql --globalTypesFile=./src/platform-api-adapter/api.global.ts --target=typescript"
   },
   "dependencies": {
+    "@apollo/federation": "^0.32.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.0",
-    "graphql": "^15.5.1",
-    "apollo-server": "^3.3.0"
+    "apollo-server": "^3.3.0",
+    "graphql": "^15.5.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",

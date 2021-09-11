@@ -1,4 +1,5 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server';
+import {buildSubgraphSchema} from '@apollo/federation'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground
 } from "apollo-server-core";
@@ -17,7 +18,7 @@ const ANSWER_URL = process.env.ANSWER_URL
 async function main() {
 
   console.log('Reading file schema from:', SCHEMA_FILENAME)
-  const typeDefs = fs.readFileSync(SCHEMA_FILENAME).toString('utf-8')
+  const typeDefs = gql(fs.readFileSync(SCHEMA_FILENAME).toString('utf-8'))
   
   console.log('Connection to answer service by url:', ANSWER_URL)
   const answerer = new AnswerService(ANSWER_URL);
@@ -26,8 +27,8 @@ async function main() {
   }
 
   const server = new ApolloServer({ 
-    typeDefs, 
-    resolvers,
+    schema: buildSubgraphSchema([{ typeDefs, resolvers}]),
+    introspection: true, 
     plugins: [
       // Current version by default displays landing page instead playground
       // This plugin fix it

@@ -46,6 +46,8 @@ core-console:
 a2g-console:
 	docker-compose run --service-ports answer2gql bash
 
+platform-gateway-console:
+	docker-compose run --service-ports platform-gateway sh
 
 attach-core-console:
 	docker exec -it asqa_core_run_9655390d68b8 bash

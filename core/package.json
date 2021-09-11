@@ -1,7 +1,7 @@
 {
   "name": "@asqa/core",
   "version": "0.2.0",
-  "description": "",
+  "description": "Core bot logic service, abstracted from specific messangers or platforms.",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
