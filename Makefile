@@ -164,9 +164,9 @@ k-answer-version:
 # ---------------------------------------------------------------------------------------------------------------------
 
 archive-search-models:
-	tar -czvf ./search-data/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz -C ./search-data/transfromers-bert-auto-tokenaizer-1.0.1 .
-	tar -czvf ./search-data/transformers-bert-embeder-auto-model-1.0.1.tar.gz -C ./search-data/transformers-bert-embeder-auto-model-1.0.1 .
-	tar -czvf ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz -C ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1 .
+	tar -czvf ./search-data/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz -C ./search-data/tokenizer/transfromers-bert-auto-tokenaizer-1.0.1 .
+	tar -czvf ./search-data/transformers-bert-embeder-auto-model-1.0.1.tar.gz -C ./search-data/embeder/transformers-bert-embeder-auto-model-1.0.1 .
+	tar -czvf ./search-data/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz -C ./search-data/index/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1 .
 
 push-search-models:
 	aws s3 cp ./search-data/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz s3://asqa-search-models/tokenizer/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz

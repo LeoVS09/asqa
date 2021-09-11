@@ -89,23 +89,28 @@ spec:
         - name: CACHE_FOLDER
           value: '/cache'
         - name: INDEX_URL
-          value: 's3://asqa-search-models/index/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.2.tar.gz'
+          value: 's3://asqa-search-models/scann262144x1_wiki40b_num_17553713_brute_force-index-1.0.1.tar.gz'
         - name: TOKENIZER_URL
-          value: 's3://asqa-search-models/tokenizer/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz'
+          value: 's3://asqa-search-models/transfromers-bert-auto-tokenaizer-1.0.1.tar.gz'
         - name: EMBEDER_URL
-          value: 's3://asqa-search-models/embeder/transformers-bert-embeder-auto-model-1.0.1.tar.gz'
-        # AWS creds
+          value: 's3://asqa-search-models/transformers-bert-embeder-auto-model-1.0.1.tar.gz'
+        # S3 creds
+        - name: S3_ENDPOINT_URL
+          value: https://s3.eu-central-1.wasabisys.com
         - name: AWS_DEFAULT_REGION       
-          value: eu-central-1
+          valueFrom: 
+            secretKeyRef:
+              name: wasabi-creds
+              key: AWS_DEFAULT_REGION
         - name: AWS_SECRET_ACCESS_KEY     
           valueFrom: 
             secretKeyRef:
-              name: aws-creds
+              name: wasabi-creds
               key: AWS_SECRET_ACCESS_KEY
         - name: AWS_ACCESS_KEY_ID           
           valueFrom: 
             secretKeyRef:
-              name: aws-creds
+              name: wasabi-creds
               key: AWS_ACCESS_KEY_ID
         
         livenessProbe:
