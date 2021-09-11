@@ -80,7 +80,7 @@ AWS_REGION = eu-central-1
 AWS_ACCOUNT_ID = 449682673987
 
 ANSWER_VERSION = 0.2.3
-ANSWER2GQL_VERSION = 0.1.0
+ANSWER2GQL_VERSION = 0.1.1
 CORE_VERSION = 0.1.2
 TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
@@ -155,7 +155,9 @@ k-prod:
 	kustomize build ./manifests/overlays/production > ./manifests/overlays/production/tml_prod.yaml
 
 k-answer-version:
-	cd ./manifests/overlays/production && kustomize edit set image leovs09/asqa-answer:${ANSWER_VERSION} 
+	cd ./manifests/overlays/production && \
+	kustomize edit set image leovs09/asqa-answer:${ANSWER_VERSION} && \
+	kustomize edit set image leovs09/asqa-answer2gql:${ANSWER2GQL_VERSION}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # MODELS DATA
