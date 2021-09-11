@@ -7,7 +7,6 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: search
-    app.kubernetes.io/version: "%VERSION%"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: asqa
 spec:
@@ -28,7 +27,6 @@ metadata:
     tier: backend
     solution: asqa
     app.kubernetes.io/name: search
-    app.kubernetes.io/version: "%VERSION%"
     app.kubernetes.io/component: server
     app.kubernetes.io/part-of: asqa
 spec:
@@ -56,7 +54,7 @@ spec:
         solution: asqa
     spec:
       containers:
-      - image: 449682673987.dkr.ecr.eu-central-1.amazonaws.com/asqa-search:%VERSION%
+      - image: leovs09/asqa-search:latest # will be set for specific environment
         name: asqa-search
         imagePullPolicy: IfNotPresent
 
