@@ -121,7 +121,7 @@ services:
          - BENTOML_GUNICORN_WORKERS=1
          - CACHE_FOLDER=/cache
          - BENTOML_HOME=/bentoml
-         - MODEL_NAME=AnswerService:latest
+         - SERVICE_NAME=AnswerService:latest
          - YATAI_URL=model-registry-manager:50051
          # - YATAI_URL=localhost:50051 # for prod
       env_file: 

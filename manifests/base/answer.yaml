@@ -56,7 +56,6 @@ spec:
       - image: leovs09/asqa-answer:latest # will be set for specific environment
         name: asqa-answer
         imagePullPolicy: IfNotPresent
-        command: ["bentoml", "serve-gunicorn", "AnswerService:20210907021904_F7A394", "--debug"]
 
         resources:
           requests:
@@ -85,7 +84,7 @@ spec:
           value: '1'
         - name: BENTOML_HOME
           value: '/bentoml'
-        - name: MODEL_NAME
+        - name: SERVICE_NAME
           value: AnswerService:20210907021904_F7A394
         - name: YATAI_URL       
           value: yatai-service:50051
