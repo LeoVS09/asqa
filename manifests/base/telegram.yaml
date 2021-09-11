@@ -27,7 +27,6 @@ spec:
       - image: leovs09/asqa-telegram-integration:latest # will be set for specific environment
         name: asqa-telegram-integration
         imagePullPolicy: IfNotPresent
-        command: ['nest', 'start']
         
         resources:
           requests:
