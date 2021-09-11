@@ -1,4 +1,4 @@
-name: Bump Answer service version
+name: Bump Answer-Production Service Version
 on:
   pull_request:
     branches:
@@ -8,7 +8,7 @@ on:
     - labeled
     - unlabeled
     paths:
-      - "answer/**"
+      - "answer/production/**"
 
 jobs:
   bump:
@@ -38,11 +38,15 @@ jobs:
       run: |-
         cd answer
         sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
-    - name: Generate production yaml with new version from template
+    - name: Setup kustomize
+      uses: imranismail/setup-kustomize@v1
+      with:
+        kustomize-version: 4.3.x
+    - name: Update production/kustomization.yaml service image tag
       run: |-
-        cd manifests
-        sed -E 's/%VERSION%/${{ steps.next_version.outputs.version }}/g' templates/answer.yaml > production/answer.yaml
-    
+        cd ./manifests/overlays/production
+        kustomize edit set image leovs09/asqa-answer:${{ steps.next_version.outputs.version }}
+  
     - name: Commit and push changes
       uses: EndBug/add-and-commit@v7
       with: 

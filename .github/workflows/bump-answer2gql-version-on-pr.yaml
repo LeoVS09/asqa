@@ -1,4 +1,4 @@
-name: Bump search service version
+name: Bump Answer2Gql service version
 on:
   pull_request:
     branches:
@@ -8,7 +8,7 @@ on:
     - labeled
     - unlabeled
     paths:
-      - "search/**"
+      - "answer2gql/**"
 
 jobs:
   bump:
@@ -22,9 +22,9 @@ jobs:
       uses: zwaldowski/match-label-action@v1
       with:
         allowed: major,minor,patch
-    - name: Read version from settings.yaml and set version variables
+    - name: Read version from package.json and set version variables
       run: |
-        VER=$(grep VERSION search/settings.yaml | cut -d '"' -f 2)
+        VER=$(grep version answer2gql/package.json | cut -d ':' -f 2 | cut -d '"' -f 2)
         echo "VERSION=$VER" >> $GITHUB_ENV
     - name: Generate new version
       id: next_version
@@ -34,10 +34,10 @@ jobs:
         bump: ${{ steps.bump.outputs.match }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Save new version in image settings.yaml
+    - name: Save new version in image package.json
       run: |-
-        cd search
-        sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
+        cd answer2gql
+        sed -i -E 's/"version": "(.*)",/"version": "${{ steps.next_version.outputs.version }}",/g' package.json
     - name: Setup kustomize
       uses: imranismail/setup-kustomize@v1
       with:
@@ -45,11 +45,11 @@ jobs:
     - name: Update production/kustomization.yaml service image tag
       run: |-
         cd ./manifests/overlays/production
-        kustomize edit set image leovs09/asqa-search:${{ steps.next_version.outputs.version }}
+        kustomize edit set image leovs09/asqa-answer2gql:${{ steps.next_version.outputs.version }}
     
     - name: Commit and push changes
       uses: EndBug/add-and-commit@v7
       with: 
         default_author: github_actions
-        message: 'search_v${{ steps.next_version.outputs.version }}'
-        tag: 'search_v${{ steps.next_version.outputs.version }} --force'
+        message: 'answer2gql_v${{ steps.next_version.outputs.version }}'
+        tag: 'answer2gql_v${{ steps.next_version.outputs.version }} --force'

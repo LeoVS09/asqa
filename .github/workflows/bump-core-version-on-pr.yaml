@@ -38,10 +38,14 @@ jobs:
       run: |-
         cd core
         sed -i -E 's/"version": "(.*)",/"version": "${{ steps.next_version.outputs.version }}",/g' package.json
-    - name: Generate production yaml with new version from template
+    - name: Setup kustomize
+      uses: imranismail/setup-kustomize@v1
+      with:
+        kustomize-version: 4.3.x
+    - name: Update production/kustomization.yaml service image tag
       run: |-
-        cd manifests
-        sed -E 's/%VERSION%/${{ steps.next_version.outputs.version }}/g' templates/core.yaml > production/core.yaml
+        cd ./manifests/overlays/production
+        kustomize edit set image leovs09/asqa-core:${{ steps.next_version.outputs.version }}
     
     - name: Commit and push changes
       uses: EndBug/add-and-commit@v7
