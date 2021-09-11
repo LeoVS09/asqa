@@ -17,47 +17,47 @@ $ make bot-console
 # Docker will map your local folder to this container
 
 # Install dependencies
-$ npm install
+$ yarn install
 
 # Then just start service in dev mode
-$ npm run start:dev
+$ yarn run start:dev
 ```
 
 Or you can start service on your machine
 
 ```bash
 # Firstly install dependencies
-$ npm install
+$ yarn install
 
 # Start sevices on which depend Core servrice
 # Change .env for match urls to services
 
 # Then just start service in dev mode
-$ npm run start:dev
+$ yarn run start:dev
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn run start
 
 # watch mode
-$ npm run start:dev
+$ yarn run start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn run start:prod
 ```
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
+$ yarn run test
 
 # e2e tests
-$ npm run test:e2e
+$ yarn run test:e2e
 
 # test coverage
-$ npm run test:cov
+$ yarn run test:cov
 ```

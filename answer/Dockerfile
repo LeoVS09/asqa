@@ -15,5 +15,5 @@ FROM second
 
 COPY . /app
 
-CMD [ "make", "start" ]
+CMD [ "make", "dev" ]
 

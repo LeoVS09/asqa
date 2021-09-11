@@ -15,8 +15,6 @@ services:
 
       # depends_on: 
       #    - elasticsearch
-      # links:
-      #    - elasticsearch
 
    elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
@@ -35,22 +33,19 @@ services:
    # GraphQl gateway service for search and answers
    platform-gateway:
       image: graphql/gateway
-      links:
-         - search
-         - answer
-      depends_on:
-         - search
-         - answer
       ports:
          - 8910:80
       environment: # TODO: use graphql manager service in production https://github.com/graphql-services/graphql-gateway
          - GRAPHQL_URL_0=http://search:8894/graphql
-         - GRAPHQL_URL_1=http://answer:8904/graphql
+         - GRAPHQL_URL_1=http://answer2gql:8914/graphql
          - GRAPHQL_UPDATE_GATEWAY=false # Not working actually
       deploy: 
          restart_policy:
             condition: any
             delay: 5s
+      depends_on:
+         - search
+         - answer2gql
    
    # Search engine service
    search:
@@ -70,8 +65,6 @@ services:
       env_file: 
          - ./search/.env
       depends_on: 
-         - mongo
-      links:
          - mongo
 
    mongo:
@@ -96,22 +89,101 @@ services:
          ME_CONFIG_MONGODB_ADMINPASSWORD: example
          ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
+   answer2gql:
+      build:
+         context: ./answer2gql
+      container_name: asqa_core_dev
+      ports:
+         - 8914:8914
+      volumes:
+         - ./answer2gql/:/app/.
+      environment:
+         - PORT=8914
+         - ANSWER_URL=http://answer:8904
+      depends_on: 
+         - answer
+
    # Answering NN service
    answer:
       build:
          context: ./answer
       container_name: asqa_answer_dev
+      # network_mode: host # for prod
       ports:
          - 8904:8904
-         - 8905:8905
+         - 5001:5001 # /livez - health check port
       volumes:
          - ./answer/:/app/.
          - ./answer-data/:/cache/.
+         - ./data/answer/bentoml/:/bentoml/.
       environment:
-         - SERVER_PORT=8904
+         - BENTOML_PORT=8904
+         - BENTOML_GUNICORN_WORKERS=1
          - CACHE_FOLDER=/cache
+         - BENTOML_HOME=/bentoml
+         - SERVICE_NAME=AnswerService:latest
+         - YATAI_URL=model-registry-manager:50051
+         # - YATAI_URL=localhost:50051 # for prod
       env_file: 
          - ./search/.env
+      depends_on: 
+         - model-registry-manager
+
+   model-registry-manager:
+      image: bentoml/yatai-service:0.13.1
+      ports:
+         - 50051:50051 # GRPC port
+         - 3000:3000 # UI port
+      environment:
+         - BENTOML_HOME=/bentoml
+      volumes:
+         - ./data/registry/bentoml/:/bentoml/.
+      # production: --s3-endpoint-url=https://s3.eu-central-1.wasabisys.com --repo-base-url=s3://asqa-bentoml-services/
+      command: --db-url=postgresql://postgres:examplepass@postgresdb:5432/bentomldb --s3-endpoint-url=http://minio:9000 --repo-base-url=s3://asqa-models/
+      env_file: 
+         ./.env
+      depends_on: 
+         - postgresdb
+         - minio
+
+   postgresdb:
+      image: postgres:13.4
+      restart: always
+      ports:
+         - 5432:5432
+      environment:
+         - POSTGRES_PASSWORD=examplepass
+         - POSTGRES_USER=postgres
+         - PGDATA=/var/lib/postgresql/data
+         - POSTGRES_DB=bentomldb
+      volumes:
+         - ./data/postgres/data:/var/lib/postgresql/data
+
+   minio:
+      image: quay.io/minio/minio
+      entrypoint: sh
+      command: -c 'mkdir -p /data/asqa-models && /usr/bin/minio server /data --console-address ":9001"'
+      expose:
+         - "9000"
+         - "9001"
+      environment:
+         MINIO_ROOT_USER: minio
+         MINIO_ROOT_PASSWORD: minio123
+      healthcheck:
+         test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+         interval: 30s
+         timeout: 20s
+         retries: 3
+      volumes:
+         - ./data/minio/data:/data
+
+   postgres-ui:
+      image: adminer
+      restart: always
+      ports:
+         - 8082:8080
+      depends_on: 
+         - postgresdb
 
    core:
       build:
@@ -119,7 +191,6 @@ services:
       container_name: asqa_core_dev
       ports:
          - 8915:8915
-         - 9229:9229
       volumes:
          - ./core/:/app/.
       environment:
@@ -127,11 +198,8 @@ services:
          - KAFKA_BROKER_URL=kafka:9092
          - KAFKA_CLIENT_ID=asqa-core
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
-         - PLATFORM_GQL_URL=http://platform-gateway/graphql
+         - PLATFORM_GQL_URL=http://platform-gateway:8910/graphql
       depends_on: 
-         - kafka
-         - platform-gateway
-      links:
          - kafka
          - platform-gateway
 
@@ -146,8 +214,6 @@ services:
       env_file:
          ./integrations/telegram/.env
       depends_on: 
-         - kafka
-      links:
          - kafka
    
    kafka:

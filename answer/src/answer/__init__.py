@@ -1,1 +1,1 @@
-from .SelfSetupAnswerer import SelfSetupAnswerer
+from .Answerer import Answerer

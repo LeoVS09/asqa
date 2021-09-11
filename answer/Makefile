@@ -8,16 +8,27 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 start:
-	python -m src.main
+	bentoml serve-gunicorn ${MODEL_NAME} --yatai-url=${YATAI_URL}
+
 
 # ---------------------------------------------------------------------------------------------------------------------
 # DEVELOPMENT
 # ---------------------------------------------------------------------------------------------------------------------
 
-dev:
-	IS_DEVELOPMENT=true
-	make start
+pack:
+	python -m src.pack
 
+pack-and-push:
+	USE_YATAI=True python -m src.pack
+
+dev: pack
+	bentoml serve AnswerService:latest
+
+pull-latest:
+	bentoml retrieve AnswerService:latest --target_dir="/bentoml/service/latest" --yatai-url=${YATAI_URL}
+
+get-latest:
+	bentoml get AnswerService:latest --print-location
 
 install: 
 	pip install -r requirements.txt
@@ -25,6 +36,13 @@ install:
 save-dependencies:
 	pip freeze > requirements.txt
 	pip freeze | sed 's/==.*//g' > requirements-unfized.txt
+
+list-models:
+	bentoml list --yatai-url=${YATAI_URL}
+
+# Install not working in dockerfile :(
+bentoml-completion:
+	bentoml install-completion
 
 # ---------------------------------------------------------------------------------------------------------------------
 # DOCKER
@@ -35,5 +53,10 @@ chmod:
 
 # --------------------------------------------------- TESTS --------------------------------------------------------------- 
 
-test: 
-	pytest
+unit-test: 
+	pytest --snapshot-update
+
+integration-test: pack
+	bentoml run AnswerService:latest predict --input-file './input.json'
+
+test: unit-test integration-test

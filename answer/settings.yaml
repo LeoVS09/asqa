@@ -1,9 +1,0 @@
-# Default configuration values, real values will be set from enviroment
-SERVER_PORT: 8904
-GRAPHQL_DEBUG: true
-APP_VERSION: "0.2.1"
-IS_DEVELOPMENT: false
-DEBUG_LOG: false
-CACHE_FOLDER: '/cache'
-TOKENIZER_URL: 's3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz'
-MODEL_URL: 's3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz'

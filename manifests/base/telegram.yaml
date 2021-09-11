@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-integration
+  labels:
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: telegram-integration
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: asqa
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: telegram-integration
+      tier: backend
+      solution: asqa
+  template:
+    metadata:
+      labels:
+        app: telegram-integration
+        tier: backend
+        solution: asqa
+    spec:
+      containers:
+      - image: leovs09/asqa-telegram-integration:latest # will be set for specific environment
+        name: asqa-telegram-integration
+        imagePullPolicy: IfNotPresent
+        
+        resources:
+          requests:
+            cpu: 1
+            memory: 512M
+          limits:
+            cpu: 1
+            memory: 1G
+          
+        ports:
+        - name: main-port
+          containerPort: 80
+        
+        env:
+        - name: SERVER_PORT
+          value: '80'
+        - name: NODE_ENV
+          value: 'production'
+        - name: KAFKA_BOOTSTRAP_SERVER
+          value: 'kafka-kafka-bootstrap:9092'
+        - name: SEND_TO_USER_TOPIC
+          value: 'message.to.user.v1'
+        - name: MESSAGE_FROM_USER_TOPIC
+          value: 'message.from.user.v1'
+        - name: TELEGRAM_BOT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: telegram-bot-api-key
+              key: token
+          # Create using kubectl create secret generic telgram-bot-api-key --from-file=token=./telegram-token.txt
+        
+        livenessProbe:
+          httpGet:
+            path: /
+            port: main-port
+      
+        readinessProbe:
+          httpGet:
+            path: /
+            port: main-port
+
+        startupProbe:
+          httpGet:
+            path: /
+            port: main-port
+          failureThreshold: 30
+          periodSeconds: 10 # 30 * 10 = 300s = 5m for start
+      imagePullSecrets:
+      - name: eu-central-1-ecr-registry # aws
+---      
+apiVersion: v1
+kind: Service
+metadata:
+  name: telegram-integration
+  labels:
+    app: telegram-integration
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: telegram-integration
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: asqa
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: telegram-integration
+    tier: backend
+    solution: asqa

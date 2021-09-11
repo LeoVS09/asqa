@@ -43,6 +43,12 @@ core:
 core-console:
 	docker-compose run --service-ports core bash
 
+a2g-console:
+	docker-compose run --service-ports answer2gql bash
+
+platform-gateway-console:
+	docker-compose run --service-ports platform-gateway sh
+
 attach-core-console:
 	docker exec -it asqa_core_run_9655390d68b8 bash
 
@@ -70,12 +76,13 @@ start:
 
 # read .env $ set -o allexport; source .env; set +o allexport
 
-export AWS_REGION = eu-central-1
-export AWS_ACCOUNT_ID = 449682673987
+AWS_REGION = eu-central-1
+AWS_ACCOUNT_ID = 449682673987
 
-export ANSWER_VERSION = 0.1.0
-export CORE_VERSION = 0.1.2
-export TELEGRAM_INTEGRATION_VERSION = 0.1.0
+ANSWER_VERSION = 0.2.4
+ANSWER2GQL_VERSION = 0.1.1
+CORE_VERSION = 0.1.2
+TELEGRAM_INTEGRATION_VERSION = 0.1.0
 
 login-aws:
 	aws configure
@@ -88,13 +95,6 @@ add-aws-ecr-to-k8s:
 	kubectl create secret generic regcred \
 		--from-file=.dockerconfigjson=/home/leovs09/.docker/config.json \
 		--type=kubernetes.io/dockerconfigjson
-
-build-answer:
-	docker build -t asqa-answer:${ANSWER_VERSION} ./answer
-
-deploy-answer:
-	docker tag asqa-answer:${ANSWER_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-answer:${ANSWER_VERSION}
-	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-answer:${ANSWER_VERSION}
 
 build-core:
 	docker build -t asqa-core:${CORE_VERSION} ./core
@@ -110,9 +110,35 @@ deploy-telegram:
 	docker tag asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION}
 	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/asqa-telegram-integration:${TELEGRAM_INTEGRATION_VERSION}
 
+build-a2g:
+	docker build -t leovs09/asqa-answer2gql:${ANSWER2GQL_VERSION} ./answer2gql
+
+push-a2g:
+	docker push leovs09/asqa-answer2gql:${ANSWER2GQL_VERSION}
+
+
 # TODO: use argo-cd for automatically setup kafka
 setup-kafka-for-k8s:
 	kubectl apply -f ./manifests/kafka.yaml
+
+# ---------------------------------------------------------------------------------------------------------------------
+# PRODUCTION MODEL SERVICE
+# ---------------------------------------------------------------------------------------------------------------------
+
+build-production-answer:
+	docker build -t leovs09/asqa-answer:${ANSWER_VERSION} ./answer/production
+
+run-production-answer:
+	docker run -it \
+		-v ${PWD}/data/answer/production/bentoml:/home/bentoml \
+		-p 5000:5000 \
+		--network="asqa_default" \
+		-e MODEL_NAME=AnswerService:latest \
+		-e YATAI_URL=model-registry-manager:50051 \
+		leovs09/asqa-answer:${ANSWER_VERSION}
+
+push-production-answer:
+	docker push leovs09/asqa-answer:${ANSWER_VERSION}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # GPU
@@ -120,6 +146,18 @@ setup-kafka-for-k8s:
 
 gpu-monitor:
 	watch -n 0.5 nvidia-smi
+
+# ---------------------------------------------------------------------------------------------------------------------
+# KUSTOMIZE
+# ---------------------------------------------------------------------------------------------------------------------
+
+k-prod:
+	kustomize build ./manifests/overlays/production > ./manifests/overlays/production/tml_prod.yaml
+
+k-answer-version:
+	cd ./manifests/overlays/production && \
+	kustomize edit set image leovs09/asqa-answer:${ANSWER_VERSION} && \
+	kustomize edit set image leovs09/asqa-answer2gql:${ANSWER2GQL_VERSION}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # MODELS DATA
@@ -142,3 +180,5 @@ archive-answer-models:
 push-answer-models:
 	aws s3 cp ./answer-data/transformers-bert-auto-tokenizer-1.0.0.tar.gz s3://asqa-answer-models/tokenizer/transformers-bert-auto-tokenizer-1.0.0.tar.gz
 	aws s3 cp ./answer-data/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz s3://asqa-answer-models/model/transformers-bert-auto-model-for-seq2seq-lm-1.0.0.tar.gz
+
+

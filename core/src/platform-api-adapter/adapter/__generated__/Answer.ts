@@ -9,7 +9,6 @@
 
 export interface Answer_answer_nodes {
   __typename: "Answer";
-  question: string;
   text: string;
 }
 

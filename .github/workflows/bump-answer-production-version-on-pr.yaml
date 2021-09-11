@@ -1,0 +1,55 @@
+name: Bump Answer-Production Service Version
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+    - opened
+    - labeled
+    - unlabeled
+    paths:
+      - "answer/production/**"
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Resolve bump label
+      id: bump
+      uses: zwaldowski/match-label-action@v1
+      with:
+        allowed: major,minor,patch
+    - name: Read version from settings.yaml and set version variables
+      run: |
+        VER=$(grep VERSION answer/settings.yaml | cut -d '"' -f 2)
+        echo "VERSION=$VER" >> $GITHUB_ENV
+    - name: Generate new version
+      id: next_version
+      uses: leovs09/semver-release-action@v3
+      with:
+        version: ${{ env.VERSION }}
+        bump: ${{ steps.bump.outputs.match }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Save new version in image settings.yaml
+      run: |-
+        cd answer
+        sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
+    - name: Setup kustomize
+      uses: imranismail/setup-kustomize@v1
+      with:
+        kustomize-version: 4.3.x
+    - name: Update production/kustomization.yaml service image tag
+      run: |-
+        cd ./manifests/overlays/production
+        kustomize edit set image leovs09/asqa-answer:${{ steps.next_version.outputs.version }}
+  
+    - name: Commit and push changes
+      uses: EndBug/add-and-commit@v7
+      with: 
+        default_author: github_actions
+        message: 'answer_v${{ steps.next_version.outputs.version }}'
+        tag: 'answer_v${{ steps.next_version.outputs.version }} --force'

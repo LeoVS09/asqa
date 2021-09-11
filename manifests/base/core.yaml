@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core
+  labels:
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: core
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: asqa
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: core
+      tier: backend
+      solution: asqa
+  template:
+    metadata:
+      labels:
+        app: core
+        tier: backend
+        solution: asqa
+    spec:
+      containers:
+      - image: leovs09/asqa-core:latest # will be set for specific environment
+        name: core
+        imagePullPolicy: IfNotPresent
+
+        resources:
+          requests:
+            cpu: 1
+            memory: 512M
+          limits:
+            cpu: 1
+            memory: 1G
+          
+        ports:
+        - name: main-port
+          containerPort: 80
+        
+        env:
+        - name: SERVER_PORT
+          value: '80'
+        - name: KAFKA_BROKER_URL
+          value: 'kafka-kafka-bootstrap:9092'
+        - name: KAFKA_CLIENT_ID
+          value: 'asqa-core'
+        - name: KAFKA_CONSUMER_GROUP_ID
+          value: 'asqa-consumer'
+        - name: PLATFORM_GQL_URL
+          value: 'http://platform-gateway/graphql'
+        - name: NODE_ENV
+          value: 'production'
+        
+        livenessProbe:
+          httpGet:
+            path: /
+            port: main-port
+      
+        readinessProbe:
+          httpGet:
+            path: /
+            port: main-port
+
+        startupProbe:
+          httpGet:
+            path: /
+            port: main-port
+          failureThreshold: 30
+          periodSeconds: 10 # 30 * 10 = 300s = 5m for start
+      imagePullSecrets:
+      - name: eu-central-1-ecr-registry # aws
+---      
+apiVersion: v1
+kind: Service
+metadata:
+  name: core
+  labels:
+    app: core
+    tier: backend
+    solution: asqa
+    app.kubernetes.io/name: core
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: asqa
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: core
+    tier: backend
+    solution: asqa

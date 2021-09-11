@@ -1,9 +1,10 @@
+from .TokenaizerWrapper import TokenaizerWrapper
 
 class Answerer:
 
     def __init__(self, model, tokenizer):
         self.model = model
-        self.tokenizer = tokenizer
+        self.tokenizer = TokenaizerWrapper(tokenizer)
 
     # Based on https://huggingface.co/transformers/main_classes/model.html#transformers.generation_utils.GenerationMixin.generate
     def answer(self, 
