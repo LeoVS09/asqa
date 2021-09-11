@@ -59,12 +59,12 @@ spec:
 
         resources:
           requests:
-            cpu: 4
-            memory: 6G
+            cpu: 2
+            memory: 4G
             ephemeral-storage: "4Gi"
           limits:
-            cpu: 6
-            memory: 8G
+            cpu: 4
+            memory: 6G
             ephemeral-storage: "6Gi"
           
         ports:
