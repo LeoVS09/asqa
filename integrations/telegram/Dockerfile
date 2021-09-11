@@ -17,5 +17,5 @@ FROM second
 
 COPY . /app
 
-CMD [ "npm", "start" ]
+CMD [ "nest", "start" ]
 
