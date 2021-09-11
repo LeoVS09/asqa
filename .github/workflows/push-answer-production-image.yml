@@ -25,9 +25,9 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Read version from settings.yaml and set version variables
+    - name: Read version from pack.settings.yaml and set version variables
       run: |
-        VER=$(grep VERSION answer/settings.yaml | cut -d '"' -f 2)
+        VER=$(grep VERSION answer/pack.settings.yaml | cut -d '"' -f 2)
         echo "VERSION=$VER" >> $GITHUB_ENV
 
     - name: Build, tag, and push image

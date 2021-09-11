@@ -22,9 +22,9 @@ jobs:
       uses: zwaldowski/match-label-action@v1
       with:
         allowed: major,minor,patch
-    - name: Read version from settings.yaml and set version variables
+    - name: Read version from pack.settings.yaml and set version variables
       run: |
-        VER=$(grep VERSION answer/settings.yaml | cut -d '"' -f 2)
+        VER=$(grep VERSION answer/pack.settings.yaml | cut -d '"' -f 2)
         echo "VERSION=$VER" >> $GITHUB_ENV
     - name: Generate new version
       id: next_version
@@ -34,10 +34,10 @@ jobs:
         bump: ${{ steps.bump.outputs.match }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Save new version in image settings.yaml
+    - name: Save new version in image pack.settings.yaml
       run: |-
         cd answer
-        sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' settings.yaml
+        sed -i -E 's/APP_VERSION: "(.*)"/APP_VERSION: "${{ steps.next_version.outputs.version }}"/g' pack.settings.yaml
     - name: Setup kustomize
       uses: imranismail/setup-kustomize@v1
       with:
