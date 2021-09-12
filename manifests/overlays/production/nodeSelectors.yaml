@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: search
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.civo.com/civo-node-size: g3.k3s.xlarge

@@ -13,5 +13,8 @@ images:
 - name: leovs09/asqa-telegram-integration
   newTag: 0.1.0
 
+patchesStrategicMerge:
+- nodeSelectors.yaml
+
 resources:
 - ../../base
