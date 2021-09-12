@@ -7,3 +7,4 @@ resources:
   - platform-gateway.yaml
   - kafka.yaml
   - core.yaml
+  - telegram.yaml
