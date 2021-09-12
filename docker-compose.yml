@@ -201,7 +201,7 @@ services:
          - KAFKA_BROKER_URL=kafka:9092
          - KAFKA_CLIENT_ID=asqa-core
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
-         - PLATFORM_GQL_URL=http://platform-gateway:8910/graphql
+         - PLATFORM_GQL_URL=http://platform-gateway/graphql
       depends_on: 
          - kafka
          - platform-gateway
@@ -246,12 +246,13 @@ services:
          - ALLOW_ANONYMOUS_LOGIN=yes
    
    kafka-ui:
-      image: obsidiandynamics/kafdrop
+      image: provectuslabs/kafka-ui:latest
       restart: always
       ports:
-         - "9000:9000"
+         - "9000:8080"
       environment:
-         KAFKA_BROKERCONNECT: "kafka:9092"
+         KAFKA_CLUSTERS_0_NAME: local
+         KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
       depends_on:
          - kafka
       links:
