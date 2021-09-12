@@ -9,7 +9,7 @@ Research trying to provide simple architecture, which will able to answer on que
 ## Roadmap
 
 - [x] QA model for [ELI5 dataset](https://facebookresearch.github.io/ELI5/explore.html)
-- [ ] Telegram bot integration
+- [x] Telegram bot integration
 - [ ] Cache answers and search
 - [ ] Add rating for answers
 - [ ] Use Bigger Wikipedia index, instead [Wiki40b](https://www.tensorflow.org/datasets/catalog/wiki40b) use [wikipedia_en_100_0](https://huggingface.co/datasets/wiki_snippets), which contain two times bigger dataset. Use[index guide](https://github.com/facebookresearch/faiss/wiki/Guidelines-to-choose-an-index) for make search possible
