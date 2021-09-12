@@ -27,14 +27,14 @@ jobs:
     
     - name: Read version from package.json and set version variables
       run: |
-        VER=$(grep version core/package.json | cut -d ':' -f 2 | cut -d '"' -f 2)
+        VER=$(grep version integrations/telegram/package.json | cut -d ':' -f 2 | cut -d '"' -f 2)
         echo "VERSION=$VER" >> $GITHUB_ENV
 
     - name: Build, tag, and push image
       id: build-image
       env:
         REGISTRY: leovs09
-        REPOSITORY: asqa-telegram
+        REPOSITORY: asqa-telegram-integration
         IMAGE_TAG: ${{ env.VERSION }}
       run: |
         # Build a docker container and push.
