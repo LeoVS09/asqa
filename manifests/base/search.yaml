@@ -130,4 +130,4 @@ spec:
           failureThreshold: 30
           periodSeconds: 40 # 30 * 40 = 1200s = 20m for start
       imagePullSecrets:
-      - name: eu-central-1-ecr-registry # aws
+      - name: docker-hub-creds
