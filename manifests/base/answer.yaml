@@ -39,12 +39,19 @@ spec:
       solution: asqa
   volumeClaimTemplates:
   - metadata:
-      name: answer-models-cache-storage
+      name: answer-bentoml-services-storage
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
           storage: 10Gi
+  - metadata:
+      name: answer-tmp-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
   template:
     metadata:
       labels:
@@ -75,7 +82,9 @@ spec:
 
         volumeMounts:
         - mountPath: "/bentoml"
-          name: answer-models-cache-storage
+          name: answer-bentoml-services-storage
+        - mountPath: "/tmp" # Need bacause bentoml loads model before extraction to tmp directory
+          name: answer-tmp-storage
         
         env:
         - name: BENTOML_PORT
