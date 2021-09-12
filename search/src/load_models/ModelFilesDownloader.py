@@ -16,12 +16,15 @@ def join_and_create(first_dir, second_dir):
 
 class ModelFilesDownloader:
 
-    def __init__(self):
+    def __init__(self, endpoint_url=None):
 
         self.aws_client = None
 
+        if not endpoint_url:
+            endpoint_url = os.environ.get('S3_ENDPOINT_URL')
+
         try:
-            self.s3 = boto3.client('s3')
+            self.s3 = boto3.client('s3', endpoint_url=endpoint_url)
         except Exception as error:
             logger.error('Cannot connect to AWS, but still can use cache', error)
 
