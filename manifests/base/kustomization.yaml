@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - answer.yaml
   - search.yaml
+  - platform-gateway.yaml
