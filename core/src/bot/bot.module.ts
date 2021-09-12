@@ -29,7 +29,7 @@ import { PlatformApiAdapterModule } from 'src/platform-api-adapter/platform-api-
               // fix case when message replayed by kafka
               // on long response processing
               // Issue: https://github.com/tulios/kafkajs/issues/130
-              sessionTimeout: 2 * 60 * 1000, // 2 minutes,
+              sessionTimeout: 5 * 60 * 1000, // 5 minutes,
               heartbeatInterval: 3 * 1000 // 3 seconds
             }
           }
