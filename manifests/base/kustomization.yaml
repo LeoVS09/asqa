@@ -6,3 +6,4 @@ resources:
   - search.yaml
   - platform-gateway.yaml
   - kafka.yaml
+  - core.yaml
