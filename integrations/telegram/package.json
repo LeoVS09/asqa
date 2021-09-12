@@ -1,6 +1,6 @@
 {
-  "name": "telegram",
-  "version": "0.1.0",
+  "name": "@asqa/telegram",
+  "version": "0.1.1",
   "description": "",
   "author": "",
   "private": true,

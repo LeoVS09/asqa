@@ -45,7 +45,7 @@ jobs:
     - name: Update production/kustomization.yaml service image tag
       run: |-
         cd ./manifests/overlays/production
-        kustomize edit set image leovs09/asqa-telegram:${{ steps.next_version.outputs.version }}
+        kustomize edit set image leovs09/asqa-telegram-integration:${{ steps.next_version.outputs.version }}
     
     - name: Commit and push changes
       uses: EndBug/add-and-commit@v7
