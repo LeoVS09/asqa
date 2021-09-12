@@ -51,7 +51,7 @@ spec:
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaTopic
 metadata:
-  name: messge.from.user.v1
+  name: message.from.user.v1
   labels:
     strimzi.io/cluster: "kafka"
     solution: asqa

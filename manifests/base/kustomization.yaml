@@ -5,3 +5,4 @@ resources:
   - answer.yaml
   - search.yaml
   - platform-gateway.yaml
+  - kafka.yaml
