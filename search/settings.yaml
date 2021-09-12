@@ -2,7 +2,7 @@
 SERVER_PORT: 8894
 GRAPHQL_DEBUG: true
 IS_DEVELOPMENT: false
-APP_VERSION: "0.5.0"
+APP_VERSION: "0.6.0"
 MONGODB_URL: "mongodb://root:example@mongo:27017/"
 DEBUG_LOG: false
 CACHE_FOLDER: '/cache'
