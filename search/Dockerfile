@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.5.0 as base
+FROM python:3.9-slim-buster as base
 
 RUN apt update && apt upgrade -y && \
    apt install -y bash bash-completion make curl wget git
