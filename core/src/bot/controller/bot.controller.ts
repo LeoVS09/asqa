@@ -13,7 +13,6 @@ export class BotController {
 
     @EventPattern(MESSAGE_FROM_USER_TOPIC)
     getHello(@Payload('value', new ValidationPipe()) value: MessageFromUserEventDto) {
-      console.log('Message from user', value.text)
       return this.bot.onMessage(value.text, value.meta);
     }
 }
