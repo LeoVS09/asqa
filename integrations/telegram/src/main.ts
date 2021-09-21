@@ -17,6 +17,8 @@ const telegramKey = process.env.TELEGRAM_BOT_API_KEY
 if (!telegramKey) 
   throw new Error('Cannot find environment variable: TELEGRAM_BOT_API_KEY')
 
+const port = process.env.SERVER_PORT || 3000
+
 async function bootstrap() {
   const kafka = await connectKafka();
 
@@ -41,7 +43,13 @@ async function bootstrap() {
   // TODO: swith to webhook
 
   await consumeKafkaMessages(async ({ meta, text }) => {
-    contextCache[meta.identity]?.reply(text);
+    const ctx = contextCache[meta.identity]
+    if(!ctx) {
+      console.error(`Cannot find context with identity: ${meta.identity} for send message: ${ctx.message}`);
+      return
+    }
+    
+    ctx.reply(text);
   });
 
   const app = express();
@@ -68,9 +76,7 @@ async function bootstrap() {
     },
   });
 
-  const port = process.env.SERVER_PORT || 3000;
   console.log('Will start server at port ' + port);
-
   server.listen(port);
 }
 bootstrap();
