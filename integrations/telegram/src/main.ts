@@ -1,13 +1,11 @@
 import { Telegraf, Context } from 'telegraf';
 import {
-  stopKafka,
-  consumeKafkaMessages,
-  sendMessageToKafka,
-  connectKafka,
-} from './kafka';
+  KafkaAdapter,
+  extractKafkaEnvironmentVariables,
+  addHealthCheck
+} from './services';
 import * as express from 'express';
 import * as http from 'http';
-import { addHealthCheck } from './health';
 import { MessagesService } from './messages';
 
 // TODO: switch to database
@@ -19,8 +17,11 @@ if (!telegramKey)
 
 const port = process.env.SERVER_PORT || 3000
 
+const kafkaOptions = extractKafkaEnvironmentVariables()
+
 async function bootstrap() {
-  const kafka = await connectKafka();
+  const kafka = new KafkaAdapter(kafkaOptions);
+  await kafka.connect();
 
   const bot = new Telegraf(telegramKey);
 
@@ -33,7 +34,7 @@ async function bootstrap() {
 
     contextCache[identity] = ctx;
 
-    sendMessageToKafka({
+    kafka.sendFromUserMessage({
       meta: { identity },
       text: ctx.message.text,
     });
@@ -42,7 +43,7 @@ async function bootstrap() {
   await bot.launch(); // Currently using long polling
   // TODO: swith to webhook
 
-  await consumeKafkaMessages(async ({ meta, text }) => {
+  await kafka.onToUserMessage(async ({ meta, text }) => {
     const ctx = contextCache[meta.identity]
     if(!ctx) {
       console.error(`Cannot find context with identity: ${meta.identity} for send message: ${ctx.message}`);
@@ -62,11 +63,12 @@ async function bootstrap() {
   addHealthCheck(server, {
     isReady: async () => {
       // TODO: make real ready check
-      return !!(bot && kafka.consumer && kafka.producer);
+      return !!(bot && kafka.isReady());
     },
     onShutdownSignal: async () => {
       bot.stop('Shutdown signal received');
-      await stopKafka();
+      await kafka.stop();
+
       await new Promise<void>((resolve, reject) =>
         server.close((err) => {
           if (err) reject(err);
