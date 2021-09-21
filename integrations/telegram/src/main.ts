@@ -8,25 +8,23 @@ import {
 import * as express from 'express';
 import * as http from 'http';
 import { addHealthCheck } from './health';
+import { MessagesService } from './messages';
 
 // TODO: switch to database
 const contextCache: { [key: string]: Context } = {};
 
-const HELLO_MESSAGE =
-  'Hello! ' +
-  'This AI know everything, just ask what you want to know. \n' +
-  'For example: Why sky is blue?\n\n' +
-  'Disclaimer: We in early alpha, ' +
-  'but really want to give all people ability to get answers on any questions instantly.\n' +
-  'Let us know if something work incorrectly or you have ideas what we can improve. ' +
-  'You can write us directly, asqa-team@protonmail.com.';
+const telegramKey = process.env.TELEGRAM_BOT_API_KEY
+if (!telegramKey) 
+  throw new Error('Cannot find environment variable: TELEGRAM_BOT_API_KEY')
 
 async function bootstrap() {
   const kafka = await connectKafka();
 
-  const bot = new Telegraf(process.env.TELEGRAM_BOT_API_KEY);
+  const bot = new Telegraf(telegramKey);
 
-  bot.start((ctx) => ctx.reply(HELLO_MESSAGE));
+  const messagesService = new MessagesService();
+  
+  bot.start(async (ctx) => ctx.reply(await messagesService.getHello()));
 
   bot.on('text', (ctx) => {
     const identity = String(ctx.message.chat.id);
