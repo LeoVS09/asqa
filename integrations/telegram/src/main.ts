@@ -11,7 +11,7 @@ import { MessagesService } from './messages';
 
 const port = process.env.SERVER_PORT || 3000
 
-async function bootstrap() {
+async function setup(){
   const kafka = new KafkaAdapter();
 
   const messagesService = new MessagesService();
@@ -23,14 +23,17 @@ async function bootstrap() {
   await kafka.connect();
   telegram.start()
 
+  return [telegram, kafka]
+}
+
+async function bootstrap() {
+  const dependencies = await setup()
+
   const app = express();
   app.get('/', (req, res) => res.send('ok'));
 
   const server = http.createServer(app);
-  setupHealthCheck({
-    server, 
-    dependencies: [telegram, kafka]
-  })
+  setupHealthCheck({server, dependencies})
 
   console.log('Will start server at port ' + port);
   server.listen(port);
