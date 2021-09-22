@@ -95,7 +95,6 @@ services:
    answer2gql:
       build:
          context: ./answer2gql
-      container_name: asqa_core_dev
       ports:
          - 8914:8914
       volumes:
