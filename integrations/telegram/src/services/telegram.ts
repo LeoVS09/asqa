@@ -1,5 +1,6 @@
 import { Telegraf, Context } from 'telegraf';
 import { IMessageBroker, Message } from "../retranslator";
+import { HealthDependency } from './health';
 
 const telegramKey = process.env.TELEGRAM_BOT_API_KEY
 if (!telegramKey) 
@@ -15,7 +16,7 @@ export interface IServiceMesssagesService {
     getHello(): Promise<string>
 }
 
-export class TelegramAdapter implements IMessageBroker {
+export class TelegramAdapter implements IMessageBroker, HealthDependency {
 
     bot: Telegraf
     contextCache: { [key: string]: Context }
@@ -41,12 +42,12 @@ export class TelegramAdapter implements IMessageBroker {
         this.isStarted = true
     }
 
-    stop() {
+    async stop() {
         this.isStarted = false;
         this.bot.stop('Shutdown signal received');
     }
 
-    isReady(): boolean {
+    async isReady(): Promise<boolean> {
         // TODO: add real health check
         return this.isStarted
     }

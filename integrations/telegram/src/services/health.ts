@@ -1,14 +1,43 @@
 import http from 'http';
 import { createTerminus, HealthCheckError } from '@godaddy/terminus';
+import * as util from 'util';
 
-export interface HealthCHeckHooks {
+export interface HealthDependency {
+  isReady(): Promise<boolean>;
+  stop(): Promise<void>;
+}
+
+export const setupHealthCheck = ({server, dependencies}: {server: http.Server, dependencies: Array<HealthDependency>}) => 
+  addHealthCheckHooks(server, {
+    isReady: async () => {
+      const results = await Promise.all(dependencies.map(d => d.isReady()));
+
+      for (const result of results) 
+        if(!result)
+          return false;
+
+      return true;      
+    },
+
+    onShutdownSignal: async () => {
+      for (const dependency of dependencies) 
+        await dependency.stop();
+
+      const closeServer = util.promisify(server.close)
+      await closeServer()
+    },
+  });
+
+
+
+export interface HealthCheckHooks {
   isReady: () => Promise<boolean>;
   onShutdownSignal: () => Promise<void>;
 }
 
-export function addHealthCheck(
+function addHealthCheckHooks(
   server: http.Server,
-  { isReady, onShutdownSignal }: HealthCHeckHooks,
+  { isReady, onShutdownSignal }: HealthCheckHooks,
 ) {
   async function onHealthCheck() {
     // checks if the system is healthy, like the db connection is live

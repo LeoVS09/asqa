@@ -1,12 +1,13 @@
 import { Kafka, Consumer, Producer, KafkaConfig, CompressionTypes } from "kafkajs";
 import { v4 as uuidv4 } from 'uuid';
+import { HealthDependency } from "../health";
 import { buildKafkaConfig } from "./configuration";
 
 export interface ConsumerCallback<Payload = {}> {
     (data: Payload): Promise<void>;
   }
   
-  export class KafkaWrapper<Payload = {}> {
+export class KafkaWrapper<Payload = {}> implements HealthDependency {
   
     private readonly config: KafkaConfig;
     private readonly kafka: Kafka
@@ -24,7 +25,7 @@ export interface ConsumerCallback<Payload = {}> {
         // Need asyncroniusly connect to kafka
     }
   
-    public isReady(): boolean {
+    public async isReady(): Promise<boolean> {
         // TODO: implement real health check
         //  Current solutions too complex https://github.com/tulios/kafkajs/issues/452
         //  Hopefully someday will exists default implementation https://github.com/tulios/kafkajs/issues/1010
