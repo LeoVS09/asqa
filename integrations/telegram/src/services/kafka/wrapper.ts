@@ -1,6 +1,6 @@
 import { Kafka, Consumer, Producer, KafkaConfig, CompressionTypes } from "kafkajs";
 import { v4 as uuidv4 } from 'uuid';
-import { HealthDependency } from "../health";
+import { HealthDependency } from 'src/interfaces';
 import { buildKafkaConfig } from "./configuration";
 
 export interface ConsumerCallback<Payload = {}> {

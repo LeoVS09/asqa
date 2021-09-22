@@ -1,6 +1,7 @@
 import { Telegraf, Context } from 'telegraf';
+import type {Chat, User} from 'typegram'
 import { IMessageBroker, Message } from "../retranslator";
-import { HealthDependency } from './health';
+import { HealthDependency, IdentifaibleData, IStorageService } from 'src/interfaces';
 
 const telegramKey = process.env.TELEGRAM_BOT_API_KEY
 if (!telegramKey) 
@@ -16,23 +17,34 @@ export interface IServiceMesssagesService {
     getHello(): Promise<string>
 }
 
+
+/** Can be conversation with user or group */
+export interface ChatData extends IdentifaibleData {
+    id: number;
+    chat: Chat
+    from: User
+}
 export class TelegramAdapter implements IMessageBroker, HealthDependency {
 
     bot: Telegraf
-    contextCache: { [key: string]: Context }
     
     private isStarted: boolean = false
 
-    constructor(private readonly messageService: IServiceMesssagesService) {
+    constructor(
+        private readonly messageService: IServiceMesssagesService,
+        private readonly storage: IStorageService<ChatData>
+    ) {
 
         this.bot = new Telegraf(telegramKey);
 
-        this.bot.start(async (ctx) =>
-            ctx.reply(await this.messageService.getHello())
-        );
+        this.bot.start(async (ctx) => {
+            
+            const saving = this.saveIfNotExists(ctx)
 
-        // TODO: switch to database
-        this.contextCache = {};
+            ctx.reply(await this.messageService.getHello())
+
+            await saving
+        });
     }
 
     async start(){
@@ -53,10 +65,10 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
     }
 
     on(callback: (message: Message<MetaWithIdentity>) => void) {
-        this.bot.on('text', (ctx) => {
+        this.bot.on('text', async (ctx) => {
+            await this.saveIfNotExists(ctx)
+            
             const identity = String(ctx.message.chat.id);
-        
-            this.contextCache[identity] = ctx;
         
             callback({
               meta: { identity },
@@ -66,14 +78,18 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
     }
 
     send({meta, text}: Message<MetaWithIdentity>) {
-        if (!meta.identity) 
+        const id = +meta.identity
+        if (!id || typeof id !== 'number' || isNaN(id)) 
             throw new Error(`Message meta not have identity: ${meta.identity}`)
         
-        const ctx = this.contextCache[meta.identity]
-        if(!ctx) 
-            throw new Error(`Cannot find context with identity: ${meta.identity} for send message: ${ctx.message}`);
-        
-        ctx.reply(text);
+        this.bot.telegram.sendMessage(id, text)
     }
 
+    private async saveIfNotExists({message: {chat, from}}: Context) {
+        return await this.storage.saveIfNotExists({
+            id: chat.id,
+            chat,
+            from
+        })
+    }
 }

@@ -1,4 +1,4 @@
-import { SASLOptions, KafkaConfig, logLevel, Kafka } from "kafkajs";
+import { SASLOptions, KafkaConfig, logLevel } from "kafkajs";
 
 const getSASLOptions = (username: string, password: string): SASLOptions => 
     username && password

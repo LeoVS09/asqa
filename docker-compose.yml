@@ -211,6 +211,7 @@ services:
       container_name: asqa_telegram_integration_dev
       ports:
          - 8916:8916
+         - 9229:9229 # Node debug port
       volumes:
          - ./integrations/telegram/:/app/.
       env_file:

@@ -1,11 +1,8 @@
 import http from 'http';
 import { createTerminus, HealthCheckError } from '@godaddy/terminus';
 import * as util from 'util';
+import { HealthDependency } from 'src/interfaces';
 
-export interface HealthDependency {
-  isReady(): Promise<boolean>;
-  stop(): Promise<void>;
-}
 
 export const setupHealthCheck = ({server, dependencies}: {server: http.Server, dependencies: Array<HealthDependency>}) => 
   addHealthCheckHooks(server, {
