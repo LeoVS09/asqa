@@ -1,29 +1,29 @@
 import { Collection, WithId } from "mongodb";
-import { ChatData } from "../telegram";
+import { ChatDto } from "../telegram";
 import { MongoDbAdapter } from "../storage/MongoDB";
 import { ISimpleStorage } from "src/interfaces";
 
-export class ChatsCollection implements ISimpleStorage<ChatData> {
+export class ChatsCollection implements ISimpleStorage<ChatDto> {
 
-    collection: Collection<ChatData>
+    collection: Collection<ChatDto>
 
     constructor(
         private readonly db: MongoDbAdapter
     ){
-        this.collection = this.db.collection('telegram-chats') as unknown as Collection<ChatData>;
+        this.collection = this.db.collection('telegram-chats') as unknown as Collection<ChatDto>;
     }
 
-    async get(id: number): Promise<ChatData | undefined> {
-        return await this.collection.findOne<ChatData>({
+    async get(id: number): Promise<ChatDto | undefined> {
+        return await this.collection.findOne<ChatDto>({
             _id: id 
         })
     }
 
-    async save(data: ChatData) {
+    async save(data: ChatDto) {
         return await this.collection.updateOne({
             ...data,
             _id: data.id as any
-        } as WithId<ChatData>, 
+        } as WithId<ChatDto>, 
         {
             upsert: true
         })

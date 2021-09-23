@@ -1,3 +1,3 @@
-export * from './adapter'
+export * from './KafkaAdapter'
 export * from './configuration'
-export * from './wrapper'
+export * from './KafkaWrapper'

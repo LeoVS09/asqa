@@ -3,7 +3,7 @@ import * as http from 'http';
 import { Retranslator } from './retranslator'
 import {
   CachableStorage,
-  ChatData,
+  ChatDto,
   ChatsCollection,
   ChatsStorage,
   InMemoryCache,
@@ -26,7 +26,7 @@ async function setup(){
   
   const mongoDb = new MongoDbAdapter();
   const chatsCollection = new ChatsCollection(mongoDb)
-  const cache = new InMemoryCache<ChatData>(WEEK_EXPIRATION);
+  const cache = new InMemoryCache<ChatDto>(WEEK_EXPIRATION);
   const cachableStorage = new CachableStorage(cache, chatsCollection);
   const storage = new ChatsStorage(cachableStorage)
 

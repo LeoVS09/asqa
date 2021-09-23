@@ -1,15 +1,15 @@
 import { ISimpleStorage } from "src/interfaces"
-import { ChatData, IChatsStorage } from "../telegram"
+import { ChatDto, IChatsStorage } from "../telegram"
 
 
 
 export class ChatsStorage implements IChatsStorage {
 
     constructor(
-        private readonly internalStorage: ISimpleStorage<ChatData>
+        private readonly internalStorage: ISimpleStorage<ChatDto>
     ){}
 
-    async saveIfNotExists(data: ChatData): Promise<void> {
+    async saveIfNotExists(data: ChatDto): Promise<void> {
         const existed = await this.internalStorage.get(data.id)
         if(existed) 
             return

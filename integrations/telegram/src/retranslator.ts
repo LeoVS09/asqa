@@ -1,11 +1,8 @@
-export interface Message<Meta = any> {
-    meta: Meta
-    text: string;
-}
+import { CommonMessage } from "./interfaces";
 
 export interface IMessageBroker {
-    on: (callback: (message: Message) => void) => void;
-    send: (message: Message) => void;
+    on: (callback: (message: CommonMessage) => void) => void;
+    send: (message: CommonMessage) => void;
 }
 
 export class Retranslator {

@@ -1,7 +1,8 @@
-import { Telegraf, Context } from 'telegraf';
-import type {Chat, User} from 'typegram'
-import { IMessageBroker, Message } from "../retranslator";
-import { HealthDependency, IdentifaibleData } from 'src/interfaces';
+import { Telegraf } from 'telegraf';
+import { IMessageBroker } from "../../retranslator";
+import { CommonMessage, HealthDependency } from 'src/interfaces';
+import { ChatDto } from './ChatDto';
+import { TelegramMessageDto, TelegramMetaDto } from './TelegramMessageDto';
 
 const telegramKey = process.env.TELEGRAM_BOT_API_KEY
 if (!telegramKey) 
@@ -9,27 +10,14 @@ if (!telegramKey)
 
 export type HelloMessageCallback = () => Promise<string>
 
-export interface TelegramMeta {
-    /** Local telegram id, used only for telegram */
-    identity: string;
-    provider: 'telegram';
-}
-
 export interface IServiceMesssagesService {
     getHello(): Promise<string>
 }
 
-
-/** Can be conversation with user or group */
-export interface ChatData extends IdentifaibleData {
-    id: number;
-    chat: Chat
-    from: User
-}
-
 export interface IChatsStorage {
-    saveIfNotExists(data: ChatData): Promise<void>
+    saveIfNotExists(data: ChatDto): Promise<void>
 }
+
 export class TelegramAdapter implements IMessageBroker, HealthDependency {
 
     bot: Telegraf
@@ -45,7 +33,7 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
 
         this.bot.start(async (ctx) => {
             
-            const saving = this.saveIfNotExists(ctx)
+            const saving = this.storage.saveIfNotExists(new ChatDto(ctx))
 
             ctx.reply(await this.messageService.getHello())
 
@@ -70,21 +58,15 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
         return this.isStarted
     }
 
-    on(callback: (message: Message<TelegramMeta>) => void) {
+    on(callback: (message: CommonMessage<TelegramMetaDto>) => void) {
         this.bot.on('text', async (ctx) => {
-            await this.saveIfNotExists(ctx)
+            await this.storage.saveIfNotExists(new ChatDto(ctx))
         
-            callback({
-                meta: { 
-                  identity: String(ctx.message.chat.id),
-                  provider: 'telegram',
-                },
-                text: ctx.message.text,
-            });
+            callback(new TelegramMessageDto(ctx));
         });
     }
 
-    send({meta, text}: Message<TelegramMeta>) {
+    send({meta, text}: CommonMessage<TelegramMetaDto>) {
         if (meta.provider !== 'telegram') 
             throw new Error('Received message not for telegram')
         
@@ -93,13 +75,5 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
             throw new Error(`Message meta not have identity: ${meta.identity}`)
         
         this.bot.telegram.sendMessage(id, text)
-    }
-
-    private async saveIfNotExists({message: {chat, from}}: Context) {
-        return await this.storage.saveIfNotExists({
-            id: chat.id,
-            chat,
-            from
-        })
     }
 }
