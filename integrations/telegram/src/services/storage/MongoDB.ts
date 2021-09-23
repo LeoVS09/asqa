@@ -1,6 +1,5 @@
-import { HealthDependency, IdentifaibleData } from "src/interfaces";
-import { ISimpleStorageService } from "./adapter";
-import { Collection, Db, MongoClient, Filter, WithId} from 'mongodb'
+import { HealthDependency } from "src/interfaces";
+import { Db, MongoClient } from 'mongodb'
 
 export function extractMongoDBConfiguration(){
     const {MONGODB_URL: url} = process.env;
@@ -16,23 +15,25 @@ export function extractMongoDBConfiguration(){
     return {url, dbName};
 }
 
-export class MongoDbAdapter<T extends IdentifaibleData = IdentifaibleData> implements ISimpleStorageService<T>, HealthDependency {
+export class MongoDbAdapter implements HealthDependency {
 
     client: MongoClient
     db: Db;
-    collection: Collection<WithId<T>>
+    
 
     areWasConnect: boolean = false;
 
-    constructor(
-        private readonly collectionName: string,
-    ) {
+    constructor() {
 
         const {url, dbName} = extractMongoDBConfiguration()
 
         this.client = new MongoClient(url);
         this.db = this.client.db(dbName)
-        this.collection = this.db.collection(this.collectionName);
+        
+    }
+
+    public collection(name: string) {
+        return this.db.collection(name);
     }
 
     public async connect(): Promise<MongoClient> {
@@ -53,20 +54,6 @@ export class MongoDbAdapter<T extends IdentifaibleData = IdentifaibleData> imple
         return this.areWasConnect
     }
 
-    async get(id: number): Promise<T | undefined> {
-        return await this.collection.findOne<T>({
-            _id: id 
-        } as Filter<WithId<T>>)
-    }
 
-    async save(data: T) {
-        return await this.collection.updateOne({
-            ...data,
-            _id: data.id as any
-        } as WithId<T>, 
-        {
-            upsert: true
-        })
-    }
     
 }

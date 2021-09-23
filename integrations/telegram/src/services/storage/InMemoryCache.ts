@@ -1,10 +1,9 @@
 import * as Keyv from 'keyv'
-import { IdentifaibleData } from 'src/interfaces';
-import { ISimpleStorageService } from './adapter';
+import { IdentifaibleData, ISimpleStorage } from 'src/interfaces';
 
 export const WEEK_EXPIRATION = 7 * 24 * 60 * 60 * 1000 // in milliseconds
 
-export class InMemoryCache<T extends IdentifaibleData = IdentifaibleData> implements ISimpleStorageService<T> {
+export class InMemoryCache<T extends IdentifaibleData = IdentifaibleData> implements ISimpleStorage<T> {
 
     keyv: Keyv
 

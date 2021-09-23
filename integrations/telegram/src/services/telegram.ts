@@ -1,7 +1,7 @@
 import { Telegraf, Context } from 'telegraf';
 import type {Chat, User} from 'typegram'
 import { IMessageBroker, Message } from "../retranslator";
-import { HealthDependency, IdentifaibleData, IStorageService } from 'src/interfaces';
+import { HealthDependency, IdentifaibleData } from 'src/interfaces';
 
 const telegramKey = process.env.TELEGRAM_BOT_API_KEY
 if (!telegramKey) 
@@ -9,8 +9,10 @@ if (!telegramKey)
 
 export type HelloMessageCallback = () => Promise<string>
 
-export interface MetaWithIdentity {
+export interface TelegramMeta {
+    /** Local telegram id, used only for telegram */
     identity: string;
+    provider: 'telegram';
 }
 
 export interface IServiceMesssagesService {
@@ -24,6 +26,10 @@ export interface ChatData extends IdentifaibleData {
     chat: Chat
     from: User
 }
+
+export interface IChatsStorage {
+    saveIfNotExists(data: ChatData): Promise<void>
+}
 export class TelegramAdapter implements IMessageBroker, HealthDependency {
 
     bot: Telegraf
@@ -32,7 +38,7 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
 
     constructor(
         private readonly messageService: IServiceMesssagesService,
-        private readonly storage: IStorageService<ChatData>
+        private readonly storage: IChatsStorage
     ) {
 
         this.bot = new Telegraf(telegramKey);
@@ -64,20 +70,24 @@ export class TelegramAdapter implements IMessageBroker, HealthDependency {
         return this.isStarted
     }
 
-    on(callback: (message: Message<MetaWithIdentity>) => void) {
+    on(callback: (message: Message<TelegramMeta>) => void) {
         this.bot.on('text', async (ctx) => {
             await this.saveIfNotExists(ctx)
-            
-            const identity = String(ctx.message.chat.id);
         
             callback({
-              meta: { identity },
-              text: ctx.message.text,
+                meta: { 
+                  identity: String(ctx.message.chat.id),
+                  provider: 'telegram',
+                },
+                text: ctx.message.text,
             });
         });
     }
 
-    send({meta, text}: Message<MetaWithIdentity>) {
+    send({meta, text}: Message<TelegramMeta>) {
+        if (meta.provider !== 'telegram') 
+            throw new Error('Received message not for telegram')
+        
         const id = +meta.identity
         if (!id || typeof id !== 'number' || isNaN(id)) 
             throw new Error(`Message meta not have identity: ${meta.identity}`)

@@ -7,6 +7,8 @@ export interface IdentifaibleData {
     id: number
 }
 
-export interface IStorageService<T extends IdentifaibleData = IdentifaibleData> {
-    saveIfNotExists(data: T): Promise<void>
+
+export interface ISimpleStorage<T extends IdentifaibleData = IdentifaibleData> {
+    get(id: number): Promise<T | undefined>;
+    save(data: T)
 }

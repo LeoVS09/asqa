@@ -1,11 +1,10 @@
-import { IdentifaibleData } from "src/interfaces";
-import { ISimpleStorageService } from "./adapter";
+import { IdentifaibleData, ISimpleStorage } from "src/interfaces";
 
-export class CachableStorage<T extends IdentifaibleData = IdentifaibleData> implements ISimpleStorageService<T> {
+export class CachableStorage<T extends IdentifaibleData = IdentifaibleData> implements ISimpleStorage<T> {
 
     constructor(
-        private readonly cache: ISimpleStorageService<T>,
-        private readonly persistent: ISimpleStorageService<T>,
+        private readonly cache: ISimpleStorage<T>,
+        private readonly persistent: ISimpleStorage<T>,
     ) {}
 
     async get(id: number): Promise<T | undefined> {
