@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { KafkaOptions } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
-import { generateKafkaClientOptions } from './bot/KafkaClientOptions';
+import { generateKafkaClientOptions } from './kafka';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,7 +19,7 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
 
-  const port = configService.get('SERVER_PORT');
+  const port = configService.get('PORT');
   await app.listen(port);
 }
 

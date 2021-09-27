@@ -4,10 +4,10 @@ import { SlowAnswerService } from './slow-answer/slow-answer.service';
 import { BotService } from './bot/bot.service';
 import { MessagesEventAdapterService } from './messages-event-adapter/messages-event-adapter.service';
 import { BotController } from './controller/bot.controller';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { ClientProxyFactory } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { PlatformApiAdapterModule } from 'src/platform-api-adapter/platform-api-adapter.module';
-import { generateKafkaClientOptions } from './KafkaClientOptions';
+import { generateKafkaClientOptions } from '../kafka';
 
 export {
   generateKafkaClientOptions

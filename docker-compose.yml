@@ -196,7 +196,7 @@ services:
       volumes:
          - ./core/:/app/.
       environment:
-         - SERVER_PORT=8915
+         - PORT=8915
          - KAFKA_BROKER_URL=kafka:9092
          - KAFKA_CLIENT_ID=asqa-core
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
@@ -214,6 +214,11 @@ services:
          - 9229:9229 # Node debug port
       volumes:
          - ./integrations/telegram/:/app/.
+      environment:
+         - KAFKA_BROKER_URL=kafka:9092
+         - KAFKA_CLIENT_ID=asqa-telegram-integration
+         - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
+         - MONGODB_URL=mongodb://root:example@mongo:27017/telegram?authSource=admin
       env_file:
          ./integrations/telegram/.env
       depends_on: 

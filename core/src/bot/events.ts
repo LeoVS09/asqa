@@ -1,10 +1,10 @@
 import { IEventMeta, IEventWithIdentity, IMessageFromUserEvent, IMessageToUserEvent } from "./interfaces";
-import { IsString, ValidateNested} from 'class-validator';
+import { IsDefined, IsString, ValidateNested} from 'class-validator';
 
 export class EventMetaDto implements IEventMeta {
 
-    @IsString()
-    identity: string;
+    @IsDefined()
+    identity: number | string;
 
 }
 

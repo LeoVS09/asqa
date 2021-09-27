@@ -4,13 +4,9 @@ export interface HealthDependency {
 }
   
 export interface IdentifaibleData {
-    id: number
+    id: string | number
 }
 
-export interface CommonMessage<Meta = any> {
-    meta: Meta
-    text: string;
-}
 
 export interface ISimpleStorage<T extends IdentifaibleData = IdentifaibleData> {
     get(id: number): Promise<T | undefined>;
