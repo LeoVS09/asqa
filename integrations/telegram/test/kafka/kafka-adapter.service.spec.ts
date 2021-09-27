@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChatsStorageService } from './chats-storage.service';
+import { KafkaAdapterService } from 'src/kafka/kafka-adapter.service';
 
-describe('ChatsStorageService', () => {
-  let service: ChatsStorageService;
+describe('KafkaAdapterService', () => {
+  let service: KafkaAdapterService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ChatsStorageService],
+      providers: [KafkaAdapterService],
     }).compile();
 
-    service = module.get<ChatsStorageService>(ChatsStorageService);
+    service = module.get<KafkaAdapterService>(KafkaAdapterService);
   });
 
   it('should be defined', () => {

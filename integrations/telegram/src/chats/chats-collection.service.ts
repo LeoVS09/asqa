@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ChatDto } from 'src/telegram';
-import {ChatModel, ChatDocument} from '../schemas'
+import {ChatModel, ChatDocument} from './schemas'
 
 @Injectable()
 export class ChatsCollectionService {

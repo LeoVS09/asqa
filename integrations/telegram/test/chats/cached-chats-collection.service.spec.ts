@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CachedChatsCollectionService } from './cached-chats-collection.service';
+import { CachedChatsCollectionService } from '../../src/chats/cached-chats-collection.service';
 
 describe('CachedStorageService', () => {
   let service: CachedChatsCollectionService;

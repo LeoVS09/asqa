@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { KafkaController } from './kafka.controller';
+import { TelegramController } from 'src/telegram/telegram.controller';
 
-describe('KafkaController', () => {
-  let controller: KafkaController;
+describe('TelegramController', () => {
+  let controller: TelegramController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [KafkaController],
+      controllers: [TelegramController],
     }).compile();
 
-    controller = module.get<KafkaController>(KafkaController);
+    controller = module.get<TelegramController>(TelegramController);
   });
 
   it('should be defined', () => {

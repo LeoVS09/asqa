@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ChatsStorageService } from 'src/chats/chats-storage/chats-storage.service';
+import { ChatsStorageService } from 'src/chats/chats-storage.service';
 import { ToTelegramMessageDto } from 'src/messages';
-import { ITelegramService, MessagesService } from 'src/messages/messages/messages.service';
+import { ITelegramService, MessagesService } from 'src/messages/messages.service';
 import { Context, Telegraf } from 'telegraf';
-import { ChatDto, FromTelegramMessageDto } from '../models';
-import { TelegrafProviderService } from '../telegraf-provider/telegraf-provider.service';
+import { ChatDto, FromTelegramMessageDto } from './models';
+import { TelegrafProviderService } from './telegraf-provider.service';
 
 @Injectable()
 export class TelegramService implements ITelegramService {

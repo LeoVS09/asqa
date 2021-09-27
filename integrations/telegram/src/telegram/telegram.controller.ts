@@ -1,6 +1,6 @@
 import { Controller, Inject } from '@nestjs/common';
 import { Telegraf, Context } from 'telegraf';
-import { TelegrafProviderService } from '../telegraf-provider/telegraf-provider.service';
+import { TelegrafProviderService } from './telegraf-provider.service';
 import { TelegramService } from './telegram.service';
 
 @Controller('telegram')

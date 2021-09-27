@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChatsCollectionService } from './chats-collection.service';
+import { ChatsCollectionService } from 'src/chats/chats-collection.service';
 
 describe('ChatsCollectionService', () => {
   let service: ChatsCollectionService;

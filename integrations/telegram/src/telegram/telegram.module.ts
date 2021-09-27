@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { TelegramController } from './telegram/telegram.controller';
-import { TelegrafProviderService } from './telegraf-provider/telegraf-provider.service';
-import { TelegramService } from './telegram/telegram.service';
+import { TelegramController } from './telegram.controller';
+import { TelegrafProviderService } from './telegraf-provider.service';
+import { TelegramService } from './telegram.service';
 import { MessagesModule } from 'src/messages/messages.module';
 import { ChatsModule } from 'src/chats/chats.module';
 

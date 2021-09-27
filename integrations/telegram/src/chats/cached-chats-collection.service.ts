@@ -1,6 +1,6 @@
 import { CACHE_MANAGER, Inject, Injectable, CacheStore } from '@nestjs/common';
 import { ChatDto } from 'src/telegram';
-import { ChatsCollectionService } from '../chats-collection/chats-collection.service';
+import { ChatsCollectionService } from './chats-collection.service';
 
 @Injectable()
 export class CachedChatsCollectionService {

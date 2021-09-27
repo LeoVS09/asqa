@@ -1,5 +1,5 @@
 import { Controller, ValidationPipe } from '@nestjs/common';
-import { KafkaAdapterService } from '../kafka-adapter/kafka-adapter.service';
+import { KafkaAdapterService } from './kafka-adapter.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { ToTelegramMessageDto } from 'src/messages';
 

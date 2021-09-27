@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FromTelegramMessageDto } from 'src/telegram';
-import { ToKafkaMessageDto, ToTelegramMessageDto } from '../models';
+import { ToKafkaMessageDto, ToTelegramMessageDto } from './models';
 
 // TODO: store messagges in separate service for easy updates and translation
 const HELLO_MESSAGE =

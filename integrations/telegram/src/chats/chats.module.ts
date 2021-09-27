@@ -2,9 +2,9 @@ import { Module, CacheModule, Logger } from '@nestjs/common';
 import { ConfigModule, ConfigService} from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import {ChatModel, ChatSchema} from './schemas'
-import { ChatsStorageService } from './chats-storage/chats-storage.service';
-import { ChatsCollectionService } from './chats-collection/chats-collection.service';
-import { CachedChatsCollectionService } from './cached-chats-collection/cached-chats-collection.service';
+import { ChatsStorageService } from './chats-storage.service';
+import { ChatsCollectionService } from './chats-collection.service';
+import { CachedChatsCollectionService } from './cached-chats-collection.service';
 
 
 @Module({

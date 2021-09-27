@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TelegrafProviderService } from './telegraf-provider.service';
+import { TelegrafProviderService } from 'src/telegram/telegraf-provider.service';
 
 describe('TelegrafProviderService', () => {
   let service: TelegrafProviderService;
