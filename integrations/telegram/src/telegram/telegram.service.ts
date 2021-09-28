@@ -31,7 +31,7 @@ export class TelegramService implements ITelegramService {
 
     async onMessage(ctx: Context): Promise<void> {
         const saving = this.chatsStorage.saveIfNotExists(new ChatDto(ctx))
-
+        
         this.messagesService.onTelegramMessage(new FromTelegramMessageDto(ctx))
         await saving
     }

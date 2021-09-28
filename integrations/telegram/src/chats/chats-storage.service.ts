@@ -10,7 +10,6 @@ export class ChatsStorageService {
     ){}
 
     async saveIfNotExists(data: ChatDto): Promise<void> {
-        debugger
         const existed = await this.collection.get(data.id)
         if(existed) 
             return
