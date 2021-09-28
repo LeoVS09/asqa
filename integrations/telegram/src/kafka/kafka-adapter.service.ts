@@ -26,7 +26,9 @@ export class KafkaAdapterService implements IKafkaService {
     }
 
     send(message: ToKafkaMessageDto) {
-        return this.client.emit(this.topic, message);
+        // Destruct class instans to object
+        const {...event} = message
+        return this.client.emit(this.topic, event);
     }
 
     onMessage(message: ToTelegramMessageDto) {
