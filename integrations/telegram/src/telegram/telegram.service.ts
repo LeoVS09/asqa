@@ -25,7 +25,6 @@ export class TelegramService implements ITelegramService {
         const saving = this.chatsStorage.saveIfNotExists(new ChatDto(ctx))
 
         ctx.reply(await this.messagesService.getHello())
-
         await saving
     }
 
@@ -37,6 +36,6 @@ export class TelegramService implements ITelegramService {
     }
 
     send({meta, text}: ToTelegramMessageDto) {
-        this.bot.telegram.sendMessage(meta.identity, text)
+        this.bot.telegram.sendMessage(meta.identity.id, text)
     }
 }

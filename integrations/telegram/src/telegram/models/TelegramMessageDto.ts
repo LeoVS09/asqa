@@ -1,16 +1,12 @@
-import { ToKafkaMessageDto, ToKafkaMetaDto } from 'src/messages';
+import { TelegramIdentityDto, ToKafkaMessageDto, ToKafkaMetaDto } from 'src/messages';
 import { Equals, IsDefined, IsString, IsInt, ValidateNested} from 'class-validator';
 import { Context } from 'telegraf';
 import type { Message } from 'typegram'
 
 export class FromTelegramMetaDto extends ToKafkaMetaDto {
-    @IsString()
-    @Equals('telegram')
-    provider: 'telegram';
-
     /** Local telegram chat id, used only for telegram */
     @IsDefined()
-    identity: number | string;
+    identity: TelegramIdentityDto;
 
     /** Message id from telegram */
     @IsDefined()
@@ -22,7 +18,10 @@ export class FromTelegramMetaDto extends ToKafkaMetaDto {
 
     constructor(ctx: Context) {
         super()
-        this.identity = ctx.message.chat.id
+        this.identity = {
+            id: ctx.message.chat.id,
+            provider: 'telegram',
+        }
         this.timestamp = ctx.message.date
         this.telegram_message_id = ctx.message.message_id
     }

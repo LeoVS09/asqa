@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PlatformApiService, Passages, Answer, TextTypes, MessagesEventBroker, IMessageToUserEvent, IEventMeta } from '../interfaces';
-import { MessagesEventAdapterService } from '../messages-event-adapter/messages-event-adapter.service';
-import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
-import { SlowAnswerService } from './slow-answer.service';
+import { PlatformApiService, MessagesEventBroker, Passages, Answer, TextTypes, IMessageToUserEvent, IEventMeta, IEventIdentity } from 'src/bot/interfaces';
+import { MessagesEventAdapterService } from 'src/bot/messages-event-adapter.service';
+import { SlowAnswerService } from 'src/bot/slow-answer.service';
+import { PlatformApiAdapterService } from 'src/platform-api-adapter';
 
 describe('LongAnswerService', () => {
   let service: SlowAnswerService;
@@ -24,7 +24,7 @@ describe('LongAnswerService', () => {
     }
 
     broker = {
-      sendToUser(event: IMessageToUserEvent) {
+      sendToUser(identity, text) {
         throw new Error('Method not implemented.');
       }
     }
@@ -72,8 +72,8 @@ describe('LongAnswerService', () => {
     const answerPromise = new Promise(resolve => {resolveAnswer = resolve})
     const callback = jest.fn(() => answerPromise)
 
-    const meta: IEventMeta = { identity: ''}
-    const longAnswerPromise = service.wrapSlowAnswerExcuse(meta, callback)
+    const identity: IEventIdentity = {id: '', provider: ''}
+    const longAnswerPromise = service.wrapSlowAnswerExcuse(identity, callback)
 
     expect(setTimeout).toHaveBeenCalledTimes(2);
 
@@ -96,8 +96,12 @@ describe('LongAnswerService', () => {
     expect(generateText.mock.calls[1][0]).toBe(TextTypes.EXCUSE_VERY_SLOW_ANSWER)
 
     expect(sendToUser.mock.calls.length).toBe(2)
-    expect(sendToUser.mock.calls[0][0]).toEqual({meta, text: excuses[0]} as IMessageToUserEvent)
-    expect(sendToUser.mock.calls[1][0]).toEqual({meta, text: excuses[1]} as IMessageToUserEvent)
+    expect(sendToUser.mock.calls[0][0]).toEqual(identity)
+    // @ts-ignore
+    expect(sendToUser.mock.calls[0][1]).toEqual(excuses[0])
+    expect(sendToUser.mock.calls[1][0]).toEqual(identity)
+    // @ts-ignore
+    expect(sendToUser.mock.calls[1][1]).toEqual(excuses[1])
 
     resolveAnswer(answer)
 
@@ -123,8 +127,8 @@ describe('LongAnswerService', () => {
     const answerPromise = new Promise(resolve => {resolveAnswer = resolve})
     const callback = jest.fn(() => answerPromise)
 
-    const meta: IEventMeta = { identity: ''}
-    const longAnswerPromise = service.wrapSlowAnswerExcuse(meta, callback)
+    const identity: IEventIdentity = {id: '', provider: ''}
+    const longAnswerPromise = service.wrapSlowAnswerExcuse(identity, callback)
 
     expect(setTimeout).toHaveBeenCalledTimes(2);
 
@@ -169,8 +173,8 @@ describe('LongAnswerService', () => {
     const answerPromise = new Promise(resolve => {resolveAnswer = resolve})
     const callback = jest.fn(() => answerPromise)
 
-    const meta: IEventMeta = { identity: ''}
-    const longAnswerPromise = service.wrapSlowAnswerExcuse(meta, callback)
+    const identity: IEventIdentity = {id: '', provider: ''}
+    const longAnswerPromise = service.wrapSlowAnswerExcuse(identity, callback)
 
     expect(setTimeout).toHaveBeenCalledTimes(2);
 
@@ -201,7 +205,9 @@ describe('LongAnswerService', () => {
     expect(generateText.mock.calls[0][0]).toBe(TextTypes.EXCUSE_SLOW_ANSWER)
 
     expect(sendToUser.mock.calls.length).toBe(1)
-    expect(sendToUser.mock.calls[0][0]).toEqual({meta, text: excuses[0]} as IMessageToUserEvent)
+    expect(sendToUser.mock.calls[0][0]).toEqual(identity)
+    // @ts-ignore
+    expect(sendToUser.mock.calls[0][1]).toEqual(excuses[0])
 
     const longAnswerResult = await longAnswerPromise
 
@@ -225,8 +231,8 @@ describe('LongAnswerService', () => {
     const answerPromise = new Promise((resolve, reject) => {rejectAnswer = reject})
     const callback = jest.fn(() => answerPromise)
 
-    const meta: IEventMeta = { identity: ''}
-    const longAnswerPromise = service.wrapSlowAnswerExcuse(meta, callback)
+    const identity: IEventIdentity = {id: '', provider: ''}
+    const longAnswerPromise = service.wrapSlowAnswerExcuse(identity, callback)
 
     expect(setTimeout).toHaveBeenCalledTimes(2);
 

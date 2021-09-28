@@ -201,6 +201,8 @@ services:
          - KAFKA_CLIENT_ID=asqa-core
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
          - PLATFORM_GQL_URL=http://platform-gateway/graphql
+         - MESSAGE_FROM_USER_TOPIC=message.from.user.v1
+         - SEND_TO_USER_TOPIC=message.to.user.v1
       depends_on: 
          - kafka
          - platform-gateway

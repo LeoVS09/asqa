@@ -1,8 +1,12 @@
 import { Controller, ValidationPipe } from '@nestjs/common';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { BotService } from '../bot/bot.service';
-import { MessageFromUserEventDto } from '../events';
-import { MESSAGE_FROM_USER_TOPIC } from '../topics';
+import { BotService } from './bot.service';
+import { MessageFromUserEventDto } from './events';
+
+// @nets/config cannot be used for define static parametor for decorator
+const {MESSAGE_FROM_USER_TOPIC} = process.env
+if (!MESSAGE_FROM_USER_TOPIC)
+    throw new Error("Cannot find enviroment variable MESSAGE_FROM_USER_TOPIC")
 
 @Controller('bot')
 export class BotController {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BotController } from './bot.controller';
+import { BotController } from 'src/bot/bot.controller';
 
 describe('BotController', () => {
   let controller: BotController;

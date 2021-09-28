@@ -1,11 +1,22 @@
-import { IEventMeta, IEventWithIdentity, IMessageFromUserEvent, IMessageToUserEvent } from "./interfaces";
-import { IsDefined, IsString, ValidateNested} from 'class-validator';
+import { IEventIdentity, IEventMeta, IEventWithIdentity, IMessageFromUserEvent, IMessageToUserEvent } from "./interfaces";
+import { IsDefined, IsNumber, IsString, ValidateNested} from 'class-validator';
+
+export class EventIdentity implements IEventIdentity {
+    
+    @IsDefined()
+    id: string | number;
+
+    @IsString()
+    provider: string;
+    
+}
 
 export class EventMetaDto implements IEventMeta {
+    @ValidateNested()
+    identity: EventIdentity;
 
-    @IsDefined()
-    identity: number | string;
-
+    @IsNumber()
+    timestamp: number;
 }
 
 export class EventWithIdentityDto implements IEventWithIdentity {

@@ -13,10 +13,10 @@ import { ChatsModule } from './chats/chats.module';
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('MONGODB_URL'),
       }),
-      inject: [ConfigService],
     }),
     TelegramModule,
     MessagesModule,

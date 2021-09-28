@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Answer, Passages, PlatformApiService, TextTypes } from '../interfaces';
-import { PlatformApiAdapterService } from '../platform-api-adapter/platform-api-adapter.service';
-import { AnswererService } from './answerer.service';
+import { AnswererService } from 'src/bot/answerer.service';
+import { PlatformApiService, Passages, Answer, TextTypes } from 'src/bot/interfaces';
+import { PlatformApiAdapterService } from 'src/platform-api-adapter';
 
 describe('AnswererService', () => {
   let service: AnswererService;

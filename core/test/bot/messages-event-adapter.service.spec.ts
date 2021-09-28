@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MessagesEventAdapterService } from './messages-event-adapter.service';
+import { MessagesEventAdapterService } from 'src/bot/messages-event-adapter.service';
 
 describe('MessagesEventAdapterService', () => {
   let service: MessagesEventAdapterService;

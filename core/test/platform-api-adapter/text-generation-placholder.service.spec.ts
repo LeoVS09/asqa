@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TextGenerationPlaceholderService } from './text-generation-placeholder.service';
+import { TextGenerationPlaceholderService } from 'src/platform-api-adapter/text-generation-placeholder.service';
 
 describe('TextGenerationPlacholderService', () => {
   let service: TextGenerationPlaceholderService;

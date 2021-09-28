@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PlatformApiAdapterService } from './platform-api-adapter.service';
+import { PlatformApiAdapterService } from 'src/platform-api-adapter';
 
 describe('PlatformApiAdapterService', () => {
   let service: PlatformApiAdapterService;

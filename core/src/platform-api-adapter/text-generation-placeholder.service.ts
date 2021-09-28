@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { TextTypes } from '../../bot/interfaces';
+import { TextTypes } from '../bot/interfaces';
 
 const textGenerationMap: {[type: string]: Array<string>} = {
     [TextTypes.EXCUSE_ERROR]: ['Sorry, something went wrong :(', 'Eh, I\'m feels bad :(', 'Oh, something broken in me :('],

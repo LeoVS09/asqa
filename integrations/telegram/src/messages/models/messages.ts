@@ -1,19 +1,27 @@
-import { Equals, IsDefined, IsString, ValidateNested} from 'class-validator';
+import { Equals, IsDefined, IsString, ValidateNested, IsInt} from 'class-validator';
+
 
 export interface CommonMessage<Meta = any> {
     meta: Meta
     text: string;
 }
 
-/** Expected interface for send message to telegram */
-export class ToTelegramMetaDto {
+/** Expected interface messages send to/from telegram by kafka */
+export class TelegramIdentityDto {
     @IsString()
     @Equals('telegram')
     provider: 'telegram';
 
     /** Local telegram chat id, used only for telegram */
     @IsDefined()
-    identity: number | string;
+    id: number | string;
+}
+
+
+export class ToTelegramMetaDto {
+
+    @ValidateNested()
+    identity: TelegramIdentityDto
 }
 
 export class ToTelegramMessageDto implements CommonMessage<ToTelegramMetaDto> {
@@ -25,17 +33,18 @@ export class ToTelegramMessageDto implements CommonMessage<ToTelegramMetaDto> {
     
 }
 
-export class ToKafkaMetaDto {
-    @IsString()
-    provider: string;
 
-    @IsDefined()
-    identity: number | string;
+export class ToKafkaMetaDto {
+    @ValidateNested()
+    identity: TelegramIdentityDto
+
+    @IsInt()
+    timestamp: number
 }
 
 export class ToKafkaMessageDto implements CommonMessage<ToKafkaMetaDto> {
     @ValidateNested()
-    meta: ToTelegramMetaDto;
+    meta: ToKafkaMetaDto;
 
     @IsString()
     text: string;
