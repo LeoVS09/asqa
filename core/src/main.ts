@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { KafkaOptions } from '@nestjs/microservices';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe} from '@nestjs/common';
 import { generateKafkaClientOptions } from './kafka';
 
 async function bootstrap() {

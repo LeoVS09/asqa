@@ -16,6 +16,8 @@ import {
 import { onError } from "@apollo/client/link/error";
 import { ConfigService } from '@nestjs/config';
 import fetch from 'cross-fetch';
+import { HealthIndicatorResult, HttpHealthIndicator } from '@nestjs/terminus';
+import { ModuleRef } from '@nestjs/core';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
@@ -38,17 +40,27 @@ const noCacheOptions: DefaultOptions = {
 }
 
 @Injectable()
-export class PlatformGraphqlClientService {
+export class PlatformGraphqlClientService extends HttpHealthIndicator {
 
     private client: ApolloClient<NormalizedCacheObject>
+    private host: string
+    private gqlUrl: string
+    private healthUrl: string
 
     constructor(
+        moduleRef: ModuleRef,
         private readonly configService: ConfigService,
     ) {
+        super(moduleRef)
+
+        this.host = this.configService.get("PLATFORM_URL")
+        this.gqlUrl = `${this.host}/graphql`
+        this.healthUrl = `${this.host}/.well-known/apollo/server-health`
+
         this.client = new ApolloClient<NormalizedCacheObject>({
             link: from([
                 errorLink, 
-                new HttpLink({ uri: this.configService.get("PLATFORM_GQL_URL"), fetch })
+                new HttpLink({ uri: this.gqlUrl, fetch })
             ]),
             cache: new InMemoryCache(),
             defaultOptions: noCacheOptions
@@ -74,6 +86,10 @@ export class PlatformGraphqlClientService {
             console.error(result.errors)
 
         return result.data
+    }
+
+    async isHealth(key: string): Promise<HealthIndicatorResult> {
+        return await this.pingCheck(key, this.healthUrl)
     }
 
 }
