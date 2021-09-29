@@ -72,17 +72,17 @@ spec:
         
         livenessProbe:
           httpGet:
-            path: /
+            path: /health
             port: main-port
       
         readinessProbe:
           httpGet:
-            path: /
+            path: /health
             port: main-port
 
         startupProbe:
           httpGet:
-            path: /
+            path: /health
             port: main-port
           failureThreshold: 30
           periodSeconds: 10 # 30 * 10 = 300s = 5m for start
