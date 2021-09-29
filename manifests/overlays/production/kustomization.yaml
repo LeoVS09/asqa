@@ -7,7 +7,7 @@ images:
 - name: leovs09/asqa-answer2gql
   newTag: 0.1.1
 - name: leovs09/asqa-core
-  newTag: 0.3.3
+  newTag: 0.4.0
 - name: leovs09/asqa-search
   newTag: 0.6.0
 - name: leovs09/asqa-telegram-integration
