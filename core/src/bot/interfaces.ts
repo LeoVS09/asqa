@@ -45,7 +45,3 @@ export interface IMessageToUserEvent extends IEventWithIdentity {
 export interface IMessageFromUserEvent extends IEventWithIdentity {
     text: string;
 }
-
-export interface MessagesEventBroker {
-    sendToUser(identity: IEventIdentity, text: string)
-}
