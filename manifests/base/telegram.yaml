@@ -60,7 +60,7 @@ spec:
           # Cache of saved entities before check them in database
           # week in seconds
         - name: CHATS_CACHE_TTL
-          vakue: '604800'
+          value: '604800'
         - name: CHATS_CACHE_MAX_COUNT
           value: '10000'
         - name: TELEGRAM_BOT_API_KEY
