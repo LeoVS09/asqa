@@ -9,7 +9,7 @@ export class ChatsCollectionService {
 
     constructor(@InjectModel(ChatModel.name) private model: Model<ChatDocument>) {}
 
-    async get(id: string | number): Promise<ChatDocument> {
+    async get(id: string | number): Promise<ChatDocument | undefined> {
         return await this.model.findById(id)
     }
 
