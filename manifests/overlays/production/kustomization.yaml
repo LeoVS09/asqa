@@ -11,7 +11,7 @@ images:
 - name: leovs09/asqa-search
   newTag: 0.6.0
 - name: leovs09/asqa-telegram-integration
-  newTag: 0.2.0
+  newTag: 0.2.1
 
 patchesStrategicMerge:
 - nodeSelectors.yaml
