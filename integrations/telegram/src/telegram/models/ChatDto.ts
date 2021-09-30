@@ -1,9 +1,8 @@
-import { IdentifaibleData } from "src/interfaces";
 import { Context } from 'telegraf';
 import type {Chat, User} from 'typegram'
 
 /** Can be conversation with user or group */
-export class ChatDto implements IdentifaibleData {
+export class ChatDto {
     id: string | number;
     chat: Chat
     from: User
