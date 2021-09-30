@@ -53,6 +53,10 @@ spec:
           value: http://platform-gateway
         - name: NODE_ENV
           value: 'production'
+        - name: MESSAGE_FROM_USER_TOPIC
+          value: message.from.user.v1
+        - name: SEND_TO_USER_TOPIC
+          value: message.to.user.v1
         
         livenessProbe:
           httpGet:
