@@ -41,7 +41,7 @@ spec:
           containerPort: 80
         
         env:
-        - name: SERVER_PORT
+        - name: PORT
           value: '80'
         - name: KAFKA_BROKER_URL
           value: 'kafka-kafka-bootstrap:9092'
