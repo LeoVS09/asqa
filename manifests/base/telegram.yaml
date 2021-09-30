@@ -41,16 +41,28 @@ spec:
           containerPort: 80
         
         env:
-        - name: SERVER_PORT
+        - name: PORT
           value: '80'
         - name: NODE_ENV
           value: 'production'
         - name: KAFKA_BOOTSTRAP_SERVER
           value: 'kafka-kafka-bootstrap:9092'
+        - name: KAFKA_CLIENT_ID
+          value: asqa-telegram-integration
+        - name: KAFKA_CONSUMER_GROUP_ID
+          value: asqa-telegram-consumer
         - name: SEND_TO_USER_TOPIC
           value: 'message.to.user.v1'
         - name: MESSAGE_FROM_USER_TOPIC
           value: 'message.from.user.v1'
+        - name: MONGODB_URL
+          value: mongodb://root:mongodb-asqa-password@mongodb:27017/telegram?authSource=admin
+          # Cache of saved entities before check them in database
+          # week in seconds
+        - name: CHATS_CACHE_TTL
+          vakue: '604800'
+        - name: CHATS_CACHE_MAX_COUNT
+          value: '10000'
         - name: TELEGRAM_BOT_API_KEY
           valueFrom:
             secretKeyRef:
@@ -60,17 +72,17 @@ spec:
         
         livenessProbe:
           httpGet:
-            path: /
+            path: /health
             port: main-port
       
         readinessProbe:
           httpGet:
-            path: /
+            path: /health
             port: main-port
 
         startupProbe:
           httpGet:
-            path: /
+            path: /health
             port: main-port
           failureThreshold: 30
           periodSeconds: 10 # 30 * 10 = 300s = 5m for start

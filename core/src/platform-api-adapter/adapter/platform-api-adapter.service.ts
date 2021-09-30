@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Answer, Passages, PlatformApiService, TextTypes } from '../../bot/interfaces';
 import { PlatformGraphqlClientService } from '../clients';
-import { TextGenerationPlaceholderService } from '../text-generation-placeholder';
+import { TextGenerationPlaceholderService } from '../text-generation-placeholder.service';
 import { answerGql, searchPassagesGql } from './queries';
 import { SearchPassages, SearchPassagesVariables } from './__generated__/SearchPassages';
 import { Answer as AnswerGql, AnswerVariables } from './__generated__/Answer';

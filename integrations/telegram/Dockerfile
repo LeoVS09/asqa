@@ -17,5 +17,5 @@ FROM second
 
 COPY . /app
 
-CMD [ "nest", "start" ]
+CMD [ "./start.sh" ]
 

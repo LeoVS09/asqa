@@ -95,7 +95,6 @@ services:
    answer2gql:
       build:
          context: ./answer2gql
-      container_name: asqa_core_dev
       ports:
          - 8914:8914
       volumes:
@@ -197,11 +196,13 @@ services:
       volumes:
          - ./core/:/app/.
       environment:
-         - SERVER_PORT=8915
+         - PORT=8915
          - KAFKA_BROKER_URL=kafka:9092
          - KAFKA_CLIENT_ID=asqa-core
          - KAFKA_CONSUMER_GROUP_ID=asqa-consumer
-         - PLATFORM_GQL_URL=http://platform-gateway/graphql
+         - PLATFORM_URL=http://platform-gateway
+         - MESSAGE_FROM_USER_TOPIC=message.from.user.v1
+         - SEND_TO_USER_TOPIC=message.to.user.v1
       depends_on: 
          - kafka
          - platform-gateway
@@ -212,8 +213,14 @@ services:
       container_name: asqa_telegram_integration_dev
       ports:
          - 8916:8916
+         - 9229:9229 # Node debug port
       volumes:
          - ./integrations/telegram/:/app/.
+      environment:
+         - KAFKA_BROKER_URL=kafka:9092
+         - KAFKA_CLIENT_ID=asqa-telegram-integration
+         - KAFKA_CONSUMER_GROUP_ID=asqa-telegram-consumer
+         - MONGODB_URL=mongodb://root:example@mongo:27017/telegram?authSource=admin
       env_file:
          ./integrations/telegram/.env
       depends_on: 

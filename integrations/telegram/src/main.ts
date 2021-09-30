@@ -1,78 +1,26 @@
-import { Telegraf, Context } from 'telegraf';
-import {
-  stopKafka,
-  consumeKafkaMessages,
-  sendMessageToKafka,
-  connectKafka,
-} from './kafka';
-import * as express from 'express';
-import * as http from 'http';
-import { addHealthCheck } from './health';
-
-// TODO: switch to database
-const contextCache: { [key: string]: Context } = {};
-
-const HELLO_MESSAGE =
-  'Hello! ' +
-  'This AI know everything, just ask what you want to know. \n' +
-  'For example: Why sky is blue?\n\n' +
-  'Disclaimer: We in early alpha, ' +
-  'but really want to give all people ability to get answers on any questions instantly.\n' +
-  'Let us know if something work incorrectly or you have ideas what we can improve. ' +
-  'You can write us directly, asqa-team@protonmail.com.';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { KafkaOptions } from '@nestjs/microservices';
+import { ValidationPipe } from '@nestjs/common';
+import { generateKafkaClientOptions } from './kafka/kafka.configuration';
 
 async function bootstrap() {
-  const kafka = await connectKafka();
+  const app = await NestFactory.create(AppModule);
 
-  const bot = new Telegraf(process.env.TELEGRAM_BOT_API_KEY);
+  app.useGlobalPipes(new ValidationPipe({
+      transform: true,
+  }));
 
-  bot.start((ctx) => ctx.reply(HELLO_MESSAGE));
+  const configService = app.get(ConfigService);
 
-  bot.on('text', (ctx) => {
-    const identity = String(ctx.message.chat.id);
+  const options = generateKafkaClientOptions(configService)
+  app.connectMicroservice<KafkaOptions>(options);
 
-    contextCache[identity] = ctx;
+  await app.startAllMicroservices();
 
-    sendMessageToKafka({
-      meta: { identity },
-      text: ctx.message.text,
-    });
-  });
-
-  await bot.launch(); // Currently using long polling
-  // TODO: swith to webhook
-
-  await consumeKafkaMessages(async ({ meta, text }) => {
-    contextCache[meta.identity]?.reply(text);
-  });
-
-  const app = express();
-  app.get('/', (req, res) => {
-    res.send('ok');
-  });
-
-  const server = http.createServer(app);
-
-  addHealthCheck(server, {
-    isReady: async () => {
-      // TODO: make real ready check
-      return !!(bot && kafka.consumer && kafka.producer);
-    },
-    onShutdownSignal: async () => {
-      bot.stop('Shutdown signal received');
-      await stopKafka();
-      await new Promise<void>((resolve, reject) =>
-        server.close((err) => {
-          if (err) reject(err);
-          resolve();
-        }),
-      );
-    },
-  });
-
-  const port = process.env.SERVER_PORT || 3000;
-  console.log('Will start server at port ' + port);
-
-  server.listen(port);
+  const port = configService.get('PORT');
+  await app.listen(port);
 }
+
 bootstrap();

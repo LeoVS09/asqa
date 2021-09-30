@@ -20,9 +20,18 @@ export interface PlatformApiService {
     generateText(type: TextTypes): Promise<string>
 }
 
+/** 
+ * Data for identify user and chat provider
+ * Need resend for identify receiver
+ * */
+export interface IEventIdentity {
+    id: string | number;
+    provider: string;
+}
+
 export interface IEventMeta {
-    /** Data for identify user */
-    identity: any
+    identity: IEventIdentity
+    timestamp: number
 }
 
 export interface IEventWithIdentity {
@@ -35,8 +44,4 @@ export interface IMessageToUserEvent extends IEventWithIdentity {
 
 export interface IMessageFromUserEvent extends IEventWithIdentity {
     text: string;
-}
-
-export interface MessagesEventBroker {
-    sendToUser(event: IMessageToUserEvent)
 }

@@ -1,31 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AnswererService } from './answerer/answerer.service';
-import { SlowAnswerService } from './slow-answer/slow-answer.service';
-import { BotService } from './bot/bot.service';
-import { MessagesEventAdapterService } from './messages-event-adapter/messages-event-adapter.service';
-import { BotController } from './controller/bot.controller';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
+import { AnswererService } from './answerer.service';
+import { SlowAnswerService } from './slow-answer.service';
+import { BotService } from './bot.service';
+import { MessagesEventAdapterService } from './messages-event-adapter.service';
+import { BotController } from './bot.controller';
 import { PlatformApiAdapterModule } from 'src/platform-api-adapter/platform-api-adapter.module';
-import { generateKafkaClientOptions } from './KafkaClientOptions';
-
-export {
-  generateKafkaClientOptions
-}
+import { KafkaModule } from 'src/kafka/kafka.module';
 
 @Module({
   imports: [
-    PlatformApiAdapterModule
+    PlatformApiAdapterModule,
+    KafkaModule
   ],
   providers: [
-    { 
-      provide: 'KAFKA_CLIENT', 
-      useFactory: (configService: ConfigService) => {
-        const options = generateKafkaClientOptions(configService)
-        return ClientProxyFactory.create(options);
-      },
-      inject: [ConfigService],
-    },
     AnswererService,
     SlowAnswerService, 
     BotService, 
