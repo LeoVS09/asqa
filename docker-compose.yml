@@ -102,8 +102,16 @@ services:
       environment:
          - PORT=8914
          - ANSWER_URL=http://answer:8904
+         - REDIS_PORT=6379
+         - REDIS_HOST=redis
       depends_on: 
          - answer
+         - redis
+
+   redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
 
    # Answering NN service
    answer:

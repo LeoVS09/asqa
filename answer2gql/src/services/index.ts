@@ -1,1 +1,1 @@
-export * from './AnswerService'
+export * from './AnswerService';
