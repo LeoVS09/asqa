@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+
+  answer2gql:
+    build:
+      context: ../
+    command: npm run test
+    ports:
+      - 8914:8914
+    volumes:
+      - ../:/app/.
+    environment:
+      - PORT=8914
+      - ANSWER_URL=http://answer:8904
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+    depends_on: 
+      - answer
+      - redis
+
+  answer:
+    build:
+      context: ../
+    command: npm run mock-server
+    volumes:
+      - ../:/usr/app/
+      - /usr/app/node_modules
+
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+

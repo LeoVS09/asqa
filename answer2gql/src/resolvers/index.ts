@@ -1,7 +1,7 @@
-import {answer} from './answer'
+import { answer } from './answer';
 
 export const resolvers = {
-    Query: {
-        answer,
-    },
+  Query: {
+    answer,
+  },
 };

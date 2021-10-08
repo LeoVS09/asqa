@@ -1,6 +1,6 @@
 {
   "name": "@asqa/answer2gql",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Transform Answer Swagger API to Graphql",
   "author": "",
   "private": true,
@@ -19,6 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "mock-server": "node ./test/mock-server.js",
     "gql:download-schema": "apollo client:download-schema --endpoint='http://platform-gateway/graphql' platform.graphql",
     "gql:gen-types": "apollo client:codegen --localSchemaFile=platform.graphql --globalTypesFile=./src/platform-api-adapter/api.global.ts --target=typescript"
   },
@@ -28,7 +29,9 @@
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.0",
     "apollo-server": "^3.3.0",
-    "graphql": "^15.5.1"
+    "fastify": "^3.22.0",
+    "graphql": "^15.5.1",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -37,6 +40,7 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^26.0.24",
     "@types/node": "^16.0.0",
+    "@types/redis": "^2.8.32",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",

@@ -5,7 +5,7 @@ images:
 - name: leovs09/asqa-answer
   newTag: 0.2.4
 - name: leovs09/asqa-answer2gql
-  newTag: 0.1.1
+  newTag: 0.2.0
 - name: leovs09/asqa-core
   newTag: 0.4.1
 - name: leovs09/asqa-search
