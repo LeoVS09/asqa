@@ -69,3 +69,24 @@ metadata:
 spec:
   partitions: 1 # telegram integration not support scaling
   replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: kafka2mongodb-sink-connector
+  labels:
+    # The strimzi.io/cluster label identifies the KafkaConnect instance
+    # in which to create this connector. That KafkaConnect instance
+    # must have the strimzi.io/use-connector-resources annotation
+    # set to true.
+    strimzi.io/cluster: kafka-connect-cluster
+spec:
+  class: org.apache.kafka.connect.file.MongoSinkConnector
+  tasksMax: 2
+  config:
+    connection:
+      uri: mongodb://root:mongodb-asqa-password@mongodb:27017/kafka?authSource=admin
+    collection: chats-messages
+    topics: 
+      - message.from.user.v1
+      - message.to.user.v1
